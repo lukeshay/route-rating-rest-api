@@ -4,11 +4,9 @@
 - [React Spring Web App](#react-spring-web-app)
 - [Directions](#directions)
   - [Pre-requisites](#pre-requisites)
-  - [Front End](#front-end)
   - [Back End](#back-end)
 - [Digital Ocean Referral](#digital-ocean-referral)
 - [Contributions](#contributions)
-- [For Me](#for-me)
 
 # React Spring Web App
 
@@ -18,21 +16,11 @@ As I learn ReactJS, I am going to be working on this web app. I am creating a we
 
 ## Pre-requisites
 
--   Node
--   npm
 -   java 8
   -  Open source is alpha
 -   docker
 -   docker-compose
 -   linux machine
--   pm2
-
-## Front End
-
-1. After cloning the repository, cd into the front end folder
-2. Run `yarn start` to run the development server
-3. Run `yarn build` to generate the production build
-4. run `./pm2StartScript` to build and serve using pm2
 
 ## Back End
 
@@ -48,9 +36,3 @@ As I learn ReactJS, I am going to be working on this web app. I am creating a we
 # Contributions
 
 If you would like to contribute or do not have a github account please send me an email at shay.luke17@gmail.com. If you do not personally want to commit, but have a suggestion, please leave an [issue](https://github.com/LukeShay/react-spring-web-app/issues) using the correct template.
-
-# For Me
--  https://stackoverflow.com/questions/27928372/react-router-urls-dont-work-when-refreshing-or-writing-manually
--  https://github.com/vikpe/react-webpack-typescript-starter
--  https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
--  https://stackoverflow.com/questions/18279141/javascript-string-encryption-and-decryption
