@@ -24,3 +24,4 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+bin/
