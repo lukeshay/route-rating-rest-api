@@ -2,7 +2,7 @@ void setBuildStatus(String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: env.GIT_URL],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Jenkins/back-end/build-status"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Jenkins/build-status"],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
   ]);
@@ -22,25 +22,25 @@ pipeline {
       steps {
         echo 'Building...'
         setBuildStatus('Starting build', 'PENDING')
-        sh 'cd back_end && make build'
+        sh 'make build'
       }
     }
     stage('Lint') {
       steps {
         echo 'Linting...'
-        sh 'cd back_end && make lint'
+        sh 'make lint'
       }
     }
     stage('Test') {
       steps {
         echo 'Testing...'
-        sh 'cd back_end && make test'
+        sh 'make test'
       }
     }
     stage('Coverage') {
       steps {
         echo 'Getting coverage...'
-        sh 'cd back_end && make coverage'
+        sh 'make coverage'
       }
     }
     stage('Deploy') {
