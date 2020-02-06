@@ -1,0 +1,13 @@
+.gitignore
+build/
+.idea
+.github
+hmac_key.sh
+Jenkinsfile
+LICENSE
+README.md
+Makefile
+Dockerfile
+docker-compose.*
+.mergify.yml
+.git/
