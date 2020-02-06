@@ -60,5 +60,6 @@ pipeline {
     failure {
       setBuildStatus('Build failed', 'FAILURE');
     }
+    sh 'docker system prune -af'
   }
 }
