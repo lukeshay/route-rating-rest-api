@@ -4,6 +4,7 @@ default: build
 
 clean:
 	rm -rf build/ restapi.log reports
+	docker rmi rest-api:${TAG} -f
 
 tag:
 	docker tag rest-api:${TAG} rest-api:latest
