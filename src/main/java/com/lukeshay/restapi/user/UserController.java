@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -56,27 +55,27 @@ public class UserController {
   @PutMapping("")
   @PreAuthorize("isAuthenticated()")
   @ApiOperation(value = "Update a user.", response = User.class)
-  public ResponseEntity<?> updateUser(
-      Authentication authentication,
-      @RequestParam("username") String username,
-      @RequestParam("email") String email,
-      @RequestParam("firstName") String firstName,
-      @RequestParam("lastName") String lastName,
-      @RequestParam("city") String city,
-      @RequestParam("state") String state,
-      @RequestParam("country") String country) {
+  public ResponseEntity<?> updateUser(Authentication authentication, @RequestBody User user) {
 
     LOG.debug("Updating user.");
 
-    ResponseEntity<?> response = checkDuplicate(authentication, email, username);
+    ResponseEntity<?> response =
+        checkDuplicate(authentication, user.getEmail(), user.getUsername());
 
     if (response != null) {
       return response;
     }
 
-    User user =
+    user =
         userService.updateUser(
-            authentication, username, email, firstName, lastName, city, state, country);
+            authentication,
+            user.getUsername(),
+            user.getEmail(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getCity(),
+            user.getState(),
+            user.getCountry());
 
     if (user == null) {
       LOG.debug("User was not found");

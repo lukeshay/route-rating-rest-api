@@ -65,7 +65,21 @@ class UserControllerTest extends TestBase {
 
   @Test
   @WithMockUser
-  void updateUserByIdTest() {
+  void updateUserTest() {
+    User testUserTwo =
+        new User(
+            "test.user2@email.com",
+            "Test",
+            "User",
+            "test.user2@email.com",
+            "1111111111",
+            "Des Moines",
+            "Iowa",
+            "USA",
+            "password");
+
+    testUserTwo = userRepository.save(testUserTwo);
+
     testUser.setUsername("TestUserChange");
     testUser.setFirstName("First");
     testUser.setLastName("Last");
@@ -73,34 +87,28 @@ class UserControllerTest extends TestBase {
     ResponseEntity<?> updatedUser =
         userController.updateUser(
             authentication,
-            testUser.getUsername(),
-            null,
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            null,
-            null,
-            null);
+            testUser);
+
+    testUser = userRepository.findById(testUser.getId()).orElse(null);
 
     Assertions.assertAll(
         () -> Assertions.assertEquals(testUser, updatedUser.getBody()),
         () -> Assertions.assertEquals(HttpStatus.OK, updatedUser.getStatusCode()));
-  }
 
-  @Test
-  @WithMockUser
-  void updateUserByIdDuplicateTest() {
-    testUser.setUsername("test.user2@email.com");
-    testUser.setEmail("test.user2@email.com");
-    testUser.setId(null);
-
-    testUser = userRepository.save(testUser);
-
-    ResponseEntity<?> response =
-        userController.updateUser(
-            authentication, "test.user@email.com", null, null, null, null, null, null);
+    testUser.setEmail(testUserTwo.getEmail());
+    ResponseEntity<?> responseEmail = userController.createUser(authentication, testUser);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(BodyUtils.error("Username taken."), response.getBody()),
-        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()));
+        () -> Assertions.assertEquals(BodyUtils.error("Email taken."), responseEmail.getBody()),
+        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode()));
+
+    testUser.setEmail("testtest@email.com");
+    testUser.setUsername(testUserTwo.getUsername());
+    ResponseEntity<?> responseUsername = userController.createUser(authentication, testUser);
+
+    Assertions.assertAll(
+        () ->
+            Assertions.assertEquals(BodyUtils.error("Username taken."), responseUsername.getBody()),
+        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseUsername.getStatusCode()));
   }
 }
