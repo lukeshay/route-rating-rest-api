@@ -78,6 +78,9 @@ class UserControllerTest extends TestBase {
             "USA",
             "password");
 
+    testUserTwo.setAuthority(UserTypes.BASIC.authority());
+    testUserTwo.setRole(UserTypes.BASIC.role());
+
     testUserTwo = userRepository.save(testUserTwo);
 
     testUser.setUsername("TestUserChange");
