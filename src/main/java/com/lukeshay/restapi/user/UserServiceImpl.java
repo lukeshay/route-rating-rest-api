@@ -119,7 +119,8 @@ class UserServiceImpl implements UserService {
       String lastName,
       String city,
       String state,
-      String country) {
+      String country,
+      String password) {
 
     User user = AuthenticationUtils.getUser(authentication);
 
@@ -156,6 +157,10 @@ class UserServiceImpl implements UserService {
 
     if (country != null && !country.equals("")) {
       toUpdate.setCountry(country);
+    }
+
+    if (password != null && !password.equals("")) {
+      toUpdate.setPassword(passwordEncoder.encode(password));
     }
 
     return userRepository.save(toUpdate);
