@@ -84,10 +84,7 @@ class UserControllerTest extends TestBase {
     testUser.setFirstName("First");
     testUser.setLastName("Last");
 
-    ResponseEntity<?> updatedUser =
-        userController.updateUser(
-            authentication,
-            testUser);
+    ResponseEntity<?> updatedUser = userController.updateUser(authentication, testUser);
 
     testUser = userRepository.findById(testUser.getId()).orElse(null);
 
