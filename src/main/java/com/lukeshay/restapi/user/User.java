@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "users")
 public class User extends Auditable<String> {
 
-  @Column(name = "id", unique = true, updatable = false)
+  @Column(name = "id", unique = true, updatable = false, nullable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
   @GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
@@ -27,43 +27,43 @@ public class User extends Auditable<String> {
   @JsonProperty(access = Access.WRITE_ONLY)
   private String password;
 
-  @Column(name = "username", unique = true)
+  @Column(name = "username", unique = true, nullable = false)
   @Expose
   private String username;
 
-  @Column(name = "email", unique = true)
+  @Column(name = "email", unique = true, nullable = false)
   @Expose
   private String email;
 
-  @Column(name = "first_name")
+  @Column(name = "first_name", nullable = false)
   @Expose
   private String firstName;
 
-  @Column(name = "last_name")
+  @Column(name = "last_name", nullable = false)
   @Expose
   private String lastName;
 
-  @Column(name = "phone_number")
+  @Column(name = "phone_number", length = 10, nullable = false)
   @Expose
   private String phoneNumber;
 
-  @Column(name = "city")
+  @Column(name = "city", nullable = false)
   @Expose
   private String city;
 
-  @Column(name = "state")
+  @Column(name = "state", nullable = false)
   @Expose
   private String state;
 
-  @Column(name = "country")
+  @Column(name = "country", nullable = false)
   @Expose
   private String country;
 
-  @Column(name = "authoritie")
+  @Column(name = "authority", length = 5, nullable = false)
   @Expose
   private String authority;
 
-  @Column(name = "role")
+  @Column(name = "role", length = 10, nullable = false)
   @Expose
   private String role;
 
