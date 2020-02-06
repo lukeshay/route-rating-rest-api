@@ -1,3 +1,4 @@
+TAG=$(git rev-parse --short HEAD)
 
 clean:
 	rm -rf build/ restapi.log reports
@@ -24,7 +25,7 @@ run: build
 dev: build
 	docker-compose -f docker-compose.dev.yml up -d || exit 1
 
-test: clean
+test:
 	docker run \
       	-e JWT_SECRET=${JWT_SECRET} \
       	-e REFRESH_SECRET=${REFRESH_SECRET} \
