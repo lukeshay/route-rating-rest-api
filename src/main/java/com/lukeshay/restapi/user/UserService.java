@@ -30,5 +30,6 @@ public interface UserService {
       String lastName,
       String city,
       String state,
-      String country);
+      String country,
+      String password);
 }

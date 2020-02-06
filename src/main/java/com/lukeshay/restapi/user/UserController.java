@@ -75,7 +75,8 @@ public class UserController {
             user.getLastName(),
             user.getCity(),
             user.getState(),
-            user.getCountry());
+            user.getCountry(),
+            user.getPassword());
 
     if (user == null) {
       LOG.debug("User was not found");
