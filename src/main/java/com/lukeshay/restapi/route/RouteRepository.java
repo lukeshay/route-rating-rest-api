@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface RouteRepository extends JpaRepository<Route, String> {
 
   List<Route> findAllByWallId(String wallId);
+
+  void deleteByWallId(String wallId);
 }

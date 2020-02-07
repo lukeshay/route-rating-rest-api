@@ -2,6 +2,7 @@ package com.lukeshay.restapi.wall;
 
 import com.lukeshay.restapi.gym.Gym;
 import com.lukeshay.restapi.gym.GymRepository;
+import com.lukeshay.restapi.route.RouteRepository;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
@@ -10,6 +11,7 @@ import com.lukeshay.restapi.utils.PageableUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class WallServiceImpl implements WallService {
 
   @Autowired private WallRepository wallRepository;
   @Autowired private GymRepository gymRepository;
+  @Autowired private RouteRepository routeRepository;
 
   @Override
   public ResponseEntity<?> createWall(Authentication authentication, Wall body) {
@@ -43,11 +46,7 @@ public class WallServiceImpl implements WallService {
   }
 
   @Override
-  public void deleteAllWalls() {
-    wallRepository.deleteAll();
-  }
-
-  @Override
+  @Transactional
   public Wall deleteWall(Authentication authentication, String wallId) {
     User user = AuthenticationUtils.getUser(authentication);
 
@@ -68,6 +67,7 @@ public class WallServiceImpl implements WallService {
     }
 
     wallRepository.deleteById(wallId);
+    routeRepository.deleteByWallId(wallId);
 
     return wall;
   }

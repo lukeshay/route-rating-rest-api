@@ -2,6 +2,7 @@ package com.lukeshay.restapi.wall;
 
 import com.lukeshay.restapi.TestBase;
 import com.lukeshay.restapi.gym.Gym;
+import com.lukeshay.restapi.route.Route;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import java.util.Collections;
@@ -127,14 +128,26 @@ public class WallControllerTest extends TestBase {
   void deleteWallTest() {
     testWall = wallRepository.save(testWall);
 
+    for (int i = 0; i < 10; i++) {
+      routeRepository.save(
+          new Route(
+              testWall.getId(),
+              testWall.getGymId(),
+              "route " + i,
+              "",
+              "",
+              Collections.singletonList(WallTypes.LEAD)));
+    }
     ResponseEntity<?> response = wallController.deleteWall(authentication, testWall.getId());
 
     int walls = wallRepository.findAll().size();
+    int routes = routeRepository.findAllByWallId(testWall.getId()).size();
 
     Assertions.assertAll(
         () -> Assertions.assertEquals(testWall, response.getBody()),
         () -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-        () -> Assertions.assertEquals(0, walls));
+        () -> Assertions.assertEquals(0, walls),
+        () -> Assertions.assertEquals(0, routes));
   }
 
   @Test

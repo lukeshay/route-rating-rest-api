@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/wall")
@@ -89,13 +88,5 @@ public class WallController {
     LOG.debug("Getting gym {} walls", gymId);
 
     return wallService.getWalls(gymId, query, sort, limit, page);
-  }
-
-  @DeleteMapping("")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiIgnore
-  public ResponseEntity<?> deleteAll() {
-    wallService.deleteAllWalls();
-    return ResponseUtils.ok(null);
   }
 }
