@@ -1,5 +1,7 @@
 TAG=$(shell git rev-parse --short HEAD)
 
+.PHONY: clean tag coverage format lint logs build run dev test
+
 default: build
 
 clean:

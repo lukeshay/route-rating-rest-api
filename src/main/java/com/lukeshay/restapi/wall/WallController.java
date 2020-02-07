@@ -90,12 +90,4 @@ public class WallController {
 
     return wallService.getWalls(gymId, query, sort, limit, page);
   }
-
-  @DeleteMapping("")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiIgnore
-  public ResponseEntity<?> deleteAll() {
-    wallService.deleteAllWalls();
-    return ResponseUtils.ok(null);
-  }
 }

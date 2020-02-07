@@ -13,8 +13,6 @@ public interface WallService {
 
   ResponseEntity<?> createWall(Authentication authentication, Wall body);
 
-  void deleteAllWalls();
-
   Wall deleteWall(Authentication authentication, String wallId);
 
   ResponseEntity<Page<Wall>> getWalls(
