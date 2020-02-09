@@ -6,7 +6,6 @@ import com.lukeshay.restapi.route.RouteProperties.Grade;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -78,12 +78,14 @@ public class RouteRatingControllerTest extends TestBase {
       ratings.add(routeRating);
     }
 
-    ResponseEntity<?> response = ratingController.getRatings(route.getId());
+    ResponseEntity<?> response = ratingController.getRatings(route.getId(), null, null, null);
 
     Assertions.assertAll(
         () -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
         () ->
             Assertions.assertTrue(
-                ratings.containsAll((Collection<?>) Objects.requireNonNull(response.getBody()))));
+                ratings.containsAll(
+                    Objects.requireNonNull(
+                        ((Page<RouteRating>) response.getBody()).getContent()))));
   }
 }

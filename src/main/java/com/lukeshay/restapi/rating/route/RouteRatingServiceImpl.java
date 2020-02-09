@@ -5,11 +5,13 @@ import com.lukeshay.restapi.route.RouteRepository;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
+import com.lukeshay.restapi.utils.PageableUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -50,10 +52,14 @@ public class RouteRatingServiceImpl implements RouteRatingService {
   }
 
   @Override
-  public ResponseEntity<?> getRatingsByRouteId(String routeId) {
-    LOG.debug("Getting ratings for route {}", routeId);
-    List<RouteRating> ratings = ratingRepository.findAllByRouteId(routeId);
-    return ResponseUtils.ok(ratings);
+  public Page<RouteRating> getRatingsByRouteId(
+      String routeId, String sorts, Integer limit, Integer page) {
+    if (sorts == null) {
+      sorts = "createdDate:desc";
+    }
+
+    return ratingRepository.findAllByRouteId(
+        PageableUtils.buildPageRequest(page, limit, sorts), routeId);
   }
 
   private boolean validateRating(RouteRating rating) {
