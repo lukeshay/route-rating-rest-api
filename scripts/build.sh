@@ -3,7 +3,7 @@ rm -rf build
 rm -rf rest-api.jar
 rm -rf restapi.log
 
-./gradlew clean build \
+./gradlew clean build --no-daemon \
     -x jacocoTestReport \
     -x test \
     -x verifyGoogleJavaFormat \
