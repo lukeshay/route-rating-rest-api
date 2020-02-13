@@ -1,4 +1,6 @@
-FROM adoptopenjdk:8-jdk-hotspot
+FROM openjdk:8-alpine
+
+RUN apk add --no-cache bash
 
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
@@ -9,6 +11,7 @@ COPY . $PROJECT_HOME
 
 EXPOSE 8080
 
+RUN export GRADLE_OPTS="-Xmx256m -Dorg.gradle.jvmargs='-Xmx512m -XX:MaxPermSize=64m'"
 RUN chmod 755 scripts/*.sh
 
 RUN sh ./scripts/build.sh
