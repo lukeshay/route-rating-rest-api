@@ -1,5 +1,7 @@
 FROM openjdk:8-alpine
 
+RUN apk add --no-cache bash
+
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
 
@@ -9,7 +11,7 @@ COPY . $PROJECT_HOME
 
 EXPOSE 8080
 
-RUN chmod 777 scripts/*.sh
+RUN chmod 755 scripts/*.sh
 
 RUN sh ./scripts/build.sh
 
