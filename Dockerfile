@@ -1,6 +1,4 @@
-FROM openjdk:8-jdk-alpine
-
-RUN apk add --no-cache bash
+FROM adoptopenjdk:8-jdk-hotspot
 
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
