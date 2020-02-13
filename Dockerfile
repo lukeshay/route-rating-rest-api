@@ -11,7 +11,7 @@ COPY . $PROJECT_HOME
 
 EXPOSE 8080
 
-RUN export GRADLE_OPTS="-Xmx256m -Dorg.gradle.jvmargs='-Xmx512m -XX:MaxPermSize=64m'"
+RUN export GRADLE_OPTS="-Xmx512m -Xms512m -Dorg.gradle.jvmargs='-Xms512m -Xmx512m -XX:MaxPermSize=64m'"
 RUN chmod 755 scripts/*.sh
 
 RUN sh ./scripts/build.sh
