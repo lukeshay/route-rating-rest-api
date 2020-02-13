@@ -1,11 +1,9 @@
-FROM adoptopenjdk/openjdk8:latest
+FROM openjdk:8-alpine
 
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
 
 WORKDIR $PROJECT_HOME
-
-EXPOSE 8080
 
 COPY . $PROJECT_HOME
 
