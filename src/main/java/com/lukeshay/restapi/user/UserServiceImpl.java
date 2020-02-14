@@ -2,7 +2,9 @@ package com.lukeshay.restapi.user;
 
 import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
+import com.lukeshay.restapi.utils.RegexUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,32 +24,7 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> createAdminUser(User user) {
-    if (user.getUsername() != null
-        && user.getFirstName() != null
-        && user.getLastName() != null
-        && user.getEmail() != null
-        && user.getPhoneNumber() != null
-        && user.getState() != null
-        && user.getCountry() != null
-        && user.getPassword() != null) {
-
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setAuthority(UserTypes.ADMIN.authority());
-      user.setRole(UserTypes.ADMIN.role());
-
-      LOG.debug("Creating admin user: {}", user);
-
-      return ResponseUtils.ok(userRepository.save(user));
-
-    } else {
-      LOG.debug("Could not create admin user: {}", user);
-      return ResponseUtils.badRequest(BodyUtils.error("Field missing for user."));
-    }
-  }
-
-  @Override
-  public ResponseEntity<?> createUser(User user) {
+  public ResponseEntity<?> createUser(User user, UserTypes type) {
     if (user.getUsername() != null
         && user.getFirstName() != null
         && user.getLastName() != null
@@ -59,15 +36,15 @@ class UserServiceImpl implements UserService {
         && user.getPassword() != null) {
 
       user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setAuthority(UserTypes.BASIC.authority());
-      user.setRole(UserTypes.BASIC.role());
+      user.setAuthority(type.authority());
+      user.setRole(type.role());
 
-      LOG.debug("Creating basic user: {}", user);
+      LOG.debug("Creating {} user: {}", type, user);
 
       return ResponseUtils.ok(userRepository.save(user));
 
     } else {
-      LOG.debug("Could not create basic user: {}", user);
+      LOG.debug("Could not create {} user: {}", type, user);
       return ResponseUtils.badRequest(BodyUtils.error("Field missing for user."));
     }
   }
@@ -164,5 +141,55 @@ class UserServiceImpl implements UserService {
     }
 
     return userRepository.save(toUpdate);
+  }
+
+  @Override
+  public boolean validateNewUserEmail(Map<String, String> responseBody, String email) {
+    if (email == null) {
+      responseBody.put("email", "Email must be provided.");
+      return false;
+    }
+
+    if (isEmailTaken(null, email)) {
+      responseBody.put("email", "Email is already in use.");
+      return false;
+    }
+
+    if (!RegexUtils.isValidEmail(email)) {
+      responseBody.put("email", "Email is an incorrect format.");
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean validateNewUserUsername(Map<String, String> responseBody, String username) {
+    if (username == null) {
+      responseBody.put("username", "Username must be provided.");
+      return false;
+    }
+
+    if (isUsernameTaken(null, username)) {
+      responseBody.put("username", "Username is already in use.");
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean validateNewUserPassword(Map<String, String> responseBody, String password) {
+    if (password == null) {
+      responseBody.put("password", "Password must be provided.");
+      return false;
+    }
+
+    if (!RegexUtils.isValidPassword(password)) {
+      responseBody.put("password", "Password is an incorrect format.");
+      return false;
+    }
+
+    return true;
   }
 }

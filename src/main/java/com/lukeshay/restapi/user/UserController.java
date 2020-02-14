@@ -4,7 +4,10 @@ import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.graalvm.compiler.lir.LIRInstruction.Use;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,17 +93,20 @@ public class UserController {
   @PostMapping("/admin")
   @PreAuthorize("hasAuthority('ADMIN')")
   @ApiOperation(value = "Create an admin user.", response = User.class)
-  public ResponseEntity<?> createAdminUser(Authentication authentication, @RequestBody User user) {
-    LOG.debug("Creating admin user {}", user.toString());
+  public ResponseEntity<?> createAdminUser(Authentication authentication, @RequestBody User body) {
+    LOG.debug("Creating user {}", body.toString());
 
-    ResponseEntity<?> response =
-        checkDuplicate(authentication, user.getEmail(), user.getUsername());
+    Map<String, String> responseBody = new HashMap<>();
 
-    if (response != null) {
-      return response;
+    boolean validEmail = userService.validateNewUserEmail(responseBody, body.getEmail());
+    boolean validUsername = userService.validateNewUserUsername(responseBody, body.getUsername());
+    boolean validPassword = userService.validateNewUserPassword(responseBody, body.getPassword());
+
+    if (!validEmail || !validUsername || !validPassword) {
+      return ResponseUtils.badRequest(responseBody);
     }
 
-    return userService.createAdminUser(user);
+    return userService.createUser(body, UserTypes.ADMIN);
   }
 
   @DeleteMapping("/{userId}")
@@ -120,17 +126,20 @@ public class UserController {
   @PostMapping("/new")
   @PreAuthorize("permitAll()")
   @ApiOperation(value = "Create a user.", response = User.class)
-  public ResponseEntity<?> createUser(Authentication authentication, @RequestBody User user) {
-    LOG.debug("Creating user {}", user.toString());
+  public ResponseEntity<?> createUser(Authentication authentication, @RequestBody User body) {
+    LOG.debug("Creating user {}", body.toString());
 
-    ResponseEntity<?> response =
-        checkDuplicate(authentication, user.getEmail(), user.getUsername());
+    Map<String, String> responseBody = new HashMap<>();
 
-    if (response != null) {
-      return response;
+    boolean validEmail = userService.validateNewUserEmail(responseBody, body.getEmail());
+    boolean validUsername = userService.validateNewUserUsername(responseBody, body.getUsername());
+    boolean validPassword = userService.validateNewUserPassword(responseBody, body.getPassword());
+
+    if (!validEmail || !validUsername || !validPassword) {
+      return ResponseUtils.badRequest(responseBody);
     }
 
-    return userService.createUser(user);
+    return userService.createUser(body, UserTypes.BASIC);
   }
 
   @GetMapping("/all")
