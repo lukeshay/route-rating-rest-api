@@ -13,6 +13,7 @@ services:
       - REFRESH_SECRET=$REFRESH_SECRET
       - ACCESS_KEY=$ACCESS_KEY
       - SECRET_KEY=$SECRET_KEY
+      - GOOGLE_RECAPTCHA_TOKEN=$GOOGLE_RECAPTCHA_TOKEN
     depends_on:
       - sqldb
     links:

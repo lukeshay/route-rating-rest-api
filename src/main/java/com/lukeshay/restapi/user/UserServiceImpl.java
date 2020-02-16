@@ -2,7 +2,9 @@ package com.lukeshay.restapi.user;
 
 import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
+import com.lukeshay.restapi.utils.RegexUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,40 +16,20 @@ class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final RecaptchaValidator recaptchaValidator;
 
   @Autowired
-  UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  UserServiceImpl(
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      RecaptchaValidator recaptchaValidator) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.recaptchaValidator = recaptchaValidator;
   }
 
   @Override
-  public ResponseEntity<?> createAdminUser(User user) {
-    if (user.getUsername() != null
-        && user.getFirstName() != null
-        && user.getLastName() != null
-        && user.getEmail() != null
-        && user.getPhoneNumber() != null
-        && user.getState() != null
-        && user.getCountry() != null
-        && user.getPassword() != null) {
-
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setAuthority(UserTypes.ADMIN.authority());
-      user.setRole(UserTypes.ADMIN.role());
-
-      LOG.debug("Creating admin user: {}", user);
-
-      return ResponseUtils.ok(userRepository.save(user));
-
-    } else {
-      LOG.debug("Could not create admin user: {}", user);
-      return ResponseUtils.badRequest(BodyUtils.error("Field missing for user."));
-    }
-  }
-
-  @Override
-  public ResponseEntity<?> createUser(User user) {
+  public ResponseEntity<?> createUser(User user, UserTypes type) {
     if (user.getUsername() != null
         && user.getFirstName() != null
         && user.getLastName() != null
@@ -59,15 +41,15 @@ class UserServiceImpl implements UserService {
         && user.getPassword() != null) {
 
       user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setAuthority(UserTypes.BASIC.authority());
-      user.setRole(UserTypes.BASIC.role());
+      user.setAuthority(type.authority());
+      user.setRole(type.role());
 
-      LOG.debug("Creating basic user: {}", user);
+      LOG.debug("Creating {} user: {}", type, user);
 
       return ResponseUtils.ok(userRepository.save(user));
 
     } else {
-      LOG.debug("Could not create basic user: {}", user);
+      LOG.debug("Could not create {} user: {}", type, user);
       return ResponseUtils.badRequest(BodyUtils.error("Field missing for user."));
     }
   }
@@ -164,5 +146,83 @@ class UserServiceImpl implements UserService {
     }
 
     return userRepository.save(toUpdate);
+  }
+
+  @Override
+  public boolean validateEmail(
+      Map<String, String> responseBody, Authentication authentication, String email) {
+    if (email == null) {
+      responseBody.put("email", "Email must be provided.");
+      return false;
+    }
+
+    if (isEmailTaken(authentication, email)) {
+      responseBody.put("email", "Email is already in use.");
+      return false;
+    }
+
+    if (!RegexUtils.isValidEmail(email)) {
+      responseBody.put("email", "Email is an incorrect format.");
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean validateUsername(
+      Map<String, String> responseBody, Authentication authentication, String username) {
+    if (username == null) {
+      responseBody.put("username", "Username must be provided.");
+      return false;
+    }
+
+    if (isUsernameTaken(authentication, username)) {
+      responseBody.put("username", "Username is already in use.");
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean validatePassword(Map<String, String> responseBody, String password) {
+    if (password == null) {
+      responseBody.put("password", "Password must be provided.");
+      return false;
+    }
+
+    if (!RegexUtils.isValidPassword(password)) {
+      responseBody.put("password", "Password is an incorrect format.");
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha) {
+    boolean success = recaptchaValidator.validate(recaptcha);
+
+    if (!success) {
+      responseBody.put("recaptcha", "Could not validate recaptcha.");
+    }
+
+    return success;
+  }
+
+  @Override
+  public boolean validateState(Map<String, String> responseBody, String state) {
+    boolean success = RegexUtils.isValidState(state);
+
+    if (!success) {
+      if (state.length() != 2) {
+        responseBody.put("state", "Invalid state. It must be the two letter abbreviation.");
+      } else {
+        responseBody.put("state", "Invalid state.");
+      }
+    }
+
+    return success;
   }
 }

@@ -4,7 +4,6 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.google.gson.annotations.Expose;
 import java.util.Date;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -20,22 +19,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Auditable<U> {
 
   @CreatedBy
-  @Expose
   @JsonProperty(access = Access.WRITE_ONLY)
   protected U createdBy;
 
-  @Expose
   @CreatedDate
   @Temporal(TIMESTAMP)
   @JsonProperty(access = Access.WRITE_ONLY)
   protected Date creationDate;
 
-  @Expose
   @LastModifiedBy
   @JsonProperty(access = Access.WRITE_ONLY)
   protected U lastModifiedBy;
 
-  @Expose
   @LastModifiedDate
   @Temporal(TIMESTAMP)
   @JsonProperty(access = Access.WRITE_ONLY)

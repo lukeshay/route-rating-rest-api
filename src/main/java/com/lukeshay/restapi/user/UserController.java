@@ -1,10 +1,12 @@
 package com.lukeshay.restapi.user;
 
+import com.lukeshay.restapi.user.bodys.NewUser;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,72 @@ public class UserController {
     this.userService = userService;
   }
 
+  @PostMapping("/admin")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @ApiIgnore
+  public ResponseEntity<?> createAdminUser(Authentication authentication, @RequestBody User body) {
+    LOG.debug("Creating user {}", body.toString());
+
+    Map<String, String> responseBody = new HashMap<>();
+
+    boolean validEmail = userService.validateEmail(responseBody, authentication, body.getEmail());
+    boolean validUsername =
+        userService.validateUsername(responseBody, authentication, body.getUsername());
+    boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
+    //    boolean validState = userService.validateState(responseBody, body.getState());
+
+    if (!validEmail || !validUsername || !validPassword) {
+      return ResponseUtils.badRequest(responseBody);
+    }
+
+    return userService.createUser(body, UserTypes.ADMIN);
+  }
+
+  @PostMapping("/new")
+  @PreAuthorize("permitAll()")
+  @ApiOperation(value = "Create a user.", response = User.class)
+  public ResponseEntity<?> createUser(@RequestBody NewUser body) {
+    LOG.debug("Creating user {}", body.toString());
+
+    Map<String, String> responseBody = new HashMap<>();
+
+    boolean validEmail = userService.validateEmail(responseBody, null, body.getEmail());
+    boolean validUsername = userService.validateUsername(responseBody, null, body.getUsername());
+    boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
+    boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
+    //    boolean validState = userService.validateState(responseBody, body.getState());
+
+    if (!validEmail || !validUsername || !validPassword || !validRecaptcha) {
+      return ResponseUtils.badRequest(responseBody);
+    }
+
+    return userService.createUser(body.getUser(), UserTypes.BASIC);
+  }
+
+  @DeleteMapping("/{userId}")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @ApiIgnore
+  public ResponseEntity<?> deleteUserByUserId(@PathVariable String userId) {
+    User deletedUser = userService.deleteUserById(userId);
+
+    if (deletedUser == null) {
+      return ResponseUtils.badRequest(BodyUtils.error("User not found."));
+    } else {
+      return ResponseUtils.ok(deletedUser);
+    }
+  }
+
+  @GetMapping("/all")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @ApiIgnore
+  public ResponseEntity<?> getAllUsers() {
+    LOG.debug("Getting all users.");
+
+    Iterable<User> users = userService.getAllUsers();
+
+    return ResponseUtils.ok(users);
+  }
+
   @GetMapping("")
   @PreAuthorize("isAuthenticated()")
   @ApiOperation(value = "Get a user by email.", response = User.class)
@@ -55,110 +123,39 @@ public class UserController {
   @PutMapping("")
   @PreAuthorize("isAuthenticated()")
   @ApiOperation(value = "Update a user.", response = User.class)
-  public ResponseEntity<?> updateUser(Authentication authentication, @RequestBody User user) {
+  public ResponseEntity<?> updateUser(Authentication authentication, @RequestBody User body) {
+    LOG.debug("Updating user {}", body);
 
-    LOG.debug("Updating user.");
+    Map<String, String> responseBody = new HashMap<>();
 
-    ResponseEntity<?> response =
-        checkDuplicate(authentication, user.getEmail(), user.getUsername());
+    boolean validEmail = userService.validateEmail(responseBody, authentication, body.getEmail());
+    boolean validUsername =
+        userService.validateUsername(responseBody, authentication, body.getUsername());
+    boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
+    //    boolean validState = userService.validateState(responseBody, body.getState());
 
-    if (response != null) {
-      return response;
+    if (!validEmail || !validUsername || !validPassword) {
+      return ResponseUtils.badRequest(responseBody);
     }
 
-    user =
+    body =
         userService.updateUser(
             authentication,
-            user.getUsername(),
-            user.getEmail(),
-            user.getFirstName(),
-            user.getLastName(),
-            user.getCity(),
-            user.getState(),
-            user.getCountry(),
-            user.getPassword());
+            body.getUsername(),
+            body.getEmail(),
+            body.getFirstName(),
+            body.getLastName(),
+            body.getCity(),
+            body.getState(),
+            body.getCountry(),
+            body.getPassword());
 
-    if (user == null) {
+    if (body == null) {
       LOG.debug("User was not found");
 
       return ResponseUtils.badRequest(BodyUtils.error("User not found."));
     } else {
-      return ResponseUtils.ok(user);
+      return ResponseUtils.ok(body);
     }
-  }
-
-  @PostMapping("/admin")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiOperation(value = "Create an admin user.", response = User.class)
-  public ResponseEntity<?> createAdminUser(Authentication authentication, @RequestBody User user) {
-    LOG.debug("Creating admin user {}", user.toString());
-
-    ResponseEntity<?> response =
-        checkDuplicate(authentication, user.getEmail(), user.getUsername());
-
-    if (response != null) {
-      return response;
-    }
-
-    return userService.createAdminUser(user);
-  }
-
-  @DeleteMapping("/{userId}")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiOperation(value = "Delete a user.", response = User.class)
-  public ResponseEntity<?> deleteUserByUserId(
-      Authentication authentication, @PathVariable String userId) {
-    User deletedUser = userService.deleteUserById(userId);
-
-    if (deletedUser == null) {
-      return ResponseUtils.badRequest(BodyUtils.error("User not found."));
-    } else {
-      return ResponseUtils.ok(deletedUser);
-    }
-  }
-
-  @PostMapping("/new")
-  @PreAuthorize("permitAll()")
-  @ApiOperation(value = "Create a user.", response = User.class)
-  public ResponseEntity<?> createUser(Authentication authentication, @RequestBody User user) {
-    LOG.debug("Creating user {}", user.toString());
-
-    ResponseEntity<?> response =
-        checkDuplicate(authentication, user.getEmail(), user.getUsername());
-
-    if (response != null) {
-      return response;
-    }
-
-    return userService.createUser(user);
-  }
-
-  @GetMapping("/all")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiIgnore
-  public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
-    LOG.debug("Getting all users.");
-
-    Iterable<User> users = userService.getAllUsers();
-
-    return ResponseUtils.ok(users);
-  }
-
-  private ResponseEntity<?> checkDuplicate(
-      Authentication authentication, String email, String username) {
-
-    if (userService.isEmailTaken(authentication, email)) {
-      LOG.debug("Not creating user because email is taken");
-
-      return ResponseUtils.badRequest(BodyUtils.error("Email taken."));
-    }
-
-    if (userService.isUsernameTaken(authentication, username)) {
-      LOG.debug("Not creating user because email is taken");
-
-      return ResponseUtils.badRequest(BodyUtils.error("Username taken."));
-    }
-
-    return null;
   }
 }
