@@ -16,6 +16,7 @@ pipeline {
     ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     JWT_SECRET = credentials('jenkins-jwt-secret')
     REFRESH_SECRET = credentials('jenkins-refresh-secret')
+    GOOGLE_RECAPTCHA_TOKEN = credentials('jenkins-google-recaptcha-token')
   }
   stages {
     stage('Build') {
