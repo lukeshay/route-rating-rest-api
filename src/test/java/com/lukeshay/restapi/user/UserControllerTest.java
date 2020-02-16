@@ -2,25 +2,44 @@ package com.lukeshay.restapi.user;
 
 import com.lukeshay.restapi.TestBase;
 import com.lukeshay.restapi.security.UserPrincipal;
+import com.lukeshay.restapi.user.bodys.NewUser;
 import com.lukeshay.restapi.utils.BodyUtils;
+import com.lukeshay.restapi.utils.ResponseUtils;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.web.client.RestTemplate;
 
 class UserControllerTest extends TestBase {
 
   private UserController userController;
-  @Autowired private UserService userService;
+  @Mock private RestTemplateBuilder mockRestTemplateBuilder;
+  @Mock private RestTemplate mockRestTemplate;
 
   @BeforeEach
   void setUp() {
-    userController = new UserController(userService);
+    Map<String, Object> map = new HashMap<>();
+    map.put("success", true);
+
+    Mockito.when(
+            mockRestTemplate.postForEntity(
+                Mockito.anyString(), Mockito.anyMap(), Map.class, Mockito.anyMap()))
+        .thenReturn(ResponseUtils.okOfType(map));
+    Mockito.when(mockRestTemplateBuilder.build()).thenReturn(mockRestTemplate);
+
+    userController =
+        new UserController(
+            new UserServiceImpl(userRepository, passwordEncoder, mockRestTemplateBuilder));
   }
 
   @Test
@@ -41,13 +60,15 @@ class UserControllerTest extends TestBase {
             "password");
     testUserTwo.setLastName("User");
 
-    ResponseEntity<?> getUser = userController.createUser(authentication, testUserTwo);
+    NewUser newUser = new NewUser(testUserTwo, "asdf");
+
+    ResponseEntity<?> getUser = userController.createUser(newUser);
     testUserTwo = userRepository.findByUsername(testUserTwo.getUsername()).get();
 
     Assertions.assertEquals(testUserTwo, getUser.getBody());
 
     testUser.setId(null);
-    ResponseEntity<?> responseEmail = userController.createUser(authentication, testUser);
+    ResponseEntity<?> responseEmail = userController.createUser(testUser, "asdf");
 
     Assertions.assertAll(
         () -> Assertions.assertEquals(BodyUtils.error("Email taken."), responseEmail.getBody()),
@@ -55,7 +76,7 @@ class UserControllerTest extends TestBase {
 
     testUser.setEmail("testtest@email.com");
 
-    ResponseEntity<?> responseUsername = userController.createUser(authentication, testUser);
+    ResponseEntity<?> responseUsername = userController.createUser(testUser, "asdf");
 
     Assertions.assertAll(
         () ->
@@ -96,7 +117,7 @@ class UserControllerTest extends TestBase {
         () -> Assertions.assertEquals(HttpStatus.OK, updatedUser.getStatusCode()));
 
     testUser.setEmail(testUserTwo.getEmail());
-    ResponseEntity<?> responseEmail = userController.createUser(authentication, testUser);
+    ResponseEntity<?> responseEmail = userController.createUser(testUser, "asdf");
 
     Assertions.assertAll(
         () -> Assertions.assertEquals(BodyUtils.error("Email taken."), responseEmail.getBody()),
@@ -104,7 +125,7 @@ class UserControllerTest extends TestBase {
 
     testUser.setEmail("testtest@email.com");
     testUser.setUsername(testUserTwo.getUsername());
-    ResponseEntity<?> responseUsername = userController.createUser(authentication, testUser);
+    ResponseEntity<?> responseUsername = userController.createUser(testUser, "asdf");
 
     Assertions.assertAll(
         () ->

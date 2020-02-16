@@ -38,7 +38,7 @@ public interface UserService {
    * the key of `email` is added to the map.
    *
    * @param responseBody The current response body map
-   * @param email        The email of the user
+   * @param email The email of the user
    * @return boolean of whether the email is valid
    */
   boolean validateNewUserEmail(Map<String, String> responseBody, String email);
@@ -48,18 +48,27 @@ public interface UserService {
    * key of 'username' is added to the map.
    *
    * @param responseBody The current response body map
-   * @param username     The username of the user
+   * @param username The username of the user
    * @return boolean of whether the username is valid
    */
   boolean validateNewUserUsername(Map<String, String> responseBody, String username);
 
   /**
-   * Checks if the password is not null and valid format. If is in invalid in anyway, a value with the
-   * key of 'password' is added to the map.
+   * Checks if the password is not null and valid format. If is in invalid in anyway, a value with
+   * the key of 'password' is added to the map.
    *
    * @param responseBody The current response body map
-   * @param password     The password of the user
+   * @param password The password of the user
    * @return boolean of whether the password is valid
    */
   boolean validateNewUserPassword(Map<String, String> responseBody, String password);
+
+  /**
+   * Validates recaptcha by hitting Google's API endpoint.
+   *
+   * @param responseBody The current response body map
+   * @param recaptcha The recaptcha string
+   * @return boolean of whether the recaptcha is valid
+   */
+  boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha);
 }

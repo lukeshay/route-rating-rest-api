@@ -4,8 +4,10 @@ import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.RegexUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,13 +16,22 @@ import org.springframework.stereotype.Service;
 @Service
 class UserServiceImpl implements UserService {
 
+  private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
+      "https://www.google.com/recaptcha/api/siteverify";
+  private static final String GOOGLE_RECAPTCHA_TOKEN = System.getenv("GOOGLE_RECAPTCHA_TOKEN");
+
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final RestTemplateBuilder restTemplateBuilder;
 
   @Autowired
-  UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  UserServiceImpl(
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      RestTemplateBuilder restTemplateBuilder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.restTemplateBuilder = restTemplateBuilder;
   }
 
   @Override
@@ -191,5 +202,27 @@ class UserServiceImpl implements UserService {
     }
 
     return true;
+  }
+
+  @Override
+  public boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha) {
+    Map<String, String> body = new HashMap<>();
+    body.put("secret", GOOGLE_RECAPTCHA_TOKEN);
+    body.put("response", recaptcha);
+
+    ResponseEntity<Map> recaptchaResponseEntity =
+        restTemplateBuilder
+            .build()
+            .postForEntity(
+                GOOGLE_RECAPTCHA_VERIFY_URL + "?secret={secret}&response={response}",
+                body,
+                Map.class,
+                body);
+
+    LOG.debug("Response from recaptcha: {}", recaptchaResponseEntity);
+
+    Map<String, Object> recaptchaResponseBody = recaptchaResponseEntity.getBody();
+
+    return (Boolean) recaptchaResponseBody.get("success");
   }
 }

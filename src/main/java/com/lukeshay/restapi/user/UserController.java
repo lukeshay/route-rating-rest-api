@@ -1,13 +1,12 @@
 package com.lukeshay.restapi.user;
 
+import com.lukeshay.restapi.user.bodys.NewUser;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import org.graalvm.compiler.lir.LIRInstruction.Use;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +91,7 @@ public class UserController {
 
   @PostMapping("/admin")
   @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiOperation(value = "Create an admin user.", response = User.class)
+  @ApiIgnore
   public ResponseEntity<?> createAdminUser(Authentication authentication, @RequestBody User body) {
     LOG.debug("Creating user {}", body.toString());
 
@@ -111,9 +110,8 @@ public class UserController {
 
   @DeleteMapping("/{userId}")
   @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiOperation(value = "Delete a user.", response = User.class)
-  public ResponseEntity<?> deleteUserByUserId(
-      Authentication authentication, @PathVariable String userId) {
+  @ApiIgnore
+  public ResponseEntity<?> deleteUserByUserId(@PathVariable String userId) {
     User deletedUser = userService.deleteUserById(userId);
 
     if (deletedUser == null) {
@@ -126,7 +124,7 @@ public class UserController {
   @PostMapping("/new")
   @PreAuthorize("permitAll()")
   @ApiOperation(value = "Create a user.", response = User.class)
-  public ResponseEntity<?> createUser(Authentication authentication, @RequestBody User body) {
+  public ResponseEntity<?> createUser(@RequestBody NewUser body) {
     LOG.debug("Creating user {}", body.toString());
 
     Map<String, String> responseBody = new HashMap<>();
@@ -134,8 +132,9 @@ public class UserController {
     boolean validEmail = userService.validateNewUserEmail(responseBody, body.getEmail());
     boolean validUsername = userService.validateNewUserUsername(responseBody, body.getUsername());
     boolean validPassword = userService.validateNewUserPassword(responseBody, body.getPassword());
+    boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
 
-    if (!validEmail || !validUsername || !validPassword) {
+    if (!validEmail || !validUsername || !validPassword || !validRecaptcha) {
       return ResponseUtils.badRequest(responseBody);
     }
 
@@ -145,7 +144,7 @@ public class UserController {
   @GetMapping("/all")
   @PreAuthorize("hasAuthority('ADMIN')")
   @ApiIgnore
-  public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
+  public ResponseEntity<?> getAllUsers() {
     LOG.debug("Getting all users.");
 
     Iterable<User> users = userService.getAllUsers();
