@@ -116,11 +116,11 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 counter = 'INSTRUCTION'
-                minimum = 0.70
+                minimum = 0.75
             }
             limit {
                 counter = 'BRANCH'
-                minimum = 0.40
+                minimum = 0.45
             }
         }
     }
@@ -131,6 +131,16 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 check.dependsOn jacocoTestReport

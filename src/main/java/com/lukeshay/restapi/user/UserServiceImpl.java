@@ -4,10 +4,8 @@ import com.lukeshay.restapi.utils.AuthenticationUtils;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.RegexUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,22 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 class UserServiceImpl implements UserService {
 
-  private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
-      "https://www.google.com/recaptcha/api/siteverify";
-  private static final String GOOGLE_RECAPTCHA_TOKEN = System.getenv("GOOGLE_RECAPTCHA_TOKEN");
-
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final RestTemplateBuilder restTemplateBuilder;
+  private final RecaptchaValidator recaptchaValidator;
 
   @Autowired
   UserServiceImpl(
       UserRepository userRepository,
       PasswordEncoder passwordEncoder,
-      RestTemplateBuilder restTemplateBuilder) {
+      RecaptchaValidator recaptchaValidator) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
-    this.restTemplateBuilder = restTemplateBuilder;
+    this.recaptchaValidator = recaptchaValidator;
   }
 
   @Override
@@ -155,13 +149,14 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean validateNewUserEmail(Map<String, String> responseBody, String email) {
+  public boolean validateEmail(
+      Map<String, String> responseBody, Authentication authentication, String email) {
     if (email == null) {
       responseBody.put("email", "Email must be provided.");
       return false;
     }
 
-    if (isEmailTaken(null, email)) {
+    if (isEmailTaken(authentication, email)) {
       responseBody.put("email", "Email is already in use.");
       return false;
     }
@@ -175,13 +170,14 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean validateNewUserUsername(Map<String, String> responseBody, String username) {
+  public boolean validateUsername(
+      Map<String, String> responseBody, Authentication authentication, String username) {
     if (username == null) {
       responseBody.put("username", "Username must be provided.");
       return false;
     }
 
-    if (isUsernameTaken(null, username)) {
+    if (isUsernameTaken(authentication, username)) {
       responseBody.put("username", "Username is already in use.");
       return false;
     }
@@ -190,7 +186,7 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean validateNewUserPassword(Map<String, String> responseBody, String password) {
+  public boolean validatePassword(Map<String, String> responseBody, String password) {
     if (password == null) {
       responseBody.put("password", "Password must be provided.");
       return false;
@@ -206,23 +202,27 @@ class UserServiceImpl implements UserService {
 
   @Override
   public boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha) {
-    Map<String, String> body = new HashMap<>();
-    body.put("secret", GOOGLE_RECAPTCHA_TOKEN);
-    body.put("response", recaptcha);
+    boolean success = recaptchaValidator.validate(recaptcha);
 
-    ResponseEntity<Map> recaptchaResponseEntity =
-        restTemplateBuilder
-            .build()
-            .postForEntity(
-                GOOGLE_RECAPTCHA_VERIFY_URL + "?secret={secret}&response={response}",
-                body,
-                Map.class,
-                body);
+    if (!success) {
+      responseBody.put("recaptcha", "Could not validate recaptcha.");
+    }
 
-    LOG.debug("Response from recaptcha: {}", recaptchaResponseEntity);
+    return success;
+  }
 
-    Map<String, Object> recaptchaResponseBody = recaptchaResponseEntity.getBody();
+  @Override
+  public boolean validateState(Map<String, String> responseBody, String state) {
+    boolean success = RegexUtils.isValidState(state);
 
-    return (Boolean) recaptchaResponseBody.get("success");
+    if (!success) {
+      if (state.length() != 2) {
+        responseBody.put("state", "Invalid state. It must be the two letter abbreviation.");
+      } else {
+        responseBody.put("state", "Invalid state.");
+      }
+    }
+
+    return success;
   }
 }

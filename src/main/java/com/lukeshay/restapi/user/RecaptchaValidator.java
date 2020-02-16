@@ -16,7 +16,7 @@ public class RecaptchaValidator {
 
   private final RestTemplateBuilder restTemplateBuilder;
 
-  private Map<String, Object> lastResponse;
+  private Map lastResponse;
 
   @Value("{google.recaptcha.token}")
   private String recaptchaToken;
@@ -48,5 +48,4 @@ public class RecaptchaValidator {
 
     return (Boolean) lastResponse.get("success");
   }
-
 }

@@ -41,7 +41,8 @@ public interface UserService {
    * @param email The email of the user
    * @return boolean of whether the email is valid
    */
-  boolean validateNewUserEmail(Map<String, String> responseBody, String email);
+  boolean validateEmail(
+      Map<String, String> responseBody, Authentication authentication, String email);
 
   /**
    * Checks if the username is not null and not in use. If is in invalid in anyway, a value with the
@@ -51,7 +52,8 @@ public interface UserService {
    * @param username The username of the user
    * @return boolean of whether the username is valid
    */
-  boolean validateNewUserUsername(Map<String, String> responseBody, String username);
+  boolean validateUsername(
+      Map<String, String> responseBody, Authentication authentication, String username);
 
   /**
    * Checks if the password is not null and valid format. If is in invalid in anyway, a value with
@@ -61,7 +63,7 @@ public interface UserService {
    * @param password The password of the user
    * @return boolean of whether the password is valid
    */
-  boolean validateNewUserPassword(Map<String, String> responseBody, String password);
+  boolean validatePassword(Map<String, String> responseBody, String password);
 
   /**
    * Validates recaptcha by hitting Google's API endpoint.
@@ -71,4 +73,13 @@ public interface UserService {
    * @return boolean of whether the recaptcha is valid
    */
   boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha);
+
+  /**
+   * Validates state by matching it with regex.
+   *
+   * @param responseBody The current response body map
+   * @param state The state string
+   * @return boolean of whether the state is valid
+   */
+  boolean validateState(Map<String, String> responseBody, String state);
 }

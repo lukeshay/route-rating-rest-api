@@ -9,7 +9,7 @@ public class NewUser extends User {
 
   NewUser() {}
 
-  NewUser(User user, String recaptcha) {
+  public NewUser(User user, String recaptcha) {
     super(
         user.getUsername(),
         user.getFirstName(),
@@ -23,19 +23,20 @@ public class NewUser extends User {
     this.recaptcha = recaptcha;
   }
 
-  NewUser(
-      String username,
-      String firstName,
-      String lastName,
-      String email,
-      String phoneNumber,
-      String city,
-      String state,
-      String country,
-      String password,
-      String recaptcha) {
-    super(username, firstName, lastName, email, phoneNumber, city, state, country, password);
-    this.recaptcha = recaptcha;
+  public User getUser() {
+    return new User(
+        getEmail(),
+        getUsername(),
+        getFirstName(),
+        getLastName(),
+        getEmail(),
+        getPhoneNumber(),
+        getCity(),
+        getState(),
+        getCountry(),
+        getPassword(),
+        getAuthority(),
+        getRole());
   }
 
   public String getRecaptcha() {
