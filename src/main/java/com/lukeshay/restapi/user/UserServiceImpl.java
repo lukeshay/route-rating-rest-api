@@ -202,6 +202,8 @@ class UserServiceImpl implements UserService {
 
   @Override
   public boolean validateRecaptcha(Map<String, String> responseBody, String recaptcha) {
+    LOG.debug("Validating recaptcha: {}", recaptcha);
+
     boolean success = recaptchaValidator.validate(recaptcha);
 
     if (!success) {

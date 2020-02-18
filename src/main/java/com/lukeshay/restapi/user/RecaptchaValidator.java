@@ -2,6 +2,8 @@ package com.lukeshay.restapi.user;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RecaptchaValidator {
+  Logger LOG = LoggerFactory.getLogger(RecaptchaValidator.class.getName());
 
   private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
       "https://www.google.com/recaptcha/api/siteverify";
@@ -41,6 +44,8 @@ public class RecaptchaValidator {
                 body);
 
     lastResponse = recaptchaResponseEntity.getBody();
+
+    LOG.debug("Recaptcha response: {}", lastResponse);
 
     if (lastResponse == null) {
       return false;
