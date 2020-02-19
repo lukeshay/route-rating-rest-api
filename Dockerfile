@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:latest
+FROM adoptopenjdk/openjdk11:latest
 
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
