@@ -21,8 +21,8 @@ public class RecaptchaValidator {
 
   private Map lastResponse;
 
-  @Value("${google.recaptcha.token}")
-  private String recaptchaToken;
+  private static final String GOOGLE_RECAPTCHA_TOKEN =
+    System.getenv("GOOGLE_RECAPTCHA_TOKEN");
 
   @Autowired
   public RecaptchaValidator(RestTemplateBuilder restTemplateBuilder) {
@@ -31,7 +31,7 @@ public class RecaptchaValidator {
 
   public boolean validate(String recaptcha) {
     Map<String, String> body = new HashMap<>();
-    body.put("secret", recaptchaToken);
+    body.put("secret", GOOGLE_RECAPTCHA_TOKEN);
     body.put("response", recaptcha);
 
     ResponseEntity<Map> recaptchaResponseEntity =
@@ -55,6 +55,6 @@ public class RecaptchaValidator {
   }
 
   public String getRecaptchaToken() {
-    return recaptchaToken;
+    return GOOGLE_RECAPTCHA_TOKEN;
   }
 }
