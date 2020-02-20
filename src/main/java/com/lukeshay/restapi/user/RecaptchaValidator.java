@@ -21,7 +21,7 @@ public class RecaptchaValidator {
 
   private Map lastResponse;
 
-  @Value("{google.recaptcha.token}")
+  @Value("${google.recaptcha.token}")
   private String recaptchaToken;
 
   @Autowired
@@ -52,5 +52,9 @@ public class RecaptchaValidator {
     }
 
     return (Boolean) lastResponse.get("success");
+  }
+
+  public String getRecaptchaToken() {
+    return recaptchaToken;
   }
 }
