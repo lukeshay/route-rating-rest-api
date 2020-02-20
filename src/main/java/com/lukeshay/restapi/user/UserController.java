@@ -71,7 +71,7 @@ public class UserController {
     boolean validUsername = userService.validateUsername(responseBody, null, body.getUsername());
     boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
     boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
-    //     boolean validState = userService.validateState(responseBody, body.getState());
+    // boolean validState = userService.validateState(responseBody, body.getState());
 
     if (!validEmail || !validUsername || !validPassword || !validRecaptcha) {
       return ResponseUtils.badRequest(responseBody);
