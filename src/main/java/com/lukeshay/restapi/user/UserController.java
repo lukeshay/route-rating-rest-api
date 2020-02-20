@@ -73,7 +73,7 @@ public class UserController {
     boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
     // boolean validState = userService.validateState(responseBody, body.getState());
 
-    if (!validEmail || !validUsername || !validPassword) {
+    if (!validEmail || !validUsername || !validPassword || !validRecaptcha) {
       return ResponseUtils.badRequest(responseBody);
     }
 
