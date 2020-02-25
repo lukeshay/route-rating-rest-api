@@ -131,7 +131,9 @@ public class UserController {
     boolean validEmail = userService.validateEmail(responseBody, authentication, body.getEmail());
     boolean validUsername =
         userService.validateUsername(responseBody, authentication, body.getUsername());
-    boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
+    boolean validPassword =
+        userService.validatePassword(responseBody, body.getPassword())
+            || body.getPassword() == null && body.getPassword().equals("");
     //    boolean validState = userService.validateState(responseBody, body.getState());
 
     if (!validEmail || !validUsername || !validPassword) {
