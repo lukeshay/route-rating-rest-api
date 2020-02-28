@@ -1,0 +1,32 @@
+file:
+    bucket:
+        name: route-rating
+        url: nyc3.digitaloceanspaces.com
+logging:
+    file:
+        name: restapi.log
+        path: /tmp
+    level:
+        com:
+            lukeshay: DEBUG
+        org:
+            springframework: WARN
+spring:
+    datasource:
+        initialization-mode: always
+        password: password
+        platform: postgres
+        url: jdbc:postgresql://localhost:5432/routerating
+        username: standard
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    main:
+        banner-mode: 'off'
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 200MB
+            max-request-size: 215MB

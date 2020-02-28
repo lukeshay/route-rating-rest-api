@@ -1,38 +1,54 @@
-# Table of Contents
+<h1 align="center">Welcome to Route Rating Rest API 👋</h1>
+<p>
+  <a href="https://github.com/LukeShay/route-rating/wiki" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="https://github.com/LukeShay/route-rating-rest-api/blob/master/LICENSE" target="_blank">
+    <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-yellow.svg" />
+  </a>
+</p>
 
-- [Table of Contents](#table-of-contents)
-- [React Spring Web App](#react-spring-web-app)
-- [Directions](#directions)
-  - [Pre-requisites](#pre-requisites)
-  - [Back End](#back-end)
-- [Digital Ocean Referral](#digital-ocean-referral)
-- [Contributions](#contributions)
+> Rest api for the Route Rating web application.
 
-# React Spring Web App
+### 🏠 [Homepage](https://lukeshay.com)
 
-As I learn ReactJS, I am going to be working on this web app. I am creating a website for rating climbing routes at climbing gyms. Climbing gyms will be able to make a 'page' and add their walls and their routes/boulders to the corresponding walls. Customers will then be able to log into this application and rate the route/boulder and say what they would grade it. The application will then average those ratings and display them.
+## Install
 
-# Directions
+```sh
+./gradlew clean build
+```
 
-## Pre-requisites
+## Usage
 
--   java 8
-  -  Open source is alpha
--   docker
--   docker-compose
--   linux machine
+```sh
+./gradlew bootRun
+```
 
-## Back End
+## Run tests
 
-1. cd into the back_end folder
-2. type './docker.sh'
-    1. This will do everything for you
-3. The project will be exposed on port 5000
+```sh
+./gradlew test
+```
 
-# Digital Ocean Referral
+## Author
 
-[Digital Ocean](https://m.do.co/c/17eeaaa0e7fb)
+👤 **Luke Shay**
 
-# Contributions
+* Github: [@LukeShay](https://github.com/LukeShay)
+* LinkedIn: [@luke-shay](https://linkedin.com/in/luke-shay)
 
-If you would like to contribute or do not have a github account please send me an email at shay.luke17@gmail.com. If you do not personally want to commit, but have a suggestion, please leave an [issue](https://github.com/LukeShay/react-spring-web-app/issues) using the correct template.
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/LukeShay/route-rating-rest-api/issues). You can also take a look at the [contributing guide](https://github.com/LukeShay/route-rating/wiki/Contribution).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2020 [Luke Shay](https://github.com/LukeShay).<br />
+This project is [LGPL](https://github.com/LukeShay/route-rating-rest-api/blob/master/LICENSE) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
