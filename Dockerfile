@@ -1,19 +1,13 @@
 FROM adoptopenjdk/openjdk11:latest
 
-RUN mkdir -p /opt/app
-ENV PROJECT_HOME /opt/app
+RUN mkdir -p /app
+ENV PROJECT_HOME /app
 
 WORKDIR $PROJECT_HOME
 
-EXPOSE 8080
-
-COPY . $PROJECT_HOME
+COPY ./rest-api.jar $PROJECT_HOME
 
 EXPOSE 8080
-
-RUN chmod 777 scripts/*.sh
-
-RUN sh ./scripts/build.sh
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
   -Dspring.datasource.url=jdbc:postgresql://rest-api-postgres:5432/routerating \

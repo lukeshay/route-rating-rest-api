@@ -19,29 +19,41 @@ pipeline {
     GOOGLE_RECAPTCHA_TOKEN = credentials('jenkins-google-recaptcha-token')
   }
   stages {
+    stage('Setup') {
+      steps {
+        setBuildStatus('Starting build', 'PENDING')
+        sh 's3cmd get s3://route-rating-data-backup/secrets/secrets.sh'
+        sh 'secrets.sh'
+      }
+    }
     stage('Build') {
       steps {
         echo 'Building...'
         setBuildStatus('Starting build', 'PENDING')
-        sh 'make build'
+        sh 'scripts/build.sh'
       }
     }
     stage('Lint') {
       steps {
         echo 'Linting...'
-        sh 'make lint'
-      }
-    }
-    stage('Test') {
-      steps {
-        echo 'Testing...'
-        sh 'make test'
+        sh './gradlew verifyGoogleJavaFormat'
       }
     }
     stage('Coverage') {
       steps {
         echo 'Getting coverage...'
-        sh 'make coverage'
+        sh './gradlew jacocoTestCoverageVerification'
+      }
+    }
+    stage('Build image') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Building image...'
+        sh 'make'
+        sh 'make push'
+        sh 'make push-latest'
       }
     }
     stage('Deploy') {
@@ -50,7 +62,8 @@ pipeline {
       }
       steps {
         echo 'Deploying...'
-//         build job: '', propagate: true, wait: true
+        // build job: '', propagate: true, wait: true
+        // Pass in the repository to get proper deploy files
       }
     }
   }

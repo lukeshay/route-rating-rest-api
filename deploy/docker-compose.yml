@@ -2,12 +2,12 @@ version: "3.3"
 
 services:
   restapi:
-    image: rest-api:latest
+    image: lukeshaydocker/route-rating-rest-api:latest
     restart: always
     container_name: rest-api
     ports:
       - 5000:8080
-    working_dir: /opt/app
+    working_dir: /app
     environment:
       - JWT_SECRET=$JWT_SECRET
       - REFRESH_SECRET=$REFRESH_SECRET
