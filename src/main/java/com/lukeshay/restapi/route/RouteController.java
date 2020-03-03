@@ -4,7 +4,10 @@ import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +43,27 @@ public class RouteController {
   @ApiOperation(value = "Create a route.", response = Route.class)
   public ResponseEntity<?> createRoute(Authentication authentication, @RequestBody Route body) {
     LOG.debug("Creating new route {}", body.toString());
+    Map<String, String> response = new HashMap<>();
 
-    Route route = routeService.createRoute(authentication, body);
-
-    if (route == null) {
-      return ResponseUtils.badRequest(BodyUtils.error("Error creating route."));
-    } else {
-      return ResponseUtils.ok(route);
+    if (routeService.validateEditor(authentication, body)) {
+      return ResponseUtils.unauthorized();
     }
+
+    response.putAll(routeService.validateRoute(body));
+    response.putAll(routeService.validWallTypes(body));
+
+    if (response.isEmpty()) {
+      Optional<Route> route = routeService.createRoute(authentication, body);
+
+      if (route.isEmpty()) {
+        return ResponseUtils.internalServerError(BodyUtils.error("error creating route"));
+      } else {
+        return ResponseUtils.ok(route.get());
+      }
+    } else {
+      return ResponseUtils.badRequest(response);
+    }
+
   }
 
   @GetMapping("/{wallId}")

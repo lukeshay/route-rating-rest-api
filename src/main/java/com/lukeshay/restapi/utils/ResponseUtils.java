@@ -25,6 +25,10 @@ public class ResponseUtils {
     return httpJsonResponse(HttpStatus.UNAUTHORIZED, body);
   }
 
+  public static ResponseEntity<?> unauthorized() {
+    return httpJsonResponse(HttpStatus.UNAUTHORIZED, null);
+  }
+
   public static <T> ResponseEntity<?> internalServerError(T body) {
     return httpJsonResponse(HttpStatus.INTERNAL_SERVER_ERROR, body);
   }

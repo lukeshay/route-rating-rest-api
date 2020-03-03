@@ -4,13 +4,18 @@ import com.lukeshay.restapi.gym.Gym;
 import com.lukeshay.restapi.gym.GymRepository;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.AuthenticationUtils;
+import com.lukeshay.restapi.utils.ExceptionUtils;
 import com.lukeshay.restapi.wall.Wall;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import com.lukeshay.restapi.wall.WallRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -27,8 +32,9 @@ public class RouteServiceImpl implements RouteService {
     this.wallRepository = wallRepository;
   }
 
+  // TODO(LUKE)
   @Override
-  public Route createRoute(Authentication authentication, Route body) {
+  public Optional<Route> createRoute(Authentication authentication, Route body) {
     User user = AuthenticationUtils.getUser(authentication);
     Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
     Wall wall = wallRepository.findById(body.getWallId()).orElse(null);
@@ -41,12 +47,17 @@ public class RouteServiceImpl implements RouteService {
         || body.getName() == null
         || body.getHoldColor() == null
         || !wall.getGymId().equals(body.getGymId())) {
-      return null;
+      return Optional.empty();
     }
 
     body.setId(null);
 
-    return routeRepository.save(body);
+    try {
+      Route route = routeRepository.save(body);
+      return Optional.of(route);
+    } catch (Exception ignored) {
+      return Optional.empty();
+    }
   }
 
   @Override
@@ -76,7 +87,7 @@ public class RouteServiceImpl implements RouteService {
       return null;
     }
 
-    if (wallId != null && !wallId.toString().equals("")) {
+    if (wallId != null && !wallId.equals("")) {
       Wall newWall = wallRepository.findById(wallId).orElse(null);
 
       if (newWall != null && newWall.getGymId() != null && newWall.getGymId().equals(gymId)) {
@@ -127,5 +138,64 @@ public class RouteServiceImpl implements RouteService {
     routeRepository.deleteById(route.getId());
 
     return route;
+  }
+
+  @Override
+  public Map<String, String> validWallTypes(Route route) throws HttpClientErrorException {
+    Wall wall= getWallOrNotFound(route);
+    Map<String, String> result = new HashMap<>();
+
+    route.getTypes().forEach((wallType) -> {
+      if (!wall.getTypes().contains(wallType)) {
+        result.put("types", wallType.toString() + " is not allowed for this wall.");
+      }
+    });
+
+    return result;
+  }
+
+  @Override
+  public Optional<Wall> getWall(Route route) {
+    if (route.getWallId() != null) {
+      return wallRepository.findById(route.getWallId());
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  @Override
+  public boolean validateEditor(Authentication authentication, Route body)
+      throws HttpClientErrorException {
+    Optional<User> user = AuthenticationUtils.getUserOptional(authentication);
+    Gym gym = getGymOrNotFound(body);
+
+    return user.isPresent() && gym.getAuthorizedEditors().contains(user.get().getId());
+  }
+
+  @Override
+  public Map<String, String> validateRoute(Route body) {
+    getWallOrNotFound(body);
+    getGymOrNotFound(body);
+    return null;
+  }
+
+  private Wall getWallOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Wall> wallOptional = getWall(route);
+
+    if (wallOptional.isEmpty()) {
+      throw ExceptionUtils.notFound("wall not found");
+    }
+
+    return wallOptional.get();
+  }
+
+  private Gym getGymOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Gym> gym = gymRepository.findById(route.getGymId());
+
+    if (gym.isEmpty()) {
+      throw ExceptionUtils.notFound("gym not found");
+    }
+
+    return gym.get();
   }
 }

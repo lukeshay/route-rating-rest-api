@@ -9,8 +9,13 @@ public class ExceptionUtils {
     return httpClientErrorException(HttpStatus.BAD_REQUEST, message);
   }
 
+  public static HttpClientErrorException notFound(String message) {
+    return httpClientErrorException(HttpStatus.NOT_FOUND, message);
+  }
+
   private static HttpClientErrorException httpClientErrorException(
       HttpStatus status, String message) {
     return HttpClientErrorException.create(status, message, HttpHeaders.EMPTY, null, null);
   }
+
 }
