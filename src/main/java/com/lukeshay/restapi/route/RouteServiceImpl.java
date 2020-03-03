@@ -183,7 +183,7 @@ public class RouteServiceImpl implements RouteService {
     Optional<Wall> wallOptional = getWall(route);
 
     if (wallOptional.isEmpty()) {
-      throw ExceptionUtils.notFound("wall not found");
+      throw ExceptionUtils.notFound("Wall not found.");
     }
 
     return wallOptional.get();
@@ -193,7 +193,7 @@ public class RouteServiceImpl implements RouteService {
     Optional<Gym> gym = gymRepository.findById(route.getGymId());
 
     if (gym.isEmpty()) {
-      throw ExceptionUtils.notFound("gym not found");
+      throw ExceptionUtils.notFound("Gym not found.");
     }
 
     return gym.get();

@@ -11,21 +11,7 @@ void setBuildStatus(String message, String state) {
 pipeline {
   agent any
 
-  environment {
-    SECRET_KEY = credentials('jenkins-aws-secret-key-id')
-    ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-    JWT_SECRET = credentials('jenkins-jwt-secret')
-    REFRESH_SECRET = credentials('jenkins-refresh-secret')
-    GOOGLE_RECAPTCHA_TOKEN = credentials('jenkins-google-recaptcha-token')
-  }
   stages {
-    stage('Setup') {
-      steps {
-        setBuildStatus('Starting build', 'PENDING')
-        sh 's3cmd get s3://route-rating-data-backup/secrets/secrets.sh'
-        sh 'secrets.sh'
-      }
-    }
     stage('Build') {
       steps {
         echo 'Building...'
@@ -61,11 +47,21 @@ pipeline {
         branch 'master'
       }
       steps {
-        echo 'Deploying...'
+        echo 'Triggering deploy job...'
         // build job: '', propagate: true, wait: true
         // Pass in the repository to get proper deploy files
+        build job: 'Deploy/deploy-from-image', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'DOCKER_REPO', value: 'route-rating-rest-api']]
       }
     }
+    stage('Smoke test') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Running post deploy smoke test...'
+        build job: 'Test/post-release-api', propagate: true, wait: true
+      }
+    }}
   }
   post {
     success {
