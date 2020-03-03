@@ -3,6 +3,7 @@ package com.lukeshay.restapi.utils;
 import com.google.gson.GsonBuilder;
 
 public class ModelUtils {
+
   public static <T> String toString(T model) {
     return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(model);
   }

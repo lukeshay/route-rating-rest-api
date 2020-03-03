@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 public class RouteControllerTest extends TestBase {
 
@@ -64,13 +65,9 @@ public class RouteControllerTest extends TestBase {
 
     wallRepository.deleteAll();
 
-    ResponseEntity<?> responseNoWall = routeController.createRoute(authentication, testRoute);
-
-    Assertions.assertAll(
-        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoWall.getStatusCode()),
-        () ->
-            Assertions.assertEquals(
-                BodyUtils.error("Error creating route."), responseNoWall.getBody()));
+    Assertions.assertThrows(
+        HttpClientErrorException.class,
+        () -> routeController.createRoute(authentication, testRoute));
 
     testWall.setId(null);
     testWall = wallRepository.save(testWall);
@@ -81,20 +78,14 @@ public class RouteControllerTest extends TestBase {
     ResponseEntity<?> responseNotEditor = routeController.createRoute(authentication, testRoute);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNotEditor.getStatusCode()),
-        () ->
-            Assertions.assertEquals(
-                BodyUtils.error("Error creating route."), responseNotEditor.getBody()));
+        () -> Assertions.assertEquals(HttpStatus.UNAUTHORIZED, responseNotEditor.getStatusCode()),
+        () -> Assertions.assertNull(responseNotEditor.getBody()));
 
     gymRepository.deleteAll();
 
-    ResponseEntity<?> responseNoGym = routeController.createRoute(authentication, testRoute);
-
-    Assertions.assertAll(
-        () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoGym.getStatusCode()),
-        () ->
-            Assertions.assertEquals(
-                BodyUtils.error("Error creating route."), responseNoGym.getBody()));
+    Assertions.assertThrows(
+        HttpClientErrorException.class,
+        () -> routeController.createRoute(authentication, testRoute));
   }
 
   @Test

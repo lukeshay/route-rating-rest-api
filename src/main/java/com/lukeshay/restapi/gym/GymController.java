@@ -37,6 +37,57 @@ public class GymController {
     this.gymService = gymService;
   }
 
+  @PostMapping("")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @ApiOperation(value = "Create a gym.", response = Gym.class)
+  public ResponseEntity<?> createGym(@RequestBody Gym body) {
+    Gym gym = gymService.createGym(body);
+
+    return ResponseUtils.ok(gym);
+  }
+
+  @Deprecated
+  @GetMapping("/all")
+  @PreAuthorize("permitAll()")
+  @ApiOperation(value = "Gets all gyms.", response = Gym.class)
+  public ResponseEntity<?> getAllGyms() {
+    LOG.debug("Getting all gyms");
+
+    Iterable<Gym> gyms = gymService.getAllGyms();
+
+    return ResponseUtils.ok(gyms);
+  }
+
+  @GetMapping("/{gymId}")
+  @PreAuthorize("permitAll()")
+  @ApiOperation(value = "Gets a gym.", response = Gym.class)
+  public ResponseEntity<?> getGymById(@PathVariable String gymId) {
+    LOG.debug("Getting gym {}", gymId);
+
+    Gym foundGym = gymService.getGymById(gymId);
+
+    if (foundGym == null) {
+      return ResponseUtils.badRequest(BodyUtils.error("Gym not found."));
+    } else {
+      return ResponseUtils.ok(foundGym);
+    }
+  }
+
+  @GetMapping("")
+  @PreAuthorize("permitAll()")
+  @ApiOperation(value = "Gets gyms.", response = Gym.class)
+  public ResponseEntity<Page<Gym>> getGyms(
+      @PathParam("query") String query,
+      @PathParam("sort") String sort,
+      @PathParam("limit") Integer limit,
+      @PathParam("page") Integer page) {
+    LOG.debug("Getting gyms, query: {}, limit: {}, page: {}", query, limit, page);
+
+    Page<Gym> gyms = gymService.getGyms(query, sort, limit, page);
+
+    return ResponseUtils.okOfType(gyms);
+  }
+
   @PutMapping("/{gymId}")
   @PreAuthorize("isAuthenticated()")
   @ApiOperation(value = "Update a gym.", response = Gym.class)
@@ -63,57 +114,6 @@ public class GymController {
       return ResponseUtils.badRequest(BodyUtils.error("Gym not found"));
     } else {
       return ResponseUtils.ok(gym);
-    }
-  }
-
-  @PostMapping("")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @ApiOperation(value = "Create a gym.", response = Gym.class)
-  public ResponseEntity<?> createGym(@RequestBody Gym body) {
-    Gym gym = gymService.createGym(body);
-
-    return ResponseUtils.ok(gym);
-  }
-
-  @Deprecated
-  @GetMapping("/all")
-  @PreAuthorize("permitAll()")
-  @ApiOperation(value = "Gets all gyms.", response = Gym.class)
-  public ResponseEntity<?> getAllGyms() {
-    LOG.debug("Getting all gyms");
-
-    Iterable<Gym> gyms = gymService.getAllGyms();
-
-    return ResponseUtils.ok(gyms);
-  }
-
-  @GetMapping("")
-  @PreAuthorize("permitAll()")
-  @ApiOperation(value = "Gets gyms.", response = Gym.class)
-  public ResponseEntity<Page<Gym>> getGyms(
-      @PathParam("query") String query,
-      @PathParam("sort") String sort,
-      @PathParam("limit") Integer limit,
-      @PathParam("page") Integer page) {
-    LOG.debug("Getting gyms, query: {}, limit: {}, page: {}", query, limit, page);
-
-    Page<Gym> gyms = gymService.getGyms(query, sort, limit, page);
-
-    return ResponseUtils.okOfType(gyms);
-  }
-
-  @GetMapping("/{gymId}")
-  @PreAuthorize("permitAll()")
-  @ApiOperation(value = "Gets a gym.", response = Gym.class)
-  public ResponseEntity<?> getGymById(@PathVariable String gymId) {
-    LOG.debug("Getting gym {}", gymId);
-
-    Gym foundGym = gymService.getGymById(gymId);
-
-    if (foundGym == null) {
-      return ResponseUtils.badRequest(BodyUtils.error("Gym not found."));
-    } else {
-      return ResponseUtils.ok(foundGym);
     }
   }
 

@@ -32,26 +32,8 @@ public class RouteServiceImpl implements RouteService {
     this.wallRepository = wallRepository;
   }
 
-  // TODO(LUKE)
   @Override
-  public Optional<Route> createRoute(Authentication authentication, Route body) {
-    User user = AuthenticationUtils.getUser(authentication);
-    Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
-    Wall wall = wallRepository.findById(body.getWallId()).orElse(null);
-
-    if (user == null
-        || gym == null
-        || wall == null
-        || gym.getAuthorizedEditors() == null
-        || !gym.getAuthorizedEditors().contains(user.getId())
-        || body.getName() == null
-        || body.getHoldColor() == null
-        || !wall.getGymId().equals(body.getGymId())) {
-      return Optional.empty();
-    }
-
-    body.setId(null);
-
+  public Optional<Route> createRoute(Route body) {
     try {
       Route route = routeRepository.save(body);
       return Optional.of(route);
@@ -61,8 +43,61 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
+  public Route deleteRoute(Authentication authentication, Route body) {
+    User user = AuthenticationUtils.getUser(authentication);
+    Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
+
+    if (body.getId() == null) {
+      return null;
+    }
+
+    Route route = routeRepository.findById(body.getId()).orElse(null);
+
+    if (route == null
+        || gym == null
+        || user == null
+        || !route.getGymId().equals(body.getGymId())
+        || !gym.getAuthorizedEditors().contains(user.getId())) {
+      return null;
+    }
+
+    routeRepository.deleteById(route.getId());
+
+    return route;
+  }
+
+  private Gym getGymOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Gym> gym = gymRepository.findById(route.getGymId());
+
+    if (gym.isEmpty()) {
+      throw ExceptionUtils.notFound("Gym not found.");
+    }
+
+    return gym.get();
+  }
+
+  @Override
   public List<Route> getRoutesByWall(String wallId) {
     return routeRepository.findAllByWallId(wallId);
+  }
+
+  @Override
+  public Optional<Wall> getWall(Route route) {
+    if (route.getWallId() != null) {
+      return wallRepository.findById(route.getWallId());
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  private Wall getWallOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Wall> wallOptional = getWall(route);
+
+    if (wallOptional.isEmpty()) {
+      throw ExceptionUtils.notFound("Wall not found.");
+    }
+
+    return wallOptional.get();
   }
 
   @Override
@@ -117,50 +152,20 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public Route deleteRoute(Authentication authentication, Route body) {
-    User user = AuthenticationUtils.getUser(authentication);
-    Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
-
-    if (body.getId() == null) {
-      return null;
-    }
-
-    Route route = routeRepository.findById(body.getId()).orElse(null);
-
-    if (route == null
-        || gym == null
-        || user == null
-        || !route.getGymId().equals(body.getGymId())
-        || !gym.getAuthorizedEditors().contains(user.getId())) {
-      return null;
-    }
-
-    routeRepository.deleteById(route.getId());
-
-    return route;
-  }
-
-  @Override
   public Map<String, String> validWallTypes(Route route) throws HttpClientErrorException {
-    Wall wall= getWallOrNotFound(route);
+    Wall wall = getWallOrNotFound(route);
     Map<String, String> result = new HashMap<>();
 
-    route.getTypes().forEach((wallType) -> {
-      if (!wall.getTypes().contains(wallType)) {
-        result.put("types", wallType.toString() + " is not allowed for this wall.");
-      }
-    });
+    route
+        .getTypes()
+        .forEach(
+            (wallType) -> {
+              if (!wall.getTypes().contains(wallType)) {
+                result.put("types", wallType.toString() + " is not allowed for this wall.");
+              }
+            });
 
     return result;
-  }
-
-  @Override
-  public Optional<Wall> getWall(Route route) {
-    if (route.getWallId() != null) {
-      return wallRepository.findById(route.getWallId());
-    } else {
-      return Optional.empty();
-    }
   }
 
   @Override
@@ -176,26 +181,6 @@ public class RouteServiceImpl implements RouteService {
   public Map<String, String> validateRoute(Route body) {
     getWallOrNotFound(body);
     getGymOrNotFound(body);
-    return null;
-  }
-
-  private Wall getWallOrNotFound(Route route) throws HttpClientErrorException {
-    Optional<Wall> wallOptional = getWall(route);
-
-    if (wallOptional.isEmpty()) {
-      throw ExceptionUtils.notFound("Wall not found.");
-    }
-
-    return wallOptional.get();
-  }
-
-  private Gym getGymOrNotFound(Route route) throws HttpClientErrorException {
-    Optional<Gym> gym = gymRepository.findById(route.getGymId());
-
-    if (gym.isEmpty()) {
-      throw ExceptionUtils.notFound("Gym not found.");
-    }
-
-    return gym.get();
+    return new HashMap<>();
   }
 }

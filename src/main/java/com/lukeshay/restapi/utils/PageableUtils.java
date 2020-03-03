@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 public class PageableUtils {
+
   public static PageRequest buildPageRequest(Integer page, Integer limit, String order) {
     int defaultPage = 0;
     int defaultLimit = 20;

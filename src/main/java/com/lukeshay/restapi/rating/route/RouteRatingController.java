@@ -21,11 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("isAuthenticated()")
 @Api(value = "Route rating api endpoints.")
 public class RouteRatingController {
+
   private RouteRatingService ratingService;
 
   @Autowired
   public RouteRatingController(RouteRatingService ratingService) {
     this.ratingService = ratingService;
+  }
+
+  @PostMapping("")
+  @PreAuthorize("isAuthenticated()")
+  @ApiOperation(value = "Create a rating for a route.", response = RouteRating.class)
+  public ResponseEntity<?> createRating(
+      Authentication authentication, @RequestBody RouteRating rating) {
+    return ratingService.createRating(authentication, rating);
   }
 
   @GetMapping("/{routeId}")
@@ -40,13 +49,5 @@ public class RouteRatingController {
     Page<RouteRating> page = ratingService.getRatingsByRouteId(routeId, sort, limit, pageNumber);
 
     return ResponseUtils.ok(page);
-  }
-
-  @PostMapping("")
-  @PreAuthorize("isAuthenticated()")
-  @ApiOperation(value = "Create a rating for a route.", response = RouteRating.class)
-  public ResponseEntity<?> createRating(
-      Authentication authentication, @RequestBody RouteRating rating) {
-    return ratingService.createRating(authentication, rating);
   }
 }

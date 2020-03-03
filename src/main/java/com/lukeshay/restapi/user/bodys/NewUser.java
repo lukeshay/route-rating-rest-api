@@ -5,6 +5,7 @@ import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.ModelUtils;
 
 public class NewUser extends User {
+
   @Expose private String recaptcha;
 
   NewUser() {}
@@ -23,6 +24,14 @@ public class NewUser extends User {
     this.recaptcha = recaptcha;
   }
 
+  public String getRecaptcha() {
+    return recaptcha;
+  }
+
+  public void setRecaptcha(String recaptcha) {
+    this.recaptcha = recaptcha;
+  }
+
   public User getUser() {
     return new User(
         getEmail(),
@@ -37,14 +46,6 @@ public class NewUser extends User {
         getPassword(),
         getAuthority(),
         getRole());
-  }
-
-  public String getRecaptcha() {
-    return recaptcha;
-  }
-
-  public void setRecaptcha(String recaptcha) {
-    this.recaptcha = recaptcha;
   }
 
   @Override

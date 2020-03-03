@@ -12,7 +12,7 @@ public interface SessionService {
       Claims refreshClaims,
       String userId);
 
-  Session saveSession(Session session);
-
   void deleteSession(Session session);
+
+  Session saveSession(Session session);
 }

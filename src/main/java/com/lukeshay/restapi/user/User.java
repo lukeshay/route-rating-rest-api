@@ -117,28 +117,33 @@ public class User extends Auditable<String> {
     this.role = role;
   }
 
-  public String getId() {
-    return id;
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public String getAuthority() {
+    return authority;
   }
 
-  public String getPassword() {
-    return password;
+  public void setAuthority(String authority) {
+    this.authority = authority;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
+  public String getCity() {
+    return city;
   }
 
-  public String getUsername() {
-    return username;
+  public void setCity(String city) {
+    this.city = city;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getEmail() {
@@ -157,12 +162,28 @@ public class User extends Auditable<String> {
     this.firstName = firstName;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public String getLastName() {
     return lastName;
   }
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getPhoneNumber() {
@@ -173,12 +194,12 @@ public class User extends Auditable<String> {
     this.phoneNumber = phoneNumber;
   }
 
-  public String getCity() {
-    return city;
+  public String getRole() {
+    return role;
   }
 
-  public void setCity(String city) {
-    this.city = city;
+  public void setRole(String role) {
+    this.role = role;
   }
 
   public String getState() {
@@ -189,33 +210,12 @@ public class User extends Auditable<String> {
     this.state = state;
   }
 
-  public String getCountry() {
-    return country;
+  public String getUsername() {
+    return username;
   }
 
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public String getAuthority() {
-    return authority;
-  }
-
-  public void setAuthority(String authority) {
-    this.authority = authority;
-  }
-
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   @Override

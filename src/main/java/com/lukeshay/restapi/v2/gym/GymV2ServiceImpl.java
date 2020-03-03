@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GymV2ServiceImpl implements GymV2Service {
+
   @Autowired private GymRepository gymRepository;
   @Autowired private WallRepository wallRepository;
   @Autowired private RouteRepository routeRepository;

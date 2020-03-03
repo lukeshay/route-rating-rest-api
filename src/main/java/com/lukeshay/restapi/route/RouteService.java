@@ -11,11 +11,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.client.HttpClientErrorException;
 
 public interface RouteService {
+
   Logger LOG = LoggerFactory.getLogger(RouteService.class.getName());
 
-  Optional<Route> createRoute(Authentication authentication, Route body);
+  Optional<Route> createRoute(Route body);
+
+  Route deleteRoute(Authentication authentication, Route body);
 
   List<Route> getRoutesByWall(String wallId);
+
+  Optional<Wall> getWall(Route route);
 
   Route updateRoute(
       Authentication authentication,
@@ -27,11 +32,7 @@ public interface RouteService {
       String setter,
       String name);
 
-  Route deleteRoute(Authentication authentication, Route body);
-
   Map<String, String> validWallTypes(Route route) throws HttpClientErrorException;
-
-  Optional<Wall> getWall(Route route);
 
   boolean validateEditor(Authentication authentication, Route body) throws HttpClientErrorException;
 

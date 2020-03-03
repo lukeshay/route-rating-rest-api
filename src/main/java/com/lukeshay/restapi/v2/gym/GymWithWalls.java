@@ -8,6 +8,7 @@ import com.lukeshay.restapi.utils.ModelUtils;
 import java.util.List;
 
 public class GymWithWalls extends Gym {
+
   @Expose
   @JsonProperty(access = Access.READ_WRITE)
   private List<WallWithRoutes> walls;

@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
   private static Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class.getName());
 
   private UserRepository userRepository;

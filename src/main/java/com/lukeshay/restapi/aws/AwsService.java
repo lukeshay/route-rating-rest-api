@@ -18,13 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class AwsService {
 
+  AWSCredentialsProvider credentialsProvider;
+
   @Value("${file.bucket.name}")
   private String bucketName;
 
   @Value("${file.bucket.url}")
   private String bucketUrl;
-
-  AWSCredentialsProvider credentialsProvider;
 
   public AwsService() {
     String accessKey = System.getenv("ACCESS_KEY");
@@ -36,6 +36,19 @@ public class AwsService {
       credentialsProvider =
           new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
     }
+  }
+
+  private File convertFile(MultipartFile file) {
+    File convertedFile = new File(file.getOriginalFilename());
+    try {
+      FileOutputStream fos = new FileOutputStream(convertedFile);
+      fos.write(file.getBytes());
+      fos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+    return convertedFile;
   }
 
   public String uploadFileToS3(String fileName, MultipartFile file) {
@@ -56,18 +69,5 @@ public class AwsService {
     } else {
       return null;
     }
-  }
-
-  private File convertFile(MultipartFile file) {
-    File convertedFile = new File(file.getOriginalFilename());
-    try {
-      FileOutputStream fos = new FileOutputStream(convertedFile);
-      fos.write(file.getBytes());
-      fos.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
-    }
-    return convertedFile;
   }
 }

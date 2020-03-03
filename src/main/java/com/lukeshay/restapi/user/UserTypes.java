@@ -4,15 +4,15 @@ public enum UserTypes {
   BASIC,
   ADMIN;
 
-  public String role() {
-    return this.toString() + "_ROLE";
+  public String authority() {
+    return this.toString();
   }
 
   public boolean equals(String role) {
     return this.role().equals(role);
   }
 
-  public String authority() {
-    return this.toString();
+  public String role() {
+    return this.toString() + "_ROLE";
   }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 public interface RouteRatingService {
+
   Logger LOG = LoggerFactory.getLogger(RouteRatingService.class.getName());
 
   ResponseEntity<?> createRating(Authentication authentication, RouteRating rating);

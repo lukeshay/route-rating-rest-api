@@ -17,6 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "gyms")
 public class Gym extends Auditable<String> {
+
   @Column(name = "id", unique = true, updatable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
@@ -119,20 +120,9 @@ public class Gym extends Auditable<String> {
     this.authorizedEditors = authorizedEditors;
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
   }
 
   public String getAddress() {
@@ -143,36 +133,20 @@ public class Gym extends Auditable<String> {
     this.address = address;
   }
 
+  public List<String> getAuthorizedEditors() {
+    return authorizedEditors;
+  }
+
+  public void setAuthorizedEditors(List<String> authorizedEditors) {
+    this.authorizedEditors = authorizedEditors;
+  }
+
   public String getCity() {
     return city;
   }
 
   public void setCity(String city) {
     this.city = city;
-  }
-
-  public String getState() {
-    return state;
-  }
-
-  public void setState(String state) {
-    this.state = state;
-  }
-
-  public String getZipCode() {
-    return zipCode;
-  }
-
-  public void setZipCode(String zipCode) {
-    this.zipCode = zipCode;
-  }
-
-  public String getWebsite() {
-    return website;
-  }
-
-  public void setWebsite(String website) {
-    this.website = website;
   }
 
   public String getEmail() {
@@ -183,12 +157,12 @@ public class Gym extends Auditable<String> {
     this.email = email;
   }
 
-  public String getPhoneNumber() {
-    return phoneNumber;
+  public String getId() {
+    return id;
   }
 
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getLogoUrl() {
@@ -199,6 +173,22 @@ public class Gym extends Auditable<String> {
     this.logoUrl = logoUrl;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
   public String getPhotoUrl() {
     return photoUrl;
   }
@@ -207,17 +197,28 @@ public class Gym extends Auditable<String> {
     this.photoUrl = photoUrl;
   }
 
-  public List<String> getAuthorizedEditors() {
-    return authorizedEditors;
+  public String getState() {
+    return state;
   }
 
-  public void setAuthorizedEditors(List<String> authorizedEditors) {
-    this.authorizedEditors = authorizedEditors;
+  public void setState(String state) {
+    this.state = state;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
+  public String getWebsite() {
+    return website;
+  }
+
+  public void setWebsite(String website) {
+    this.website = website;
+  }
+
+  public String getZipCode() {
+    return zipCode;
+  }
+
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
   }
 
   @Override

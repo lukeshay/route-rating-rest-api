@@ -45,7 +45,7 @@ public class RouteController {
     LOG.debug("Creating new route {}", body.toString());
     Map<String, String> response = new HashMap<>();
 
-    if (routeService.validateEditor(authentication, body)) {
+    if (!routeService.validateEditor(authentication, body)) {
       return ResponseUtils.unauthorized();
     }
 
@@ -53,7 +53,7 @@ public class RouteController {
     response.putAll(routeService.validWallTypes(body));
 
     if (response.isEmpty()) {
-      Optional<Route> route = routeService.createRoute(authentication, body);
+      Optional<Route> route = routeService.createRoute(body);
 
       if (route.isEmpty()) {
         return ResponseUtils.internalServerError(BodyUtils.error("error creating route"));
@@ -63,7 +63,21 @@ public class RouteController {
     } else {
       return ResponseUtils.badRequest(response);
     }
+  }
 
+  @DeleteMapping("")
+  @PreAuthorize("isAuthenticated()")
+  @ApiOperation(value = "Delete a route", response = Route.class)
+  public ResponseEntity<?> deleteRoute(Authentication authentication, @RequestBody Route body) {
+    LOG.debug("Deleting route {}", body.getId());
+
+    Route route = routeService.deleteRoute(authentication, body);
+
+    if (route == null) {
+      return ResponseUtils.badRequest(BodyUtils.error("Error deleting route."));
+    } else {
+      return ResponseUtils.ok(route);
+    }
   }
 
   @GetMapping("/{wallId}")
@@ -96,21 +110,6 @@ public class RouteController {
 
     if (route == null) {
       return ResponseUtils.badRequest(BodyUtils.error("Error updating route."));
-    } else {
-      return ResponseUtils.ok(route);
-    }
-  }
-
-  @DeleteMapping("")
-  @PreAuthorize("isAuthenticated()")
-  @ApiOperation(value = "Delete a route", response = Route.class)
-  public ResponseEntity<?> deleteRoute(Authentication authentication, @RequestBody Route body) {
-    LOG.debug("Deleting route {}", body.getId());
-
-    Route route = routeService.deleteRoute(authentication, body);
-
-    if (route == null) {
-      return ResponseUtils.badRequest(BodyUtils.error("Error deleting route."));
     } else {
       return ResponseUtils.ok(route);
     }

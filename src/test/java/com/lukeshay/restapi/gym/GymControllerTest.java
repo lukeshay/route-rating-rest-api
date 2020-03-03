@@ -196,7 +196,7 @@ class GymControllerTest extends TestBase {
         () -> Assertions.assertEquals(10, responseQuery.getBody().getContent().size()));
   }
 
-  private void populateGyms() {
+  protected void populateGyms() {
     for (int i = 0; i < 19; i++) {
       Gym gym =
           new Gym(

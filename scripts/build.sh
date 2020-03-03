@@ -1,4 +1,5 @@
 #!/bin/bash
+
 rm -rf build
 rm -rf rest-api.jar
 rm -rf restapi.log

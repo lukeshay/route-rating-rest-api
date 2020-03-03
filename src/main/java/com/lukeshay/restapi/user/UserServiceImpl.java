@@ -67,13 +67,13 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUser(Authentication authentication) {
-    return AuthenticationUtils.getUser(authentication);
+  public Iterable<User> getAllUsers() {
+    return userRepository.findAll();
   }
 
   @Override
-  public Iterable<User> getAllUsers() {
-    return userRepository.findAll();
+  public User getUser(Authentication authentication) {
+    return AuthenticationUtils.getUser(authentication);
   }
 
   @Override
@@ -170,22 +170,6 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean validateUsername(
-      Map<String, String> responseBody, Authentication authentication, String username) {
-    if (username == null) {
-      responseBody.put("username", "Username must be provided.");
-      return false;
-    }
-
-    if (isUsernameTaken(authentication, username)) {
-      responseBody.put("username", "Username is already in use.");
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override
   public boolean validatePassword(Map<String, String> responseBody, String password) {
     if (password == null) {
       responseBody.put("password", "Password must be provided.");
@@ -227,5 +211,21 @@ class UserServiceImpl implements UserService {
     }
 
     return success;
+  }
+
+  @Override
+  public boolean validateUsername(
+      Map<String, String> responseBody, Authentication authentication, String username) {
+    if (username == null) {
+      responseBody.put("username", "Username must be provided.");
+      return false;
+    }
+
+    if (isUsernameTaken(authentication, username)) {
+      responseBody.put("username", "Username is already in use.");
+      return false;
+    }
+
+    return true;
   }
 }

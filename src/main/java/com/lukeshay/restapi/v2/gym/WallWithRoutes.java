@@ -9,6 +9,7 @@ import com.lukeshay.restapi.wall.Wall;
 import java.util.List;
 
 public class WallWithRoutes extends Wall {
+
   @Expose
   @JsonProperty(access = Access.READ_WRITE)
   private List<Route> routes;

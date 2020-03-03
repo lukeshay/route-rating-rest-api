@@ -14,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "route_rating")
 public class RouteRating extends Auditable<String> {
+
   @Column(name = "id", unique = true, updatable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
@@ -54,12 +55,9 @@ public class RouteRating extends Auditable<String> {
     this.rating = rating;
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
   }
 
   public String getCreatorId() {
@@ -78,28 +76,20 @@ public class RouteRating extends Auditable<String> {
     this.creatorUsername = creatorUsername;
   }
 
-  public String getRouteId() {
-    return routeId;
-  }
-
-  public void setRouteId(String routeId) {
-    this.routeId = routeId;
-  }
-
-  public String getReview() {
-    return review;
-  }
-
-  public void setReview(String review) {
-    this.review = review;
-  }
-
   public Grade getGrade() {
     return grade;
   }
 
   public void setGrade(Grade grade) {
     this.grade = grade;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public int getRating() {
@@ -110,9 +100,20 @@ public class RouteRating extends Auditable<String> {
     this.rating = rating;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
+  public String getReview() {
+    return review;
+  }
+
+  public void setReview(String review) {
+    this.review = review;
+  }
+
+  public String getRouteId() {
+    return routeId;
+  }
+
+  public void setRouteId(String routeId) {
+    this.routeId = routeId;
   }
 
   @Override
