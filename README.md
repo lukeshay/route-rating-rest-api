@@ -1,5 +1,6 @@
 <h1 align="center">Welcome to Route Rating Rest API 👋</h1>
 <p>
+  <a href='https://jenkins.ops.lukeshay.com/job/Build/job/rest-api/job/master/'><img src='https://jenkins.ops.lukeshay.com/job/Build/job/rest-api/job/master/badge/icon'></a>
   <a href="https://github.com/LukeShay/route-rating/wiki" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
