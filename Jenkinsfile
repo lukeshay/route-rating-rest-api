@@ -61,7 +61,7 @@ pipeline {
         echo 'Running post deploy smoke test...'
         build job: 'Test/post-release-api', propagate: true, wait: true
       }
-    }}
+    }
   }
   post {
     success {
