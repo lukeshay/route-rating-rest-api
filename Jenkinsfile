@@ -9,7 +9,7 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-  agent any
+  agent { label 'ops' }
 
   stages {
     stage('Build') {
@@ -50,7 +50,7 @@ pipeline {
         echo 'Triggering deploy job...'
         // build job: '', propagate: true, wait: true
         // Pass in the repository to get proper deploy files
-        build job: 'Deploy/deploy-from-image', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'DOCKER_REPO', value: 'route-rating-rest-api']]
+        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'DEPLOY_CONFIG', value: 'deploy/deploy.json'], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
       }
     }
     stage('Smoke test') {
