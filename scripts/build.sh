@@ -19,6 +19,6 @@ rm -rf restapi.log
 #    -x check \
 #    || exit 1
 
-./gradlew clean build
+GRADLE_OPTS="-Xmx64m -Dorg.gradle.jvmargs='-Xmx256m -XX:MaxPermSize=64m'" ./gradlew clean build
 
 mv build/libs/*.jar rest-api.jar
