@@ -22,13 +22,13 @@ pipeline {
     stage('Lint') {
       steps {
         echo 'Linting...'
-        sh './gradlew verifyGoogleJavaFormat'
+        sh 'scripts/lint.sh'
       }
     }
     stage('Coverage') {
       steps {
         echo 'Getting coverage...'
-        sh './gradlew jacocoTestCoverageVerification'
+        sh 'scripts/coverage.sh'
       }
     }
     stage('Build image') {
