@@ -20,7 +20,6 @@ rm -rf restapi.log
 #    || exit 1
 
 GRADLE_OPTS="-Xmx64m -Dorg.gradle.jvmargs='-Xmx256m -XX:MaxPermSize=64m'" ./gradlew build \
-  --no-daemon \
   --no-rebuild \
   -x verifyGoogleJavaFormat \
   -x bootDistTar \
