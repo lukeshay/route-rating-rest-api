@@ -1,5 +1,5 @@
 {
-  "git_repository": "LukeShay/route-rating-rest-api",
+  "git_repository": "route-rating-rest-api",
   "secrets": [
     "JWT_SECRET",
     "REFRESH_SECRET",
