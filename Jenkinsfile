@@ -1,12 +1,10 @@
 pipeline {
   agent { label 'master' }
 
+  environment {
+    GIT_REPO = $(shell basename `git rev-parse --show-toplevel`)
+  }
   stages {
-    stage('Print vars') {
-      steps {
-        echo sh(returnStdout: true, script: 'env')
-      }
-    }
     stage('Build') {
       steps {
         echo 'Building...'
@@ -44,7 +42,7 @@ pipeline {
         echo 'Triggering deploy job...'
         // build job: '', propagate: true, wait: true
         // Pass in the repository to get proper deploy files
-        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
+        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: ${GIT_REPO}], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
       }
     }
     stage('Smoke test') {
