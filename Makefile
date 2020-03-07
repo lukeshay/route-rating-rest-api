@@ -1,43 +1,32 @@
 TAG=$(shell git rev-parse --short HEAD)
+IMAGE_NAME=lukeshaydocker/route-rating-rest-api
 
-.PHONY: clean tag coverage format lint logs build run dev test
+.PHONY: default clean tag build run push-latest tag-latest prebuild
 
 default: build
 
 clean:
-	rm -rf build/ restapi.log reports
-	docker rmi rest-api:${TAG} -f
+	docker images | awk 'NR != 1 && $1 == "${IMAGE_NAME}" { print $3 }' | xargs docker rmi -f
+	rm -rf rest-api.jar build
 
-tag:
-	docker tag rest-api:${TAG} rest-api:latest
+push:
+	docker push ${IMAGE_NAME}:${TAG}
 
-coverage:
-	./gradlew clean build -x verifyGoogleJavaFormat
-	./gradlew jacocoTestCoverageVerification
+push-latest: tag-latest
+	docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
+	docker push ${IMAGE_NAME}:latest
 
-format:
-	./gradlew format
+tag-latest:
+	docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
 
-lint:
-	./gradlew verifyGoogleJavaFormat
-
-logs:
-	docker ps | grep rest-api | awk 'NR == 1{print $$1}' | xargs docker logs
+prebuild:
+	sh scripts/build.sh
 
 build:
-	docker build -t rest-api:${TAG} . || exit 1
+	docker build -t ${IMAGE_NAME}:${TAG} .
 
 run:
-	docker-compose up -d || exit 1
+	docker-compose -f deploy/docker-compose.yml up -d
 
 dev:
-	docker-compose -f docker-compose.dev.yml up -d || exit 1
-
-test:
-	docker run \
-      	-e JWT_SECRET=${JWT_SECRET} \
-      	-e REFRESH_SECRET=${REFRESH_SECRET} \
-      	-e ACCESS_KEY=${ACCESS_KEY} \
-      	-e SECRET_KEY=${SECRET_KEY} \
-      	--entrypoint ./scripts/test.sh \
-      	rest-api:${TAG} || exit 1
+	docker-compose -f deploy/docker-compose.dev.yml up -d

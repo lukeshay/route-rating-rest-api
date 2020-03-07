@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SessionServiceImpl implements SessionService {
+
   @Autowired private SessionRepository sessionRepository;
 
   @Override
@@ -22,12 +23,12 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public Session saveSession(Session session) {
-    return sessionRepository.save(session);
+  public void deleteSession(Session session) {
+    sessionRepository.delete(session);
   }
 
   @Override
-  public void deleteSession(Session session) {
-    sessionRepository.delete(session);
+  public Session saveSession(Session session) {
+    return sessionRepository.save(session);
   }
 }

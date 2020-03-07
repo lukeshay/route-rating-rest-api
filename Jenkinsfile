@@ -9,39 +9,37 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-  agent any
+  agent { label 'master' }
 
-  environment {
-    SECRET_KEY = credentials('jenkins-aws-secret-key-id')
-    ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-    JWT_SECRET = credentials('jenkins-jwt-secret')
-    REFRESH_SECRET = credentials('jenkins-refresh-secret')
-    GOOGLE_RECAPTCHA_TOKEN = credentials('jenkins-google-recaptcha-token')
-  }
   stages {
     stage('Build') {
       steps {
         echo 'Building...'
         setBuildStatus('Starting build', 'PENDING')
-        sh 'make build'
+        sh 'scripts/build.sh'
       }
     }
     stage('Lint') {
       steps {
         echo 'Linting...'
-        sh 'make lint'
-      }
-    }
-    stage('Test') {
-      steps {
-        echo 'Testing...'
-        sh 'make test'
+        sh 'scripts/lint.sh'
       }
     }
     stage('Coverage') {
       steps {
         echo 'Getting coverage...'
-        sh 'make coverage'
+        sh 'scripts/coverage.sh'
+      }
+    }
+    stage('Build image') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Building image...'
+        sh 'make'
+        sh 'make push'
+        sh 'make push-latest'
       }
     }
     stage('Deploy') {
@@ -49,19 +47,38 @@ pipeline {
         branch 'master'
       }
       steps {
-        echo 'Deploying...'
-//         build job: '', propagate: true, wait: true
+        echo 'Triggering deploy job...'
+        // build job: '', propagate: true, wait: true
+        // Pass in the repository to get proper deploy files
+        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'DEPLOY_CONFIG', value: 'deploy/deploy.json'], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
+      }
+    }
+    stage('Smoke test') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Running post deploy smoke test...'
+        build job: 'Test/post-release-api', propagate: true, wait: true
+      }
+    }
+    stage('Clean') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Cleaning hanging images...'
+        sh 'docker rmi $(docker images -q) || exit 0'
+        sh 'docker rm $(docker ps -aq) || exit 0'
       }
     }
   }
   post {
     success {
       setBuildStatus('Build succeeded', 'SUCCESS');
-      sh 'make clean'
     }
     failure {
       setBuildStatus('Build failed', 'FAILURE');
-      sh 'make clean'
     }
   }
 }

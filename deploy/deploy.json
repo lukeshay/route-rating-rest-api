@@ -1,0 +1,16 @@
+{
+  "git_repository": "route-rating-rest-api",
+  "secrets": [
+    "JWT_SECRET",
+    "REFRESH_SECRET",
+    "ACCESS_KEY",
+    "SECRET_KEY",
+    "GOOGLE_RECAPTCHA_TOKEN",
+    "RDS_REST_API_USERNAME",
+    "RDS_REST_API_PASSWORD"
+  ],
+  "docker_compose": {
+    "repository": "lukeshaydocker/route-rating-rest-api",
+    "compose_file": "deploy/docker-compose.yml"
+  }
+}

@@ -36,6 +36,11 @@ public class UserPrincipal implements UserDetails, Principal {
   }
 
   @Override
+  public String getName() {
+    return user.getFirstName() + " " + user.getLastName();
+  }
+
+  @Override
   public String getPassword() {
     return user.getPassword();
   }
@@ -67,10 +72,5 @@ public class UserPrincipal implements UserDetails, Principal {
   @Override
   public boolean isEnabled() {
     return true;
-  }
-
-  @Override
-  public String getName() {
-    return user.getFirstName() + " " + user.getLastName();
   }
 }

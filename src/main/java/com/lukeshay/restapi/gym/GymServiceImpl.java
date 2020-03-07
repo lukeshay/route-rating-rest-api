@@ -39,6 +39,11 @@ public class GymServiceImpl implements GymService {
   }
 
   @Override
+  public Gym getGymById(String gymId) {
+    return gymRepository.findById(gymId).orElse(null);
+  }
+
+  @Override
   public Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page) {
     if (query == null) {
       query = "";
@@ -46,11 +51,6 @@ public class GymServiceImpl implements GymService {
 
     return gymRepository.findAllByNameIgnoreCaseContaining(
         PageableUtils.buildPageRequest(page, limit, sorts), query);
-  }
-
-  @Override
-  public Gym getGymById(String gymId) {
-    return gymRepository.findById(gymId).orElse(null);
   }
 
   @Override

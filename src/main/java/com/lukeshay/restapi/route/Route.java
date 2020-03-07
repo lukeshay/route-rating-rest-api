@@ -20,6 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "routes")
 public class Route extends Auditable<String> {
+
   @Column(name = "id", unique = true, updatable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
@@ -77,20 +78,25 @@ public class Route extends Auditable<String> {
     this.types = types;
   }
 
-  public String getId() {
-    return id;
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public Grade getAverageGrade() {
+    return averageGrade;
   }
 
-  public String getWallId() {
-    return wallId;
+  public void setAverageGrade(Grade averageGrade) {
+    this.averageGrade = averageGrade;
   }
 
-  public void setWallId(String wallId) {
-    this.wallId = wallId;
+  public double getAverageRating() {
+    return averageRating;
+  }
+
+  public void setAverageRating(double averageRating) {
+    this.averageRating = averageRating;
   }
 
   public String getGymId() {
@@ -99,6 +105,22 @@ public class Route extends Auditable<String> {
 
   public void setGymId(String gymId) {
     this.gymId = gymId;
+  }
+
+  public String getHoldColor() {
+    return holdColor;
+  }
+
+  public void setHoldColor(String holdColor) {
+    this.holdColor = holdColor;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -117,14 +139,6 @@ public class Route extends Auditable<String> {
     this.setter = setter;
   }
 
-  public String getHoldColor() {
-    return holdColor;
-  }
-
-  public void setHoldColor(String holdColor) {
-    this.holdColor = holdColor;
-  }
-
   public List<WallTypes> getTypes() {
     return types;
   }
@@ -133,20 +147,17 @@ public class Route extends Auditable<String> {
     this.types = types;
   }
 
-  public Grade getAverageGrade() {
-    return averageGrade;
+  public String getWallId() {
+    return wallId;
   }
 
-  public void setAverageGrade(Grade averageGrade) {
-    this.averageGrade = averageGrade;
+  public void setWallId(String wallId) {
+    this.wallId = wallId;
   }
 
-  public double getAverageRating() {
-    return averageRating;
-  }
-
-  public void setAverageRating(double averageRating) {
-    this.averageRating = averageRating;
+  @Override
+  public String toString() {
+    return ModelUtils.toString(this);
   }
 
   public void updateAverages(List<RouteRating> ratings) {
@@ -169,15 +180,5 @@ public class Route extends Auditable<String> {
 
     setAverageRating(averageRating);
     setAverageGrade(Grade.getGrade(averageGrade));
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
-  }
-
-  @Override
-  public String toString() {
-    return ModelUtils.toString(this);
   }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RouteRepository extends JpaRepository<Route, String> {
 
-  List<Route> findAllByWallId(String wallId);
-
   void deleteByWallId(String wallId);
+
+  List<Route> findAllByWallId(String wallId);
 }

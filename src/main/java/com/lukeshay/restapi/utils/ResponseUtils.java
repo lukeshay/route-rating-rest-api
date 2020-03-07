@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseUtils {
+
   public static <T> ResponseEntity<?> ok(T body) {
     return httpJsonResponse(HttpStatus.OK, body);
   }
@@ -23,6 +24,10 @@ public class ResponseUtils {
 
   public static <T> ResponseEntity<?> unauthorized(T body) {
     return httpJsonResponse(HttpStatus.UNAUTHORIZED, body);
+  }
+
+  public static ResponseEntity<?> unauthorized() {
+    return httpJsonResponse(HttpStatus.UNAUTHORIZED, null);
   }
 
   public static <T> ResponseEntity<?> internalServerError(T body) {

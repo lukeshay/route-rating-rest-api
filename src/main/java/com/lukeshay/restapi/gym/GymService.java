@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface GymService {
+
   Logger LOG = LoggerFactory.getLogger(GymService.class.getName());
 
   Gym createGym(Gym gym);
@@ -16,9 +17,9 @@ public interface GymService {
   @Deprecated
   Iterable<Gym> getAllGyms();
 
-  Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page);
-
   Gym getGymById(String gymId);
+
+  Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page);
 
   Gym updateGym(
       Authentication authentication,

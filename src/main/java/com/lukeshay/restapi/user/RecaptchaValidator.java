@@ -11,20 +11,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RecaptchaValidator {
-  Logger LOG = LoggerFactory.getLogger(RecaptchaValidator.class.getName());
 
   private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
       "https://www.google.com/recaptcha/api/siteverify";
-
-  private final RestTemplateBuilder restTemplateBuilder;
-
-  private Map lastResponse;
-
   private static final String GOOGLE_RECAPTCHA_TOKEN = System.getenv("GOOGLE_RECAPTCHA_TOKEN");
+  private final RestTemplateBuilder restTemplateBuilder;
+  Logger LOG = LoggerFactory.getLogger(RecaptchaValidator.class.getName());
+  private Map lastResponse;
 
   @Autowired
   public RecaptchaValidator(RestTemplateBuilder restTemplateBuilder) {
     this.restTemplateBuilder = restTemplateBuilder;
+  }
+
+  public String getRecaptchaToken() {
+    return GOOGLE_RECAPTCHA_TOKEN;
   }
 
   public boolean validate(String recaptcha) {
@@ -50,9 +51,5 @@ public class RecaptchaValidator {
     }
 
     return (Boolean) lastResponse.get("success");
-  }
-
-  public String getRecaptchaToken() {
-    return GOOGLE_RECAPTCHA_TOKEN;
   }
 }

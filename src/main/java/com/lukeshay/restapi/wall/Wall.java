@@ -17,6 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "walls")
 public class Wall extends Auditable<String> {
+
   @Column(name = "id", unique = true, updatable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
@@ -52,12 +53,9 @@ public class Wall extends Auditable<String> {
     this.types = types;
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
   }
 
   public String getGymId() {
@@ -66,6 +64,14 @@ public class Wall extends Auditable<String> {
 
   public void setGymId(String gymId) {
     this.gymId = gymId;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -87,10 +93,5 @@ public class Wall extends Auditable<String> {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
   }
 }

@@ -4,13 +4,18 @@ import com.lukeshay.restapi.gym.Gym;
 import com.lukeshay.restapi.gym.GymRepository;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.AuthenticationUtils;
+import com.lukeshay.restapi.utils.ExceptionUtils;
 import com.lukeshay.restapi.wall.Wall;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import com.lukeshay.restapi.wall.WallRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -28,30 +33,71 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public Route createRoute(Authentication authentication, Route body) {
+  public Optional<Route> createRoute(Route body) {
+    try {
+      Route route = routeRepository.save(body);
+      return Optional.of(route);
+    } catch (Exception ignored) {
+      return Optional.empty();
+    }
+  }
+
+  @Override
+  public Route deleteRoute(Authentication authentication, Route body) {
     User user = AuthenticationUtils.getUser(authentication);
     Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
-    Wall wall = wallRepository.findById(body.getWallId()).orElse(null);
 
-    if (user == null
-        || gym == null
-        || wall == null
-        || gym.getAuthorizedEditors() == null
-        || !gym.getAuthorizedEditors().contains(user.getId())
-        || body.getName() == null
-        || body.getHoldColor() == null
-        || !wall.getGymId().equals(body.getGymId())) {
+    if (body.getId() == null) {
       return null;
     }
 
-    body.setId(null);
+    Route route = routeRepository.findById(body.getId()).orElse(null);
 
-    return routeRepository.save(body);
+    if (route == null
+        || gym == null
+        || user == null
+        || !route.getGymId().equals(body.getGymId())
+        || !gym.getAuthorizedEditors().contains(user.getId())) {
+      return null;
+    }
+
+    routeRepository.deleteById(route.getId());
+
+    return route;
+  }
+
+  private Gym getGymOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Gym> gym = gymRepository.findById(route.getGymId());
+
+    if (gym.isEmpty()) {
+      throw ExceptionUtils.notFound("Gym not found.");
+    }
+
+    return gym.get();
   }
 
   @Override
   public List<Route> getRoutesByWall(String wallId) {
     return routeRepository.findAllByWallId(wallId);
+  }
+
+  @Override
+  public Optional<Wall> getWall(Route route) {
+    if (route.getWallId() != null) {
+      return wallRepository.findById(route.getWallId());
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  private Wall getWallOrNotFound(Route route) throws HttpClientErrorException {
+    Optional<Wall> wallOptional = getWall(route);
+
+    if (wallOptional.isEmpty()) {
+      throw ExceptionUtils.notFound("Wall not found.");
+    }
+
+    return wallOptional.get();
   }
 
   @Override
@@ -76,7 +122,7 @@ public class RouteServiceImpl implements RouteService {
       return null;
     }
 
-    if (wallId != null && !wallId.toString().equals("")) {
+    if (wallId != null && !wallId.equals("")) {
       Wall newWall = wallRepository.findById(wallId).orElse(null);
 
       if (newWall != null && newWall.getGymId() != null && newWall.getGymId().equals(gymId)) {
@@ -106,26 +152,35 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public Route deleteRoute(Authentication authentication, Route body) {
-    User user = AuthenticationUtils.getUser(authentication);
-    Gym gym = gymRepository.findById(body.getGymId()).orElse(null);
+  public Map<String, String> validWallTypes(Route route) throws HttpClientErrorException {
+    Wall wall = getWallOrNotFound(route);
+    Map<String, String> result = new HashMap<>();
 
-    if (body.getId() == null) {
-      return null;
-    }
+    route
+        .getTypes()
+        .forEach(
+            (wallType) -> {
+              if (!wall.getTypes().contains(wallType)) {
+                result.put("types", wallType.toString() + " is not allowed for this wall.");
+              }
+            });
 
-    Route route = routeRepository.findById(body.getId()).orElse(null);
+    return result;
+  }
 
-    if (route == null
-        || gym == null
-        || user == null
-        || !route.getGymId().equals(body.getGymId())
-        || !gym.getAuthorizedEditors().contains(user.getId())) {
-      return null;
-    }
+  @Override
+  public boolean validateEditor(Authentication authentication, Route body)
+      throws HttpClientErrorException {
+    Optional<User> user = AuthenticationUtils.getUserOptional(authentication);
+    Gym gym = getGymOrNotFound(body);
 
-    routeRepository.deleteById(route.getId());
+    return user.isPresent() && gym.getAuthorizedEditors().contains(user.get().getId());
+  }
 
-    return route;
+  @Override
+  public Map<String, String> validateRoute(Route body) {
+    getWallOrNotFound(body);
+    getGymOrNotFound(body);
+    return new HashMap<>();
   }
 }

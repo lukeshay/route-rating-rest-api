@@ -19,14 +19,6 @@ public class JwtServiceImpl implements JwtService {
   private JwtParser jwtParser;
   private SecretKey secretKey;
 
-  @PostConstruct
-  private void setSigner() {
-    byte[] secret = Base64.getMimeDecoder().decode(SecurityProperties.JWT_SECRET);
-
-    jwtParser = Jwts.parser().setSigningKey(secret);
-    secretKey = Keys.hmacShaKeyFor(secret);
-  }
-
   private Claims buildClaims(User user, Long expiration, String subject) {
     Instant now = Instant.now();
     Claims claims = Jwts.claims();
@@ -65,5 +57,13 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public Claims parseJwtToken(String token) {
     return jwtParser.parseClaimsJws(token).getBody();
+  }
+
+  @PostConstruct
+  private void setSigner() {
+    byte[] secret = Base64.getMimeDecoder().decode(SecurityProperties.JWT_SECRET);
+
+    jwtParser = Jwts.parser().setSigningKey(secret);
+    secretKey = Keys.hmacShaKeyFor(secret);
   }
 }

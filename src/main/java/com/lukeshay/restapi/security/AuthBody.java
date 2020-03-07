@@ -6,6 +6,7 @@ import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.ModelUtils;
 
 public class AuthBody {
+
   @Expose private User user;
   @Expose private Session session;
 

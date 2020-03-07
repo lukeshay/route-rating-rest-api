@@ -17,6 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "sessions")
 public class Session extends Auditable<String> {
+
   @Column(name = "id", unique = true, updatable = false)
   @Expose
   @GeneratedValue(generator = "pg-uuid")
@@ -31,7 +32,7 @@ public class Session extends Auditable<String> {
 
   @Column(name = "user_id", unique = true, updatable = false)
   @Expose
-  private String userId;;
+  private String userId;
 
   @Column(name = "active")
   @JsonProperty(access = Access.WRITE_ONLY)
@@ -43,6 +44,19 @@ public class Session extends Auditable<String> {
     this.tokens = tokens;
     this.userId = userId;
     active = true;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return ModelUtils.equals(this, obj);
+  }
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
   public String getId() {
@@ -69,21 +83,8 @@ public class Session extends Auditable<String> {
     this.userId = userId;
   }
 
-  public Boolean getActive() {
-    return active;
-  }
-
-  public void setActive(Boolean active) {
-    this.active = active;
-  }
-
   @Override
   public String toString() {
     return ModelUtils.toString(this);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
   }
 }

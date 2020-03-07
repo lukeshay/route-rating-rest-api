@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("isAuthenticated()")
 @Api(value = "Wall api endpoints.")
 public class WallController {
+
   private static Logger LOG = LoggerFactory.getLogger(WallController.class.getName());
 
   private WallService wallService;
@@ -41,23 +42,6 @@ public class WallController {
   public ResponseEntity<?> createWall(Authentication authentication, @RequestBody Wall body) {
     LOG.debug("Adding wall {}", body);
     return wallService.createWall(authentication, body);
-  }
-
-  @PutMapping("")
-  @PreAuthorize("isAuthenticated()")
-  @ApiOperation(value = "Update an existing wall.", response = Wall.class)
-  public ResponseEntity<?> updateWall(Authentication authentication, @RequestBody Wall body) {
-    LOG.debug("Updating wall {}", body);
-
-    Wall wall =
-        wallService.updateWall(
-            authentication, body.getId(), body.getGymId(), body.getName(), body.getTypes());
-
-    if (wall == null) {
-      return ResponseUtils.badRequest(BodyUtils.error("Error updating wall."));
-    } else {
-      return ResponseUtils.ok(wall);
-    }
   }
 
   @DeleteMapping("/{wallId}")
@@ -88,5 +72,22 @@ public class WallController {
     LOG.debug("Getting gym {} walls", gymId);
 
     return wallService.getWalls(gymId, query, sort, limit, page);
+  }
+
+  @PutMapping("")
+  @PreAuthorize("isAuthenticated()")
+  @ApiOperation(value = "Update an existing wall.", response = Wall.class)
+  public ResponseEntity<?> updateWall(Authentication authentication, @RequestBody Wall body) {
+    LOG.debug("Updating wall {}", body);
+
+    Wall wall =
+        wallService.updateWall(
+            authentication, body.getId(), body.getGymId(), body.getName(), body.getTypes());
+
+    if (wall == null) {
+      return ResponseUtils.badRequest(BodyUtils.error("Error updating wall."));
+    } else {
+      return ResponseUtils.ok(wall);
+    }
   }
 }

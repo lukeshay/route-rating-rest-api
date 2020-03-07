@@ -30,7 +30,6 @@ public class UserServiceTest extends TestBase {
   }
 
   /*
-  isUsernameTaken
   updateUser
   validateEmail
   validateUsername

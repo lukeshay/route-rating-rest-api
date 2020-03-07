@@ -5,8 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 public class ExceptionUtils {
+
   public static HttpClientErrorException badRequest(String message) {
     return httpClientErrorException(HttpStatus.BAD_REQUEST, message);
+  }
+
+  public static HttpClientErrorException notFound(String message) {
+    return httpClientErrorException(HttpStatus.NOT_FOUND, message);
   }
 
   private static HttpClientErrorException httpClientErrorException(

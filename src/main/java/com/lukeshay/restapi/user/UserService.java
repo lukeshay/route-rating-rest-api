@@ -45,17 +45,6 @@ public interface UserService {
       Map<String, String> responseBody, Authentication authentication, String email);
 
   /**
-   * Checks if the username is not null and not in use. If is in invalid in anyway, a value with the
-   * key of 'username' is added to the map.
-   *
-   * @param responseBody The current response body map
-   * @param username The username of the user
-   * @return boolean of whether the username is valid
-   */
-  boolean validateUsername(
-      Map<String, String> responseBody, Authentication authentication, String username);
-
-  /**
    * Checks if the password is not null and valid format. If is in invalid in anyway, a value with
    * the key of 'password' is added to the map.
    *
@@ -82,4 +71,15 @@ public interface UserService {
    * @return boolean of whether the state is valid
    */
   boolean validateState(Map<String, String> responseBody, String state);
+
+  /**
+   * Checks if the username is not null and not in use. If is in invalid in anyway, a value with the
+   * key of 'username' is added to the map.
+   *
+   * @param responseBody The current response body map
+   * @param username The username of the user
+   * @return boolean of whether the username is valid
+   */
+  boolean validateUsername(
+      Map<String, String> responseBody, Authentication authentication, String username);
 }

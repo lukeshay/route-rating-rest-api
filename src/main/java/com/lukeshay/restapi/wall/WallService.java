@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 public interface WallService {
+
   Logger LOG = LoggerFactory.getLogger(WallService.class.getName());
 
   ResponseEntity<?> createWall(Authentication authentication, Wall body);
