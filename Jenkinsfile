@@ -2,7 +2,7 @@ pipeline {
   agent { label 'master' }
 
   environment {
-    GIT_REPO = $(shell basename 'git rev-parse --show-toplevel')
+    GIT_REPO = $(basename '$(git rev-parse --show-toplevel)')
   }
   stages {
     stage('Build') {
