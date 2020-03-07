@@ -9,7 +9,7 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-  agent { label 'ops' }
+  agent { label 'master' }
 
   stages {
     stage('Build') {
@@ -62,15 +62,23 @@ pipeline {
         build job: 'Test/post-release-api', propagate: true, wait: true
       }
     }
+    stage('Clean') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Cleaning hanging images...'
+        sh 'docker rmi $(docker images -q) || exit 0'
+        sh 'docker rm $(docker ps -aq) || exit 0'
+      }
+    }
   }
   post {
     success {
       setBuildStatus('Build succeeded', 'SUCCESS');
-      sh 'make clean'
     }
     failure {
       setBuildStatus('Build failed', 'FAILURE');
-      sh 'make clean'
     }
   }
 }

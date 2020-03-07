@@ -7,6 +7,7 @@ default: build
 
 clean:
 	docker images | awk 'NR != 1 && $1 == "${IMAGE_NAME}" { print $3 }' | xargs docker rmi -f
+	rm -rf rest-api.jar build
 
 push:
 	docker push ${IMAGE_NAME}:${TAG}
