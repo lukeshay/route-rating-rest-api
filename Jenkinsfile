@@ -4,10 +4,10 @@ pipeline {
   stages {
     stage('Print vars') {
       steps {
-        echo 'GIT_CHECKOUT_DIR $GIT_CHECKOUT_DIR'
-        echo 'GIT_CHECKOUT_DIR ${GIT_CHECKOUT_DIR}'
-        echo 'GIT_URL GIT_URL'
-        echo 'GIT_URL ${GIT_URL}'
+        echo 'GIT_CHECKOUT_DIR $env.GIT_CHECKOUT_DIR'
+        echo 'GIT_CHECKOUT_DIR ${env.GIT_CHECKOUT_DIR}'
+        echo 'GIT_URL $env.GIT_URL'
+        echo 'GIT_URL ${env.GIT_URL}'
       }
     }
     stage('Build') {
