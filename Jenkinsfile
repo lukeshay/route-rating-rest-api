@@ -62,6 +62,16 @@ pipeline {
         build job: 'Test/post-release-api', propagate: true, wait: true
       }
     }
+    stage('Clean') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Cleaning hanging images...'
+        sh 'docker rmi $(docker images -q) || exit 0'
+        sh 'docker rm $(docker ps -aq) || exit 0'
+      }
+    }
   }
   post {
     success {
