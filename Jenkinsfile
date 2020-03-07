@@ -66,11 +66,9 @@ pipeline {
   post {
     success {
       setBuildStatus('Build succeeded', 'SUCCESS');
-      sh 'make clean'
     }
     failure {
       setBuildStatus('Build failed', 'FAILURE');
-      sh 'make clean'
     }
   }
 }
