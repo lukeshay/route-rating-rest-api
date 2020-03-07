@@ -17,7 +17,7 @@ spring:
         password: password
         platform: postgres
         url: jdbc:postgresql://localhost:5432/routerating
-        username: standard
+        username: postgres
     jpa:
         hibernate:
             ddl-auto: update

@@ -10,7 +10,9 @@ COPY ./rest-api.jar $PROJECT_HOME
 EXPOSE 8080
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
-  -Dspring.datasource.url=jdbc:postgresql://rest-api-postgres:5432/routerating \
+  -Dspring.datasource.url=$DB_URL \
+  -Dspring.datasource.username=$DB_USERNAME \
+  -Dspring.datasource.password=$DB_PASSWORD \
   -DJWT_SECRET=$JWT_SECRET \
   -DREFRESH_SECRET=$REFRESH_SECRET \
   -DACCESS_KEY=$ACCESS_KEY \

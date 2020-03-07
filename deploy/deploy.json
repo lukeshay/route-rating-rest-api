@@ -1,13 +1,14 @@
 {
   "git_repository": "route-rating-rest-api",
   "secrets": [
-    "JWT_SECRET",
-    "REFRESH_SECRET",
-    "ACCESS_KEY",
-    "SECRET_KEY",
+    "REST_API_JWT_SECRET",
+    "REST_API_REFRESH_SECRET",
+    "DIGITAL_OCEAN_ACCESS_KEY",
+    "DIGITAL_OCEAN_SECRET_KEY",
     "GOOGLE_RECAPTCHA_TOKEN",
-    "RDS_REST_API_USERNAME",
-    "RDS_REST_API_PASSWORD"
+    "REST_API_DB_USERNAME",
+    "REST_API_DB_PASSWORD",
+    "REST_API_DB_URL"
   ],
   "docker_compose": {
     "repository": "lukeshaydocker/route-rating-rest-api",

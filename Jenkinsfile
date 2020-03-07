@@ -1,13 +1,3 @@
-void setBuildStatus(String message, String state) {
-  step([
-      $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: env.GIT_URL],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Jenkins/build-status"],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-  ]);
-}
-
 pipeline {
   agent { label 'master' }
 
@@ -15,7 +5,6 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building...'
-        setBuildStatus('Starting build', 'PENDING')
         sh 'scripts/build.sh'
       }
     }
@@ -50,7 +39,7 @@ pipeline {
         echo 'Triggering deploy job...'
         // build job: '', propagate: true, wait: true
         // Pass in the repository to get proper deploy files
-        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'DEPLOY_CONFIG', value: 'deploy/deploy.json'], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
+        build job: 'Deploy/deploy', propagate: true, wait: true, parameters: [[$class: 'StringParameterValue', name: 'GIT_REPO', value: 'route-rating-rest-api'], [$class: 'StringParameterValue', name: 'IMAGE_TAG', value: 'latest']]
       }
     }
     stage('Smoke test') {
@@ -75,10 +64,10 @@ pipeline {
   }
   post {
     success {
-      setBuildStatus('Build succeeded', 'SUCCESS');
+      sh 'rm -rf build rest-api.jar'
     }
     failure {
-      setBuildStatus('Build failed', 'FAILURE');
+      sh 'rm -rf build rest-api.jar'
     }
   }
 }

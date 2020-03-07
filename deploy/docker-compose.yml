@@ -9,26 +9,11 @@ services:
       - 5000:8080
     working_dir: /app
     environment:
-      - JWT_SECRET=$JWT_SECRET
-      - REFRESH_SECRET=$REFRESH_SECRET
-      - ACCESS_KEY=$ACCESS_KEY
-      - SECRET_KEY=$SECRET_KEY
+      - JWT_SECRET=$REST_API_JWT_SECRET
+      - REFRESH_SECRET=$REST_API_REFRESH_SECRET
+      - ACCESS_KEY=$DIGITAL_OCEAN_ACCESS_KEY
+      - SECRET_KEY=$DIGITAL_OCEAN_SECRET_KEY
       - GOOGLE_RECAPTCHA_TOKEN=$GOOGLE_RECAPTCHA_TOKEN
-    depends_on:
-      - sqldb
-    links:
-      - sqldb
-
-  sqldb:
-    image: postgres
-    container_name: rest-api-postgres
-    environment:
-      POSTGRES_USER: standard
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: routerating
-    volumes:
-      - db-data:/var/lib/postgresql/data
-
-volumes:
-  db-data:
-    driver: local
+      - DB_USERNAME=$REST_API_DB_USERNAME
+      - DB_URL=$REST_API_DB_URL
+      - DB_PASSWORD=$REST_API_DB_PASSWORD
