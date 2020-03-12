@@ -53,5 +53,5 @@ jobs:
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest -f deploy/Dockerfile .
       - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
-      - run: test `echo ${{ env.BRANCH }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || exit 0
+      - run: test `echo ${{ env.BRANCH }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
 
