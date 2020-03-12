@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users")
-public class User extends Auditable<String> {
+public class User extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false, nullable = false)
   @Expose
@@ -117,34 +118,6 @@ public class User extends Auditable<String> {
     this.authority = authority;
     this.role = role;
   }
-
-  //  @Override
-  //  public boolean equals(Object obj) {
-  //    if (obj == null) {
-  //      return false;
-  //    }
-  //    if (obj == this) {
-  //      return true;
-  //    }
-  //    if (obj.getClass() != getClass()) {
-  //      return false;
-  //    }
-  //    User rhs = (User) obj;
-  //
-  //    return super.equals(obj)
-  //        && this.id.equals(rhs.id)
-  //        && this.password.equals(rhs.password)
-  //        && this.username.equals(rhs.username)
-  //        && this.email.equals(rhs.email)
-  //        && this.firstName.equals(rhs.firstName)
-  //        && this.lastName.equals(rhs.lastName)
-  //        && this.phoneNumber.equals(rhs.phoneNumber)
-  //        && this.city.equals(rhs.city)
-  //        && this.state.equals(rhs.state)
-  //        && this.country.equals(rhs.country)
-  //        && this.authority.equals(rhs.authority)
-  //        && this.role.equals(rhs.role);
-  //  }
 
   public String getAuthority() {
     return authority;

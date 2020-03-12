@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AwsServiceImpl implements AwsService {
+  private static final String TEMP_FILE_NAME = "file_name.jpg";
 
   AWSCredentialsProvider credentialsProvider;
 
@@ -43,15 +44,18 @@ public class AwsServiceImpl implements AwsService {
 
   @Override
   public File convertFile(MultipartFile file) {
-    File convertedFile = new File(file.getOriginalFilename());
+    if (file == null) return null;
+    File convertedFile = new File(TEMP_FILE_NAME);
+
     try {
       FileOutputStream fos = new FileOutputStream(convertedFile);
       fos.write(file.getBytes());
       fos.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error("Exception when converting MultipartFile to File.", e);
       return null;
     }
+
     return convertedFile;
   }
 

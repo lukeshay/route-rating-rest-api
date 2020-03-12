@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.jwt.RouteRatingJwt;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "sessions")
-public class Session extends Auditable<String> {
+public class Session extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose

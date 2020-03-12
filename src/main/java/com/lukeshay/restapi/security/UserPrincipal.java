@@ -1,6 +1,7 @@
 package com.lukeshay.restapi.security;
 
 import com.lukeshay.restapi.user.User;
+import com.lukeshay.restapi.user.UserTypes;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,12 +22,12 @@ public class UserPrincipal implements UserDetails, Principal {
   @Override
   public Collection<GrantedAuthority> getAuthorities() {
     String role = user.getRole();
-    if (role == null) {
+    if (role == null || !role.equals(UserTypes.ADMIN.role())) {
       role = "BASIC_ROLE";
     }
 
     String authority = user.getAuthority();
-    if (authority == null) {
+    if (authority == null || !role.equals(UserTypes.ADMIN.authority())) {
       authority = "BASIC";
     }
 

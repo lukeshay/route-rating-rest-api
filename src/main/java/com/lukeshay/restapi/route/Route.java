@@ -6,6 +6,7 @@ import com.lukeshay.restapi.route.RouteProperties.Grade;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "routes")
-public class Route extends Auditable<String> {
+public class Route extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose

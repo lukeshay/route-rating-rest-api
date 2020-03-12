@@ -42,6 +42,7 @@ jobs:
           version: 4.3.0.2102
       - run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=${{ env.BRANCH }} -Dsonar.project.version=${{ env.SHA}}
 
+
   push-image:
     runs-on: ubuntu-latest
     needs: [build, lint, coverage]

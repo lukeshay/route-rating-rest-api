@@ -3,6 +3,7 @@ package com.lukeshay.restapi.gym;
 import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 /** The type Gym. */
 @Entity
 @Table(name = "gyms")
-public class Gym extends Auditable<String> {
+public class Gym extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose

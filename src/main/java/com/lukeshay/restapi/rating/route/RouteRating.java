@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.route.RouteProperties.Grade;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "route_rating")
-public class RouteRating extends Auditable<String> {
+public class RouteRating extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose

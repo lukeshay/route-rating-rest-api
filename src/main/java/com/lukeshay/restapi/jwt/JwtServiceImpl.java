@@ -64,7 +64,6 @@ public class JwtServiceImpl implements JwtService {
 
   @PostConstruct
   private void setSigner() {
-    System.out.println("JWT TOKEN: " + jwtSecret);
     byte[] secret = Base64.getMimeDecoder().decode(jwtSecret);
 
     jwtParser = Jwts.parser().setSigningKey(secret);

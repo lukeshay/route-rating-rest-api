@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "walls")
-public class Wall extends Auditable<String> {
+public class Wall extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose
@@ -104,7 +105,6 @@ public class Wall extends Auditable<String> {
         && Objects.equals(gymId, wall.gymId)
         && Objects.equals(name, wall.name)
         && ModelUtils.collectionsEqual(types, wall.types);
-    //        && Objects.equals(types, wall.types);
   }
 
   @Override
