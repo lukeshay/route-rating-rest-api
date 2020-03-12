@@ -47,7 +47,7 @@ public class AwsServiceImpl implements AwsService {
     if (file == null) return null;
     File convertedFile = new File(TEMP_FILE_NAME);
 
-    try (FileOutputStream fos = new FileOutputStream(convertedFile)){
+    try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
       fos.write(file.getBytes());
     } catch (IOException e) {
       LOG.error("Exception when converting MultipartFile to File.", e);
