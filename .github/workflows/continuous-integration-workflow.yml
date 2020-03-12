@@ -57,5 +57,5 @@ jobs:
       - run: ./scripts/build.sh
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest .
-      - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }
+      - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
 
