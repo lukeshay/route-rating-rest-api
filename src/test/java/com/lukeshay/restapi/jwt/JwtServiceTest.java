@@ -21,8 +21,8 @@ public class JwtServiceTest extends TestBase {
 
   @BeforeEach
   void setUp() {
-    jwtClaims = jwtService.buildJwtClaims(testUser);
-    refreshClaims = jwtService.buildRefreshClaims(testUser);
+    jwtClaims = jwtService.buildJwtClaims(user);
+    refreshClaims = jwtService.buildRefreshClaims(user);
 
     jwtToken = jwtService.buildToken(jwtClaims);
     refreshToken = jwtService.buildToken(refreshClaims);
@@ -44,10 +44,10 @@ public class JwtServiceTest extends TestBase {
     Claims parsedRefreshClaims = jwtService.parseJwtToken(refreshToken);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(testUser.getId(), jwtClaims.getId()),
+        () -> Assertions.assertEquals(user.getId(), jwtClaims.getId()),
         () -> Assertions.assertEquals(SecurityProperties.JWT_HEADER_STRING, jwtClaims.getSubject()),
         () -> Assertions.assertEquals(SecurityProperties.ISSUER, jwtClaims.getIssuer()),
-        () -> Assertions.assertEquals(testUser.getId(), refreshClaims.getId()),
+        () -> Assertions.assertEquals(user.getId(), refreshClaims.getId()),
         () ->
             Assertions.assertEquals(
                 SecurityProperties.REFRESH_HEADER_STRING, refreshClaims.getSubject()),

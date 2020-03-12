@@ -40,24 +40,24 @@ public class UserServiceTest extends TestBase {
 
   @Test
   void createUserTest() {
-    ResponseEntity<?> createValidUser = userService.createUser(testUser, UserTypes.BASIC);
+    ResponseEntity<?> createValidUser = userService.createUser(user, UserTypes.BASIC);
 
-    testUser = userRepository.findAll().get(0);
+    user = userRepository.findAll().get(0);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(testUser, createValidUser.getBody()),
+        () -> Assertions.assertEquals(user, createValidUser.getBody()),
         () ->
             Assertions.assertEquals(
                 UserTypes.BASIC.authority(), ((User) createValidUser.getBody()).getAuthority()),
         () -> Assertions.assertEquals(HttpStatus.OK, createValidUser.getStatusCode()));
 
     userRepository.deleteAll();
-    ResponseEntity<?> createValidAdminUser = userService.createUser(testUser, UserTypes.ADMIN);
+    ResponseEntity<?> createValidAdminUser = userService.createUser(user, UserTypes.ADMIN);
 
-    testUser = userRepository.findAll().get(0);
+    user = userRepository.findAll().get(0);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(testUser, createValidAdminUser.getBody()),
+        () -> Assertions.assertEquals(user, createValidAdminUser.getBody()),
         () ->
             Assertions.assertEquals(
                 UserTypes.ADMIN.authority(),
@@ -66,10 +66,10 @@ public class UserServiceTest extends TestBase {
 
     userRepository.deleteAll();
 
-    testUser.setId(null);
-    testUser.setUsername(null);
+    user.setId(null);
+    user.setUsername(null);
 
-    ResponseEntity<?> createInvalidUser = userService.createUser(testUser, UserTypes.BASIC);
+    ResponseEntity<?> createInvalidUser = userService.createUser(user, UserTypes.BASIC);
 
     Assertions.assertAll(
         () ->
@@ -80,11 +80,11 @@ public class UserServiceTest extends TestBase {
 
   @Test
   void deleteUserByIdTest() {
-    testUser = userRepository.save(testUser);
-    User deletedUser = userService.deleteUserById(testUser.getId());
-    Assertions.assertEquals(testUser, deletedUser);
+    user = userRepository.save(user);
+    User deletedUser = userService.deleteUserById(user.getId());
+    Assertions.assertEquals(user, deletedUser);
 
-    deletedUser = userService.deleteUserById(testUser.getId());
+    deletedUser = userService.deleteUserById(user.getId());
     Assertions.assertNull(deletedUser);
   }
 
@@ -95,7 +95,7 @@ public class UserServiceTest extends TestBase {
   @Test
   void getUserTest() {
     User getUser = userService.getUser(authentication);
-    Assertions.assertEquals(testUser, getUser);
+    Assertions.assertEquals(user, getUser);
 
     getUser = userService.getUser(null);
     Assertions.assertNull(getUser);
@@ -103,12 +103,12 @@ public class UserServiceTest extends TestBase {
 
   @Test
   void isEmailTakenTest() {
-    testUser = userRepository.save(testUser);
+    user = userRepository.save(user);
 
-    boolean emailTaken = userService.isEmailTaken(null, testUser.getEmail());
+    boolean emailTaken = userService.isEmailTaken(null, user.getEmail());
     Assertions.assertTrue(emailTaken);
 
-    emailTaken = userService.isEmailTaken(authentication, testUser.getEmail());
+    emailTaken = userService.isEmailTaken(authentication, user.getEmail());
     Assertions.assertFalse(emailTaken);
 
     emailTaken = userService.isEmailTaken(null, "luke@shay.com");

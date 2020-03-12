@@ -1,14 +1,14 @@
 package com.lukeshay.restapi.security;
 
-public class Credentials {
+public class CredentialsPayload {
 
   private String username;
   private String password;
   private Boolean remember;
 
-  public Credentials() {}
+  public CredentialsPayload() {}
 
-  public Credentials(String username, String password, Boolean remember) {
+  public CredentialsPayload(String username, String password, Boolean remember) {
     this.username = username;
     this.password = password;
     this.remember = remember;

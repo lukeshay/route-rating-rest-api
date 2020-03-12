@@ -41,7 +41,7 @@ class GymControllerTest extends TestBase {
             "lukeshay.com",
             "climbing@gym.com",
             "phoneNumber",
-            Collections.singletonList(testUser.getId()));
+            Collections.singletonList(user.getId()));
 
     // Setup files
     Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/logo.jpg");
@@ -103,7 +103,7 @@ class GymControllerTest extends TestBase {
             Assertions.assertEquals(
                 BodyUtils.error("Gym not found"), gymNotFoundResponse.getBody()));
 
-    testUserPrincipal.getUser().setId(UUID.randomUUID().toString());
+    userPrincipal.getUser().setId(UUID.randomUUID().toString());
 
     ResponseEntity<?> unauthorizedResponse =
         gymController.updateGym(
@@ -153,7 +153,7 @@ class GymControllerTest extends TestBase {
             Assertions.assertEquals(
                 BodyUtils.error("Error uploading file."), errorResponse.getBody()));
 
-    testUserPrincipal.getUser().setId(UUID.randomUUID().toString());
+    userPrincipal.getUser().setId(UUID.randomUUID().toString());
 
     ResponseEntity<?> unauthorizedResponse =
         gymController.uploadLogo(authentication, testFile, testGym.getId(), "logo");
@@ -211,7 +211,7 @@ class GymControllerTest extends TestBase {
               "lukeshay.com",
               "climbing@gym.com",
               "phoneNumber",
-              Collections.singletonList(testUser.getId()));
+              Collections.singletonList(user.getId()));
 
       gymRepository.save(gym);
     }

@@ -59,9 +59,9 @@ class UserControllerTest extends TestBase {
 
     Assertions.assertEquals(testUserTwo, getUser.getBody());
 
-    testUser.setId(null);
-    testUser.setUsername(UUID.randomUUID().toString());
-    newUser = new NewUser(testUser, "asdf");
+    user.setId(null);
+    user.setUsername(UUID.randomUUID().toString());
+    newUser = new NewUser(user, "asdf");
     ResponseEntity<?> responseEmail = userController.createUser(newUser);
 
     Map<String, Object> map = new HashMap<>();
@@ -72,9 +72,9 @@ class UserControllerTest extends TestBase {
         () -> Assertions.assertEquals(map, responseEmail.getBody()),
         () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode()));
 
-    testUser.setEmail("testtest@email.com");
-    testUser.setUsername(testUserTwo.getUsername());
-    newUser = new NewUser(testUser, "asdf");
+    user.setEmail("testtest@email.com");
+    user.setUsername(testUserTwo.getUsername());
+    newUser = new NewUser(user, "asdf");
 
     ResponseEntity<?> responseUsername = userController.createUser(newUser);
 
@@ -106,20 +106,20 @@ class UserControllerTest extends TestBase {
 
     testUserTwo = userRepository.save(testUserTwo);
 
-    testUser.setUsername("TestUserChange");
-    testUser.setFirstName("First");
-    testUser.setLastName("Last");
+    user.setUsername("TestUserChange");
+    user.setFirstName("First");
+    user.setLastName("Last");
 
-    ResponseEntity<?> updatedUser = userController.updateUser(authentication, testUser);
+    ResponseEntity<?> updatedUser = userController.updateUser(authentication, user);
 
-    testUser = userRepository.findById(testUser.getId()).orElse(null);
+    user = userRepository.findById(user.getId()).orElse(null);
 
     Assertions.assertAll(
-        () -> Assertions.assertEquals(testUser, updatedUser.getBody()),
+        () -> Assertions.assertEquals(user, updatedUser.getBody()),
         () -> Assertions.assertEquals(HttpStatus.OK, updatedUser.getStatusCode()));
 
-    testUser.setEmail(testUserTwo.getEmail());
-    ResponseEntity<?> responseEmail = userController.updateUser(authentication, testUser);
+    user.setEmail(testUserTwo.getEmail());
+    ResponseEntity<?> responseEmail = userController.updateUser(authentication, user);
 
     Map<String, String> map = new HashMap<>();
 
@@ -129,9 +129,9 @@ class UserControllerTest extends TestBase {
         () -> Assertions.assertEquals(map, responseEmail.getBody()),
         () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode()));
 
-    testUser.setEmail("testtest@email.com");
-    testUser.setUsername(testUserTwo.getUsername());
-    ResponseEntity<?> responseUsername = userController.updateUser(authentication, testUser);
+    user.setEmail("testtest@email.com");
+    user.setUsername(testUserTwo.getUsername());
+    ResponseEntity<?> responseUsername = userController.updateUser(authentication, user);
 
     map.clear();
     map.put("username", "Username is already in use.");
