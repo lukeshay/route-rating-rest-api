@@ -27,7 +27,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     env:
-      BRANCH: ${GITHUB_REF:11:}
+      BRANCH: ${GITHUB_REF:11}
       PROJECT_KEY: LukeShay_route-rating-rest-api
       SHA: ${GITHUB_SHA::7}
     steps:
