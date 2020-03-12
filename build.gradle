@@ -105,8 +105,7 @@ jacocoTestCoverageVerification {
                     '**/*SpringMain.class',
                     '**/*Utils.class',
                     '**/*Auditable.class',
-                    '**/*config/*',
-                    '**/*security/*',
+                    '**/*config/*'
                 ]
             )
         }))
@@ -116,7 +115,7 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 counter = 'INSTRUCTION'
-                minimum = 0.75
+                minimum = 0.70
             }
             limit {
                 counter = 'BRANCH'
