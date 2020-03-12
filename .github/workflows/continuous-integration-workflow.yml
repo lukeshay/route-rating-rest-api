@@ -26,6 +26,10 @@ jobs:
 
   coverage:
     runs-on: ubuntu-latest
+    env:
+      BRANCH: ${GITHUB_REF}
+      PROJECT_KEY: LukeShay_route-rating-rest-api
+      SHA: ${GITHUB_SHA::7}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
@@ -33,7 +37,25 @@ jobs:
           java-version: '11.0.5' # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
-      - run: ./gradlew jacocoTestCoverageVerification
+      - uses: warchant/setup-sonar-scanner@v1
+        with:
+          version: 4.3.0.2102
+      - run: ./gradlew build
+      - run: sonar-scanner \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.branch.name=${{ env.BRANCH }} \
+          -Dsonar.projectKey=${{ env.PROJECT_KEY }} \
+          -Dsonar.projectVersion=${{ env.SHA }} \
+          -Dsonar.organization=luke-shay \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.sources=src/main/java/ \
+          -Dsonar.exclusions=**/*Repository.class,**/*Repository.java,**/*Body.class,**/*Body.java,**/*View.class,**/*View.java,**/*Payload.class,**/*Payload.java,**/*Filter.class,**/*Filter.java,**/*Exception.class,**/*Exception.java,**/*SpringMain.class,**/*SpringMain.java \
+          -Dsonar.tests=src/test/java/ \
+          -Dsonar.java.source=11 \
+          -Dsonar.java.target=11 \
+          -Dsonar.java.binaries=build/classes/java/main/ \
+          -Dsonar.java.test.binaries=build/classes/java/test/ \
+          -Dsonar.junit.reportPaths=build/test-results/test/
 
   push-image:
     runs-on: ubuntu-latest
