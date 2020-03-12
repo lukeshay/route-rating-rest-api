@@ -30,3 +30,17 @@ spring:
             file-size-threshold: 2KB
             max-file-size: 200MB
             max-request-size: 215MB
+
+security:
+    secret:
+        jwt: AqDtjC3fnboWA2BBcHWdrWm1wvVKGy2IKtjX4Pa4de3nAOQu
+        refresh: CFiU3pvkQOE2Cv1a1VXefnB3owyiSpf3FZ2gyfhcXqTvbsYg
+
+do:
+    key:
+        secret: THIS_IS_A_FAKE_KEY
+        access: THIS_IS_A_FAKE_KEY
+
+google:
+    recaptcha:
+        token: THIS_IS_A_FAKE_KEY

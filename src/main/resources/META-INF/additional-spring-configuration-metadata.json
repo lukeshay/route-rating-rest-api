@@ -10,5 +10,15 @@
       "type": "java.lang.String",
       "description": "The name of the bucket/space being used."
     },
+    {
+      "name": "security.secret.jwt",
+      "type": "java.lang.String",
+      "description": "The secret being used for JWT generation."
+    },
+    {
+      "name": "security.secret.refresh",
+      "type": "java.lang.String",
+      "description": "The secret being used for refresh token generation."
+    }
   ]
 }

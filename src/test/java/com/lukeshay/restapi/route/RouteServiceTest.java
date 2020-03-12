@@ -20,7 +20,7 @@ public class RouteServiceTest extends TestBase {
   @BeforeEach
   void setUp() {
     routeService = new RouteServiceImpl(routeRepository, gymRepository, wallRepository);
-    testGym = TestBase.createTestGym(testUser.getId());
+    testGym = TestBase.createTestGym(user.getId());
     testGym = gymRepository.save(testGym);
     testWall = TestBase.createTestWall(testGym.getId(), Collections.singletonList(WallTypes.LEAD));
     testWall = wallRepository.save(testWall);

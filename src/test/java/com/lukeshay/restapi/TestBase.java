@@ -40,8 +40,8 @@ public class TestBase {
   @Autowired protected WallRepository wallRepository;
   @Autowired protected PasswordEncoder passwordEncoder;
 
-  protected User testUser;
-  protected UserPrincipal testUserPrincipal;
+  protected User user;
+  protected UserPrincipal userPrincipal;
 
   @Mock protected Authentication authentication;
   @Mock protected AwsService awsService;
@@ -50,7 +50,7 @@ public class TestBase {
   protected void setUpClasses() {
     MockitoAnnotations.initMocks(this);
 
-    testUser =
+    user =
         new User(
             "test.user@email.com",
             "Test",
@@ -62,14 +62,14 @@ public class TestBase {
             "USA",
             "password");
 
-    testUser.setAuthority(UserTypes.BASIC.authority());
-    testUser.setRole(UserTypes.BASIC.role());
+    user.setAuthority(UserTypes.BASIC.authority());
+    user.setRole(UserTypes.BASIC.role());
 
-    testUser = userRepository.save(testUser);
+    user = userRepository.save(user);
 
-    testUserPrincipal = new UserPrincipal(testUser);
+    userPrincipal = new UserPrincipal(user);
 
-    Mockito.when(authentication.getPrincipal()).thenReturn(testUserPrincipal);
+    Mockito.when(authentication.getPrincipal()).thenReturn(userPrincipal);
     Mockito.when(awsService.uploadFileToS3(Mockito.anyString(), Mockito.any(MultipartFile.class)))
         .thenReturn("url.com");
   }

@@ -12,7 +12,7 @@ clean:
 push:
 	docker push ${IMAGE_NAME}:${TAG}
 
-push-latest: tag-latest
+push-latest:
 	docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
 	docker push ${IMAGE_NAME}:latest
 
@@ -23,7 +23,7 @@ prebuild:
 	sh scripts/build.sh
 
 build:
-	docker build -t ${IMAGE_NAME}:${TAG} .
+	docker build -t ${IMAGE_NAME}:${TAG} -f deploy/Dockerfile .
 
 run:
 	docker-compose -f deploy/docker-compose.yml up -d

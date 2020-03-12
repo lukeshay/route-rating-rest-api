@@ -27,8 +27,8 @@ public class SessionServiceTest extends TestBase {
 
   @BeforeEach
   void setUp() {
-    jwtClaims = jwtService.buildJwtClaims(testUser);
-    refreshClaims = jwtService.buildRefreshClaims(testUser);
+    jwtClaims = jwtService.buildJwtClaims(user);
+    refreshClaims = jwtService.buildRefreshClaims(user);
 
     jwtToken = jwtService.buildToken(jwtClaims);
     refreshToken = jwtService.buildToken(refreshClaims);
@@ -43,7 +43,7 @@ public class SessionServiceTest extends TestBase {
             SecurityProperties.TOKEN_PREFIX + refreshToken,
             refreshClaims);
 
-    testSession = new Session(testRouteRatingJwt, testUser.getId());
+    testSession = new Session(testRouteRatingJwt, user.getId());
   }
 
   @Test
@@ -90,7 +90,7 @@ public class SessionServiceTest extends TestBase {
             Assertions.assertEquals(
                 SecurityProperties.TOKEN_PREFIX + refreshToken,
                 savedTestSession.getTokens().getRefreshToken()),
-        () -> Assertions.assertEquals(testUser.getId(), savedTestSession.getUserId()));
+        () -> Assertions.assertEquals(user.getId(), savedTestSession.getUserId()));
 
     savedTestSession.setTokens(null);
 

@@ -36,7 +36,7 @@ public class WallControllerTest extends TestBase {
             "lukeshay.com",
             "climbing@gym.com",
             "phoneNumber",
-            Collections.singletonList(testUser.getId()));
+            Collections.singletonList(user.getId()));
 
     testGym = gymRepository.save(testGym);
 
@@ -153,7 +153,7 @@ public class WallControllerTest extends TestBase {
   @Test
   @WithMockUser
   void unauthorizedEditorTest() {
-    testUser.setId(UUID.randomUUID().toString());
+    user.setId(UUID.randomUUID().toString());
 
     ResponseEntity<?> responseCreate = wallController.createWall(authentication, testWall);
 

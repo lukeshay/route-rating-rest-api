@@ -124,7 +124,7 @@ hs_err_pid*
 .scannerwork/
 
 # http://www.sonarlint.org/commandline/
-# SonarLint working directories, configuration files (including credentials)
+# SonarLint working directories, configuration files (including credentialsPayload)
 .sonarlint/
 
 ### Gradle ###

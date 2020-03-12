@@ -1,6 +1,7 @@
 package com.lukeshay.restapi.gym;
 
 import com.lukeshay.restapi.TestBase;
+import com.lukeshay.restapi.jwt.JwtService;
 import com.lukeshay.restapi.utils.BodyUtils;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ class GymControllerTest extends TestBase {
   private GymController gymController;
   private Gym testGym;
   private MultipartFile testFile;
+  @Autowired private JwtService jwtService;
 
   @BeforeEach
   void setUp() {
@@ -38,7 +41,7 @@ class GymControllerTest extends TestBase {
             "lukeshay.com",
             "climbing@gym.com",
             "phoneNumber",
-            Collections.singletonList(testUser.getId()));
+            Collections.singletonList(user.getId()));
 
     // Setup files
     Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/logo.jpg");
@@ -100,7 +103,7 @@ class GymControllerTest extends TestBase {
             Assertions.assertEquals(
                 BodyUtils.error("Gym not found"), gymNotFoundResponse.getBody()));
 
-    testUserPrincipal.getUser().setId(UUID.randomUUID().toString());
+    userPrincipal.getUser().setId(UUID.randomUUID().toString());
 
     ResponseEntity<?> unauthorizedResponse =
         gymController.updateGym(
@@ -150,7 +153,7 @@ class GymControllerTest extends TestBase {
             Assertions.assertEquals(
                 BodyUtils.error("Error uploading file."), errorResponse.getBody()));
 
-    testUserPrincipal.getUser().setId(UUID.randomUUID().toString());
+    userPrincipal.getUser().setId(UUID.randomUUID().toString());
 
     ResponseEntity<?> unauthorizedResponse =
         gymController.uploadLogo(authentication, testFile, testGym.getId(), "logo");
@@ -208,7 +211,7 @@ class GymControllerTest extends TestBase {
               "lukeshay.com",
               "climbing@gym.com",
               "phoneNumber",
-              Collections.singletonList(testUser.getId()));
+              Collections.singletonList(user.getId()));
 
       gymRepository.save(gym);
     }

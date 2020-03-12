@@ -7,6 +7,7 @@ import com.lukeshay.restapi.route.Route;
 import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.Wall;
 import java.util.List;
+import java.util.Objects;
 
 public class WallWithRoutes extends Wall {
 
@@ -22,5 +23,25 @@ public class WallWithRoutes extends Wall {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    WallWithRoutes that = (WallWithRoutes) o;
+    return Objects.equals(routes, that.routes);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), routes);
   }
 }

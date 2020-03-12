@@ -6,6 +6,8 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.jwt.RouteRatingJwt;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "sessions")
-public class Session extends Auditable<String> {
+public class Session extends Auditable<String> implements Serializable {
 
   @Column(name = "id", unique = true, updatable = false)
   @Expose
@@ -44,11 +46,6 @@ public class Session extends Auditable<String> {
     this.tokens = tokens;
     this.userId = userId;
     active = true;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
   }
 
   public Boolean getActive() {
@@ -81,6 +78,26 @@ public class Session extends Auditable<String> {
 
   public void setUserId(String userId) {
     this.userId = userId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Session session = (Session) o;
+    return Objects.equals(id, session.id)
+        && Objects.equals(tokens, session.tokens)
+        && Objects.equals(userId, session.userId)
+        && Objects.equals(active, session.active);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, tokens, userId, active);
   }
 
   @Override

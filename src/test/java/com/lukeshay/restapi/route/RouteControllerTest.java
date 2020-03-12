@@ -35,7 +35,7 @@ public class RouteControllerTest extends TestBase {
                 "lukeshay.com",
                 "climbing@gym.com",
                 "phoneNumber",
-                Collections.singletonList(testUser.getId())));
+                Collections.singletonList(user.getId())));
 
     testWall =
         wallRepository.save(
