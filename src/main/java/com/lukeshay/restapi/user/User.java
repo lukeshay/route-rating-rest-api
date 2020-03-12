@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -117,10 +118,33 @@ public class User extends Auditable<String> {
     this.role = role;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
-  }
+  //  @Override
+  //  public boolean equals(Object obj) {
+  //    if (obj == null) {
+  //      return false;
+  //    }
+  //    if (obj == this) {
+  //      return true;
+  //    }
+  //    if (obj.getClass() != getClass()) {
+  //      return false;
+  //    }
+  //    User rhs = (User) obj;
+  //
+  //    return super.equals(obj)
+  //        && this.id.equals(rhs.id)
+  //        && this.password.equals(rhs.password)
+  //        && this.username.equals(rhs.username)
+  //        && this.email.equals(rhs.email)
+  //        && this.firstName.equals(rhs.firstName)
+  //        && this.lastName.equals(rhs.lastName)
+  //        && this.phoneNumber.equals(rhs.phoneNumber)
+  //        && this.city.equals(rhs.city)
+  //        && this.state.equals(rhs.state)
+  //        && this.country.equals(rhs.country)
+  //        && this.authority.equals(rhs.authority)
+  //        && this.role.equals(rhs.role);
+  //  }
 
   public String getAuthority() {
     return authority;
@@ -221,5 +245,45 @@ public class User extends Auditable<String> {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return Objects.equals(id, user.id)
+        && Objects.equals(password, user.password)
+        && Objects.equals(username, user.username)
+        && Objects.equals(email, user.email)
+        && Objects.equals(firstName, user.firstName)
+        && Objects.equals(lastName, user.lastName)
+        && Objects.equals(phoneNumber, user.phoneNumber)
+        && Objects.equals(city, user.city)
+        && Objects.equals(state, user.state)
+        && Objects.equals(country, user.country)
+        && Objects.equals(authority, user.authority)
+        && Objects.equals(role, user.role);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id,
+        password,
+        username,
+        email,
+        firstName,
+        lastName,
+        phoneNumber,
+        city,
+        state,
+        country,
+        authority,
+        role);
   }
 }

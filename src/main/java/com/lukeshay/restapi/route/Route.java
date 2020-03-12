@@ -8,6 +8,7 @@ import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -76,11 +77,6 @@ public class Route extends Auditable<String> {
     this.setter = setter;
     this.holdColor = holdColor;
     this.types = types;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
   }
 
   public Grade getAverageGrade() {
@@ -155,11 +151,6 @@ public class Route extends Auditable<String> {
     this.wallId = wallId;
   }
 
-  @Override
-  public String toString() {
-    return ModelUtils.toString(this);
-  }
-
   public void updateAverages(List<RouteRating> ratings) {
     List<Grade> userGrades = new ArrayList<>();
     List<Integer> userRatings = new ArrayList<>();
@@ -180,5 +171,36 @@ public class Route extends Auditable<String> {
 
     setAverageRating(averageRating);
     setAverageGrade(Grade.getGrade(averageGrade));
+  }
+
+  @Override
+  public String toString() {
+    return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Route route = (Route) o;
+    return Double.compare(route.averageRating, averageRating) == 0
+        && Objects.equals(id, route.id)
+        && Objects.equals(wallId, route.wallId)
+        && Objects.equals(gymId, route.gymId)
+        && Objects.equals(name, route.name)
+        && Objects.equals(setter, route.setter)
+        && Objects.equals(holdColor, route.holdColor)
+        && ModelUtils.collectionsEqual(types, route.types)
+        && averageGrade == route.averageGrade;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id, wallId, gymId, name, setter, holdColor, types, averageGrade, averageRating);
   }
 }

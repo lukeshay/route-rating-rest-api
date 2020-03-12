@@ -1,5 +1,7 @@
 package com.lukeshay.restapi.security;
 
+import java.util.Objects;
+
 public class CredentialsPayload {
 
   private String username;
@@ -36,5 +38,24 @@ public class CredentialsPayload {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CredentialsPayload that = (CredentialsPayload) o;
+    return Objects.equals(username, that.username)
+        && Objects.equals(password, that.password)
+        && Objects.equals(remember, that.remember);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(username, password, remember);
   }
 }

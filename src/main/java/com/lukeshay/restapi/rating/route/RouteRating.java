@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.route.RouteProperties.Grade;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,11 +54,6 @@ public class RouteRating extends Auditable<String> {
     this.review = review;
     this.grade = grade;
     this.rating = rating;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
   }
 
   public String getCreatorId() {
@@ -119,5 +115,28 @@ public class RouteRating extends Auditable<String> {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    RouteRating that = (RouteRating) o;
+    return rating == that.rating
+        && Objects.equals(id, that.id)
+        && Objects.equals(creatorId, that.creatorId)
+        && Objects.equals(creatorUsername, that.creatorUsername)
+        && Objects.equals(routeId, that.routeId)
+        && Objects.equals(review, that.review)
+        && grade == that.grade;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, creatorId, creatorUsername, routeId, review, grade, rating);
   }
 }

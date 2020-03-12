@@ -5,6 +5,7 @@ import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -53,11 +54,6 @@ public class Wall extends Auditable<String> {
     this.types = types;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
-  }
-
   public String getGymId() {
     return gymId;
   }
@@ -93,5 +89,26 @@ public class Wall extends Auditable<String> {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Wall wall = (Wall) o;
+    return Objects.equals(id, wall.id)
+        && Objects.equals(gymId, wall.gymId)
+        && Objects.equals(name, wall.name)
+        && ModelUtils.collectionsEqual(types, wall.types);
+    //        && Objects.equals(types, wall.types);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, gymId, name, types);
   }
 }

@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.gym.Gym;
 import com.lukeshay.restapi.utils.ModelUtils;
 import java.util.List;
+import java.util.Objects;
 
 public class GymWithWalls extends Gym {
 
@@ -33,5 +34,25 @@ public class GymWithWalls extends Gym {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    GymWithWalls that = (GymWithWalls) o;
+    return Objects.equals(walls, that.walls);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), walls);
   }
 }

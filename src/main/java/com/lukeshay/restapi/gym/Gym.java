@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -120,11 +121,6 @@ public class Gym extends Auditable<String> {
     this.authorizedEditors = authorizedEditors;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ModelUtils.equals(this, obj);
-  }
-
   public String getAddress() {
     return address;
   }
@@ -224,5 +220,45 @@ public class Gym extends Auditable<String> {
   @Override
   public String toString() {
     return ModelUtils.toString(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Gym gym = (Gym) o;
+    return Objects.equals(id, gym.id)
+        && Objects.equals(name, gym.name)
+        && Objects.equals(address, gym.address)
+        && Objects.equals(city, gym.city)
+        && Objects.equals(state, gym.state)
+        && Objects.equals(zipCode, gym.zipCode)
+        && Objects.equals(website, gym.website)
+        && Objects.equals(email, gym.email)
+        && Objects.equals(phoneNumber, gym.phoneNumber)
+        && Objects.equals(logoUrl, gym.logoUrl)
+        && Objects.equals(photoUrl, gym.photoUrl)
+        && ModelUtils.collectionsEqual(authorizedEditors, gym.authorizedEditors);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id,
+        name,
+        address,
+        city,
+        state,
+        zipCode,
+        website,
+        email,
+        phoneNumber,
+        logoUrl,
+        photoUrl,
+        authorizedEditors);
   }
 }
