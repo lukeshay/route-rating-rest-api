@@ -5,16 +5,18 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RecaptchaValidator {
+  @Value("${google.recaptcha.token}")
+  private String googleRecaptchaToken;
 
   private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
       "https://www.google.com/recaptcha/api/siteverify";
-  private static final String GOOGLE_RECAPTCHA_TOKEN = System.getenv("GOOGLE_RECAPTCHA_TOKEN");
   private final RestTemplateBuilder restTemplateBuilder;
   Logger LOG = LoggerFactory.getLogger(RecaptchaValidator.class.getName());
   private Map lastResponse;
@@ -24,13 +26,9 @@ public class RecaptchaValidator {
     this.restTemplateBuilder = restTemplateBuilder;
   }
 
-  public String getRecaptchaToken() {
-    return GOOGLE_RECAPTCHA_TOKEN;
-  }
-
   public boolean validate(String recaptcha) {
     Map<String, String> body = new HashMap<>();
-    body.put("secret", GOOGLE_RECAPTCHA_TOKEN);
+    body.put("secret", googleRecaptchaToken);
     body.put("response", recaptcha);
 
     ResponseEntity<Map> recaptchaResponseEntity =

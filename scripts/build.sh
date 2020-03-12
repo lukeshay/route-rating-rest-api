@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
-rm -rf build
-rm -rf rest-api.jar
-rm -rf restapi.log
+rm -rf build || echo ""
+rm -rf rest-api.jar || echo ""
+rm -rf restapi.log || echo ""
 
 #./gradlew clean build --no-daemon  \
 #    -x jacocoTestReport \
@@ -19,7 +19,7 @@ rm -rf restapi.log
 #    -x check \
 #    || exit 1
 
-GRADLE_OPTS="-Xmx64m -Dorg.gradle.jvmargs='-Xmx256m -XX:MaxPermSize=64m'" ./gradlew build \
+./gradlew build \
   --no-rebuild \
   -x verifyGoogleJavaFormat \
   -x bootDistTar \

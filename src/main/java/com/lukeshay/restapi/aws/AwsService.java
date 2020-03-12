@@ -26,10 +26,13 @@ public class AwsService {
   @Value("${file.bucket.url}")
   private String bucketUrl;
 
-  public AwsService() {
-    String accessKey = System.getenv("ACCESS_KEY");
-    String secretKey = System.getenv("SECRET_KEY");
+  @Value("${do.key.access")
+  private String accessKey;
 
+  @Value("${do.key.secret")
+  private String secretKey;
+
+  public AwsService() {
     if (accessKey == null || secretKey == null) {
       credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials("", ""));
     } else {

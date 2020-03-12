@@ -11,10 +11,13 @@ import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+  @Value("${security.secret.jwt}")
+  private String jwtSecret;
 
   private JwtParser jwtParser;
   private SecretKey secretKey;
@@ -61,7 +64,8 @@ public class JwtServiceImpl implements JwtService {
 
   @PostConstruct
   private void setSigner() {
-    byte[] secret = Base64.getMimeDecoder().decode(SecurityProperties.JWT_SECRET);
+    System.out.println("JWT TOKEN: " + jwtSecret);
+    byte[] secret = Base64.getMimeDecoder().decode(jwtSecret);
 
     jwtParser = Jwts.parser().setSigningKey(secret);
     secretKey = Keys.hmacShaKeyFor(secret);
