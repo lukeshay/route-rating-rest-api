@@ -11,7 +11,7 @@
     "REST_API_DB_URL"
   ],
   "docker_compose": {
-    "repository": "lukeshaydocker/route-rating-rest-api",
+    "repository": "route-rating-rest-api",
     "compose_file": "deploy/docker-compose.yml"
   }
 }

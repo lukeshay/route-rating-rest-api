@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.utils.ModelUtils;
 import io.jsonwebtoken.Claims;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class RouteRatingJwt {
+public class RouteRatingJwt implements Serializable {
 
   @Expose private String jwtToken;
 
