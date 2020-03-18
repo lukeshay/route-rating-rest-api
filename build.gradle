@@ -40,7 +40,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: project.springBootVersion
 
     // Database dependencies
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
 
     // Test dependencies
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
