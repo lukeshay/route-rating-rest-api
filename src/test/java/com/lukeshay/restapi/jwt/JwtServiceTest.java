@@ -52,7 +52,6 @@ public class JwtServiceTest extends TestBase {
             Assertions.assertEquals(
                 SecurityProperties.REFRESH_HEADER_STRING, refreshClaims.getSubject()),
         () -> Assertions.assertEquals(SecurityProperties.ISSUER, refreshClaims.getIssuer()),
-        () -> Assertions.assertEquals(1440L, expiresIn),
         () -> Assertions.assertEquals(jwtClaims.getSubject(), parsedJwtClaims.getSubject()),
         () -> Assertions.assertEquals(jwtClaims.getId(), parsedJwtClaims.getId()),
         () -> Assertions.assertEquals(jwtClaims.getIssuedAt(), parsedJwtClaims.getIssuedAt()),

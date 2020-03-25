@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Rest API for Route Rating.
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: rest-api
+    Description: Rest API for Route Rating.
+    Author: Luke Shay
+    LicenseUrl: LICENSE
+    ReadmeUrl: README.md
+    HomePageUrl: https://lukeshay.com
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/LukeShay/route-rating-rest-api
+    private: true
+
+Resources:
+  RestApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.lukeshay.restapi.StreamLambdaHandler::handleRequest
+      Runtime: java11
+      CodeUri: build/distributions/rest-api-lambda.zip
+      MemorySize: 1512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 120
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+      TracingConfig:
+        Mode: Active
+
+Outputs:
+  RestApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api'
+    Export:
+      Name: RestApi

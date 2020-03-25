@@ -30,10 +30,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: routerating
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./db-data:/var/lib/postgresql/data
     ports:
     - 5433:5432
-
-volumes:
-  db-data:
-    driver: local

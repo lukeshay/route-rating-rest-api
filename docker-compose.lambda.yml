@@ -1,0 +1,41 @@
+version: "3.5"
+
+services:
+#  restapi:
+#    image: lambci/lambda:java11
+#    restart: always
+#    container_name: rest-api-lambda
+#    environment:
+#      - AWS_ACCESS_KEY_ID=$RR_AWS_ACCESS_KEY_ID
+#      - AWS_SECRET_ACCESS_KEY=$RR_AWS_SECRET_ACCESS_KEY
+#      - AWS_LAMBDA_FUNCTION_MEMORY_SIZE=1512
+#      - AWS_LAMBDA_FUNCTION_HANDLER=com.lukeshay.restapi.StreamLambdaHandler::handleRequest
+#      - environment=dev
+#      - AWS_DEFAULT_REGION=us-east-1
+#    depends_on:
+#      - sqldb
+#    links:
+#      - sqldb
+#    volumes:
+#      - ./build/distributions/lambda:/var/task
+
+#  restapi-build:
+#    image: lambci/lambda:build-java11
+#    volumes:
+#      - .:/tmp
+
+  postgres:
+    image: postgres:11-alpine
+    container_name: rest-api-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: routerating
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+    - 5432:5432
+
+volumes:
+  db-data:
+    driver: local

@@ -69,7 +69,7 @@ public class RouteServiceImpl implements RouteService {
   private Gym getGymOrNotFound(Route route) throws HttpClientErrorException {
     Optional<Gym> gym = gymRepository.findById(route.getGymId());
 
-    if (gym.isEmpty()) {
+    if (!gym.isPresent()) {
       throw ExceptionUtils.notFound("Gym not found.");
     }
 
@@ -93,7 +93,7 @@ public class RouteServiceImpl implements RouteService {
   private Wall getWallOrNotFound(Route route) throws HttpClientErrorException {
     Optional<Wall> wallOptional = getWall(route);
 
-    if (wallOptional.isEmpty()) {
+    if (!wallOptional.isPresent()) {
       throw ExceptionUtils.notFound("Wall not found.");
     }
 

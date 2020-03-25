@@ -44,7 +44,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       throws IOException, ServletException {
 
     if (jwtService == null) {
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = request.getSession().getServletContext();
       WebApplicationContext webApplicationContext =
           WebApplicationContextUtils.getWebApplicationContext(servletContext);
 

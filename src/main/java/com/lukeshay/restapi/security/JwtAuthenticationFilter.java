@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
 
     if (jwtService == null) {
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = request.getSession().getServletContext();
       WebApplicationContext webApplicationContext =
           WebApplicationContextUtils.getWebApplicationContext(servletContext);
 

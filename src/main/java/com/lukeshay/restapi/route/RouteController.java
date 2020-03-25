@@ -55,7 +55,7 @@ public class RouteController {
     if (response.isEmpty()) {
       Optional<Route> route = routeService.createRoute(body);
 
-      if (route.isEmpty()) {
+      if (!route.isPresent()) {
         return ResponseUtils.internalServerError(BodyUtils.error("error creating route"));
       } else {
         return ResponseUtils.ok(route.get());
