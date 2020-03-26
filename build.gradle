@@ -2,7 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.1.13.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
-    id 'checkstyle'
+//    id "org.ec4j.editorconfig"
     id 'jacoco'
     id 'application'
     id 'org.sonarqube' version '2.7'

@@ -7,11 +7,6 @@ pipeline {
         sh 'scripts/build.sh'
       }
     }
-    stage('Lint') {
-      steps {
-        sh 'scripts/lint.sh'
-      }
-    }
     stage('Coverage') {
       steps {
         sh 'scripts/coverage.sh'
