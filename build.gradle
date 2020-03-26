@@ -1,11 +1,8 @@
-import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
-import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
-
 plugins {
     id 'org.springframework.boot' version '2.1.13.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
-    id 'com.github.sherter.google-java-format' version '0.8'
+    id 'checkstyle'
     id 'jacoco'
     id 'application'
     id 'org.sonarqube' version '2.7'
@@ -57,10 +54,10 @@ dependencies {
     // Security dependencies
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: project.jjwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: project.jjwtVersion, {
-        exclude group:'io.jsonwebtoken', module:'jjwt-api'
+        exclude group: 'io.jsonwebtoken', module: 'jjwt-api'
     }
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: project.jjwtVersion, {
-        exclude group:'io.jsonwebtoken', module:'jjwt-api'
+        exclude group: 'io.jsonwebtoken', module: 'jjwt-api'
     }
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 
@@ -72,26 +69,13 @@ dependencies {
     // AWS dependencies
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3'
-    implementation  group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.4.0'
+    implementation group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.4.0'
 
     implementation group: 'com.google.code.gson', name: 'gson'
 }
 
 test {
     useJUnitPlatform()
-}
-
-task format(type: GoogleJavaFormat) {
-    source 'src/main'
-    source 'src/test'
-    include '**/*.java'
-    exclude '**/*Template.java'
-}
-
-task verifyFormatting(type: VerifyGoogleJavaFormat) {
-    source 'src/main'
-    include '**/*.java'
-    ignoreFailures true
 }
 
 jacocoTestCoverageVerification {

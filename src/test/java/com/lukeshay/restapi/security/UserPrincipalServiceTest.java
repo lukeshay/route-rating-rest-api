@@ -6,19 +6,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserPrincipalServiceTest extends TestBase {
-  @Autowired private UserPrincipalService userPrincipalService;
+	@Autowired
+	private UserPrincipalService userPrincipalService;
 
-  @Test
-  void loadUserByUsernameTest() {
-    UserPrincipal validUsername =
-        (UserPrincipal) userPrincipalService.loadUserByUsername(user.getUsername());
-    UserPrincipal invalidUsername =
-        (UserPrincipal) userPrincipalService.loadUserByUsername("ADJFLDKFJ");
+	@Test
+	void loadUserByUsernameTest() {
+		UserPrincipal validUsername =
+			(UserPrincipal) userPrincipalService.loadUserByUsername(user.getUsername());
+		UserPrincipal invalidUsername =
+			(UserPrincipal) userPrincipalService.loadUserByUsername("ADJFLDKFJ");
 
-    Assertions.assertAll(
-        () -> Assertions.assertNotNull(validUsername),
-        () -> Assertions.assertEquals(user, validUsername.getUser()),
-        () -> Assertions.assertEquals(userPrincipal, validUsername),
-        () -> Assertions.assertNull(invalidUsername.getUser()));
-  }
+		Assertions.assertAll(
+			() -> Assertions.assertNotNull(validUsername),
+			() -> Assertions.assertEquals(user, validUsername.getUser()),
+			() -> Assertions.assertEquals(userPrincipal, validUsername),
+			() -> Assertions.assertNull(invalidUsername.getUser()));
+	}
 }

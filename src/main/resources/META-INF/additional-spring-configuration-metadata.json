@@ -1,24 +1,24 @@
 {
-  "properties": [
-    {
-      "name": "file.bucket.url",
-      "type": "java.lang.String",
-      "description": "The url of the bucket/space being used."
-    },
-    {
-      "name": "file.bucket.name",
-      "type": "java.lang.String",
-      "description": "The name of the bucket/space being used."
-    },
-    {
-      "name": "security.secret.jwt",
-      "type": "java.lang.String",
-      "description": "The secret being used for JWT generation."
-    },
-    {
-      "name": "security.secret.refresh",
-      "type": "java.lang.String",
-      "description": "The secret being used for refresh token generation."
-    }
-  ]
+    "properties": [
+        {
+            "name": "file.bucket.url",
+            "type": "java.lang.String",
+            "description": "The url of the bucket/space being used."
+        },
+        {
+            "name": "file.bucket.name",
+            "type": "java.lang.String",
+            "description": "The name of the bucket/space being used."
+        },
+        {
+            "name": "security.secret.jwt",
+            "type": "java.lang.String",
+            "description": "The secret being used for JWT generation."
+        },
+        {
+            "name": "security.secret.refresh",
+            "type": "java.lang.String",
+            "description": "The secret being used for refresh token generation."
+        }
+    ]
 }

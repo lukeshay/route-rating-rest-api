@@ -1,6 +1,5 @@
 package com.lukeshay.restapi.gym;
 
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,32 +7,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface GymService {
 
-  Logger LOG = LoggerFactory.getLogger(GymService.class.getName());
+	Logger LOG = LoggerFactory.getLogger(GymService.class.getName());
 
-  Gym createGym(Gym gym);
+	Gym createGym(Gym gym);
 
-  @Deprecated
-  Iterable<Gym> getAllGyms();
+	@Deprecated
+	Iterable<Gym> getAllGyms();
 
-  Gym getGymById(String gymId);
+	Gym getGymById(String gymId);
 
-  Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page);
+	Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page);
 
-  Gym updateGym(
-      Authentication authentication,
-      String gymId,
-      String name,
-      String address,
-      String city,
-      String state,
-      String zipCode,
-      String email,
-      String phoneNumber,
-      String website,
-      List<String> authorizedEditors);
+	Gym updateGym(
+		Authentication authentication,
+		String gymId,
+		String name,
+		String address,
+		String city,
+		String state,
+		String zipCode,
+		String email,
+		String phoneNumber,
+		String website,
+		List<String> authorizedEditors);
 
-  ResponseEntity<?> uploadPhoto(
-      Authentication authentication, MultipartFile file, String gymId, String imageName);
+	ResponseEntity<?> uploadPhoto(
+		Authentication authentication, MultipartFile file, String gymId, String imageName);
 }

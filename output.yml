@@ -6,8 +6,8 @@ Metadata:
     Name: rest-api
     Description: Rest API for Route Rating.
     Author: Luke Shay
-    LicenseUrl: s3://route-rating-rest-api-builds/fa2ff42/3000208d539ec061b899bce1d9ce9404
-    ReadmeUrl: s3://route-rating-rest-api-builds/fa2ff42/738b8003af06e40d1284381d949518d1
+    LicenseUrl: s3://route-rating-rest-api-builds/2e5ed98/3000208d539ec061b899bce1d9ce9404
+    ReadmeUrl: s3://route-rating-rest-api-builds/2e5ed98/738b8003af06e40d1284381d949518d1
     HomePageUrl: https://lukeshay.com
     SemanticVersion: 0.0.1
     SourceCodeUrl: https://github.com/LukeShay/route-rating-rest-api
@@ -18,7 +18,7 @@ Resources:
     Properties:
       Handler: com.lukeshay.restapi.StreamLambdaHandler::handleRequest
       Runtime: java11
-      CodeUri: s3://route-rating-rest-api-builds/fa2ff42/89a7a1f6c699927d87001af6549a8bc9
+      CodeUri: s3://route-rating-rest-api-builds/2e5ed98/8ed639b83da4b3d3f2d754e76d5a5500
       MemorySize: 1512
       Policies: AWSLambdaBasicExecutionRole
       Timeout: 120

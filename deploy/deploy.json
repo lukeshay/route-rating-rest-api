@@ -1,17 +1,17 @@
 {
-  "git_repository": "route-rating-rest-api",
-  "secrets": [
-    "REST_API_JWT_SECRET",
-    "REST_API_REFRESH_SECRET",
-    "DIGITAL_OCEAN_ACCESS_KEY",
-    "DIGITAL_OCEAN_SECRET_KEY",
-    "GOOGLE_RECAPTCHA_TOKEN",
-    "REST_API_DB_USERNAME",
-    "REST_API_DB_PASSWORD",
-    "REST_API_DB_URL"
-  ],
-  "docker_compose": {
-    "repository": "route-rating-rest-api",
-    "compose_file": "deploy/docker-compose.yml"
-  }
+    "git_repository": "route-rating-rest-api",
+    "secrets": [
+        "REST_API_JWT_SECRET",
+        "REST_API_REFRESH_SECRET",
+        "DIGITAL_OCEAN_ACCESS_KEY",
+        "DIGITAL_OCEAN_SECRET_KEY",
+        "GOOGLE_RECAPTCHA_TOKEN",
+        "REST_API_DB_USERNAME",
+        "REST_API_DB_PASSWORD",
+        "REST_API_DB_URL"
+    ],
+    "docker_compose": {
+        "repository": "route-rating-rest-api",
+        "compose_file": "deploy/docker-compose.yml"
+    }
 }

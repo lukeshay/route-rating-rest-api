@@ -17,35 +17,35 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @EnableWebMvc
 @Profile("lambda")
 public class LambdaConfig {
-  // silence console logging
-   @Value("${logging.level.root:OFF}")
-   String message = "";
+	// silence console logging
+	@Value("${logging.level.root:OFF}")
+	String message = "";
 
-  /**
-   * Create required HandlerMapping, to avoid several default HandlerMapping instances being created
-   */
-  @Bean
-  public HandlerMapping handlerMapping() {
-    return new RequestMappingHandlerMapping();
-  }
+	/**
+	 * Create required HandlerMapping, to avoid several default HandlerMapping instances being created
+	 */
+	@Bean
+	public HandlerMapping handlerMapping() {
+		return new RequestMappingHandlerMapping();
+	}
 
-  /**
-   * Create required HandlerAdapter, to avoid several default HandlerAdapter instances being created
-   */
-  @Bean
-  public HandlerAdapter handlerAdapter() {
-    return new RequestMappingHandlerAdapter();
-  }
+	/**
+	 * Create required HandlerAdapter, to avoid several default HandlerAdapter instances being created
+	 */
+	@Bean
+	public HandlerAdapter handlerAdapter() {
+		return new RequestMappingHandlerAdapter();
+	}
 
-  /**
-   * optimization - avoids creating default exception resolvers; not required as the serverless
-   * container handles all exceptions
-   *
-   * <p>By default, an ExceptionHandlerExceptionResolver is created which creates many dependent
-   * object, including an expensive ObjectMapper instance.
-   */
-  @Bean
-  public HandlerExceptionResolver handlerExceptionResolver() {
-    return (request, response, handler, ex) -> null;
-  }
+	/**
+	 * optimization - avoids creating default exception resolvers; not required as the serverless
+	 * container handles all exceptions
+	 *
+	 * <p>By default, an ExceptionHandlerExceptionResolver is created which creates many dependent
+	 * object, including an expensive ObjectMapper instance.
+	 */
+	@Bean
+	public HandlerExceptionResolver handlerExceptionResolver() {
+		return (request, response, handler, ex) -> null;
+	}
 }

@@ -16,21 +16,21 @@ if [[ "${SKIP_PACKAGE}" != "TRUE" ]]; then
 fi
 
 if [[ "${SKIP_DEPLOY}" != "TRUE" ]]; then
-  sam deploy \
-      --s3-bucket route-rating-rest-api-builds \
-      --template-file output.yml \
-      --region us-east-2 \
-      --no-confirm-changeset \
-      --stack-name "$(basename "$(git rev-parse --show-toplevel)")" \
-      --capabilities CAPABILITY_IAM
+    sam deploy \
+        --s3-bucket route-rating-rest-api-builds \
+        --template-file output.yml \
+        --region us-east-2 \
+        --no-confirm-changeset \
+        --stack-name "$(basename "$(git rev-parse --show-toplevel)")" \
+        --capabilities CAPABILITY_IAM
 fi
 
 FUNCTION_NAME=$(
-  aws lambda list-functions | \
-  grep '"FunctionName": "route-rating-rest-api-RestApiFunction' | \
-  sed 's/"FunctionName": "//g' | \
-  sed 's/",//g' |
-  sed 's/ //g'
+    aws lambda list-functions |
+        grep '"FunctionName": "route-rating-rest-api-RestApiFunction' |
+        sed 's/"FunctionName": "//g' |
+        sed 's/",//g' |
+        sed 's/ //g'
 )
 
 ENV_VARS="{
@@ -44,6 +44,6 @@ ENV_VARS="{
 }"
 
 aws lambda \
-  update-function-configuration \
-  --function-name "${FUNCTION_NAME}" \
-  --environment "Variables=${ENV_VARS}"
+    update-function-configuration \
+    --function-name "${FUNCTION_NAME}" \
+    --environment "Variables=${ENV_VARS}"
