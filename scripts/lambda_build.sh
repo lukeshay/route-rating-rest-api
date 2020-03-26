@@ -3,12 +3,13 @@
 rm -rf build output.yml
 
 if [[ "${SKIP_BUILD}" != "TRUE" ]]; then
-    docker build -t rest-api-lambda .
+    docker build -f deploy/Dockerfile.lambda -t rest-api-lambda .
     docker run -v "${PWD}"/build:/app/build rest-api-lambda
 fi
 
 if [[ "${SKIP_PACKAGE}" != "TRUE" ]]; then
     sam package \
+        --template-file deploy/template.yml \
         --s3-bucket route-rating-rest-api-builds \
         --s3-prefix "$(git rev-parse --short HEAD)" \
         --output-template-file output.yml \
