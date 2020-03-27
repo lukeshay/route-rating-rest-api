@@ -1,26 +1,26 @@
-version: "3.3"
+version: "3.5"
 
 services:
-#  restapi:
-#    image: lukeshaydocker/route-rating-rest-api:latest
-#    restart: always
-#    container_name: rest-api
-#    ports:
-#      - 5000:8080
-#    working_dir: /app
-#    environment:
-#      - JWT_SECRET=$JWT_SECRET
-#      - REFRESH_SECRET=$REFRESH_SECRET
-#      - ACCESS_KEY=$ACCESS_KEY
-#      - SECRET_KEY=$SECRET_KEY
-#      - GOOGLE_RECAPTCHA_TOKEN=$GOOGLE_RECAPTCHA_TOKEN
-#      - DB_URL=jdbc:postgresql://localhost:5432/routerating
-#      - DB_USERNAME=postgres
-#      - DB_PASSWORD=password
-#    depends_on:
-#      - sqldb
-#    links:
-#      - sqldb
+  restapi:
+    image: lukeshaydocker/route-rating-rest-api:latest
+    restart: always
+    container_name: rest-api
+    ports:
+      - 5000:8080
+    working_dir: /app
+    environment:
+      - JWT_SECRET=$JWT_SECRET
+      - REFRESH_SECRET=$REFRESH_SECRET
+      - ACCESS_KEY=$ACCESS_KEY
+      - SECRET_KEY=$SECRET_KEY
+      - GOOGLE_RECAPTCHA_TOKEN=$GOOGLE_RECAPTCHA_TOKEN
+      - DB_URL=jdbc:postgresql://localhost:5432/routerating
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+    depends_on:
+      - sqldb
+    links:
+      - sqldb
 
   sqldb:
     image: postgres

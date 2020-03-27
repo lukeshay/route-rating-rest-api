@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
@@ -36,8 +37,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
 
-	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService, SessionService sessionService, UserRepository userRepository) {
 		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtService;
+		this.sessionService = sessionService;
+		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -71,15 +75,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		FilterChain chain,
 		Authentication authResult)
 		throws IOException {
-
-		if (jwtService == null) {
-			ServletContext servletContext = request.getSession().getServletContext();
-			WebApplicationContext webApplicationContext =
-				WebApplicationContextUtils.getWebApplicationContext(servletContext);
-
-			jwtService = webApplicationContext.getBean(JwtServiceImpl.class);
-			sessionService = webApplicationContext.getBean(SessionServiceImpl.class);
-		}
 
 		UserPrincipal principal = (UserPrincipal) authResult.getPrincipal();
 

@@ -1,9 +1,10 @@
 package com.lukeshay.restapi.config;
 
+import com.lukeshay.restapi.jwt.JwtService;
 import com.lukeshay.restapi.security.JwtAuthenticationFilter;
 import com.lukeshay.restapi.security.JwtAuthorizationFilter;
+import com.lukeshay.restapi.session.SessionService;
 import com.lukeshay.restapi.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -30,13 +31,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private UserDetailsService userDetailsService;
 	private UserRepository userRepository;
+	private SessionService sessionService;
+	private JwtService jwtService;
 
-	@Autowired
-	public SecurityConfiguration(
-		@Qualifier("userPrincipalService") UserDetailsService userDetailsService,
-		UserRepository userRepository) {
+	public SecurityConfiguration(@Qualifier("userPrincipalService") UserDetailsService userDetailsService,
+	                             UserRepository userRepository,
+	                             SessionService sessionService, JwtService jwtService) {
 		this.userDetailsService = userDetailsService;
 		this.userRepository = userRepository;
+		this.sessionService = sessionService;
+		this.jwtService = jwtService;
 	}
 
 	@Bean
@@ -58,8 +62,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.addFilter(new JwtAuthenticationFilter(authenticationManager()))
-			.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
+			.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, sessionService,
+				userRepository))
+			.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtService, userRepository))
 			.authorizeRequests()
 			.anyRequest()
 			.permitAll();

@@ -1,9 +1,7 @@
 package com.lukeshay.restapi.security;
 
 import com.lukeshay.restapi.jwt.JwtService;
-import com.lukeshay.restapi.jwt.JwtServiceImpl;
 import com.lukeshay.restapi.session.SessionService;
-import com.lukeshay.restapi.session.SessionServiceImpl;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.user.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -15,11 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,9 +27,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private JwtService jwtService;
 	private SessionService sessionService;
 
-	public JwtAuthorizationFilter(
-		AuthenticationManager authenticationManager, UserRepository userRepository) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository) {
 		super(authenticationManager);
+		this.jwtService = jwtService;
 		this.userRepository = userRepository;
 	}
 
@@ -43,15 +37,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(
 		HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
-
-		if (jwtService == null) {
-			ServletContext servletContext = request.getSession().getServletContext();
-			WebApplicationContext webApplicationContext =
-				WebApplicationContextUtils.getWebApplicationContext(servletContext);
-
-			jwtService = webApplicationContext.getBean(JwtServiceImpl.class);
-			sessionService = webApplicationContext.getBean(SessionServiceImpl.class);
-		}
 
 		String header = request.getHeader(SecurityProperties.JWT_HEADER_STRING);
 

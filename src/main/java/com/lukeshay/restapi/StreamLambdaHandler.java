@@ -9,6 +9,9 @@ import com.amazonaws.serverless.proxy.spring.SpringBootProxyHandlerBuilder;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.common.base.Splitter;
+import com.lukeshay.restapi.wall.WallService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +22,8 @@ import java.util.Set;
 
 public class StreamLambdaHandler implements RequestStreamHandler {
 	private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
+
+	private static Logger LOG = LoggerFactory.getLogger(StreamLambdaHandler.class.getName());
 
 	private static String[] getProfiles(String activeProfiles) {
 		Splitter splitter = Splitter.on(',').trimResults().omitEmptyStrings();
@@ -39,8 +44,6 @@ public class StreamLambdaHandler implements RequestStreamHandler {
 				String listOfActiveSpringProfiles = System.getenv("SPRING_PROFILES_ACTIVE");
 				long startTime = Instant.now().toEpochMilli();
 
-				LambdaContainerHandler.getContainerConfig().setInitializationTimeout(20_000);
-
 				handler =
 					new SpringBootProxyHandlerBuilder()
 						.defaultProxy()
@@ -54,9 +57,8 @@ public class StreamLambdaHandler implements RequestStreamHandler {
 			}
 		}
 
-		handler.proxyStream(inputStream, outputStream, context);
+		LOG.info("Context: " + context);
 
-		outputStream.flush();
-		outputStream.close();
+		handler.proxyStream(inputStream, outputStream, context);
 	}
 }

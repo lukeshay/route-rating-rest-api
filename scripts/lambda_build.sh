@@ -9,7 +9,7 @@ fi
 
 if [[ "${SKIP_PACKAGE}" != "TRUE" ]]; then
     sam package \
-        --template-file deploy/template.yml \
+        --template-file template.yml \
         --s3-bucket route-rating-rest-api-builds \
         --s3-prefix "$(git rev-parse --short HEAD)" \
         --output-template-file output.yml \

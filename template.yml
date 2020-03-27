@@ -30,8 +30,6 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: any
-      TracingConfig:
-        Mode: Active
 
 Outputs:
   RestApi:
