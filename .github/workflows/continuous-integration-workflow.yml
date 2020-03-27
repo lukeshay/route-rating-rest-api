@@ -13,7 +13,7 @@ jobs:
       - run: ./scripts/build.sh
       - uses: actions/upload-artifact@v1
         with:
-          name: rest-api.jar 
+          name: rest-api.jar
           path: rest-api.jar
       - uses: actions/upload-artifact@v1
         with:
@@ -73,5 +73,5 @@ jobs:
         with:
           sam_command: 'package --s3-bucket route-rating-rest-api-builds --s3-prefix latest --output-template-file output.yml'
       - uses: youyo/aws-sam-action/python3.8@master
-        with: 
-          sam_command: 'deploy --s3-bucket route-rating-rest-api-builds --template-file output.yml --region us-east-2 --no-confirm-changeset --stack-name route-rating-rest-api --capabilities CAPABILITY_IAM' 
+        with:
+          sam_command: 'deploy --s3-bucket route-rating-rest-api-builds --template-file output.yml --region us-east-2 --no-confirm-changeset --stack-name route-rating-rest-api --capabilities CAPABILITY_IAM'
