@@ -1,6 +1,13 @@
 name: CI
 on: [push]
 
+x-git-env-vars: &git-env-vars
+  BRANCH_NAME: ${GITHUB_REF:11}
+  PROJECT_KEY: LukeShay_route-rating-rest-api
+  SHORT_SHA: ${GITHUB_SHA::7}
+  DOCKER_REPO: lukeshaydocker/route-rating-rest-api
+  BRANCH: ${GITHUB_REF}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,9 +29,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     env:
-      BRANCH: ${GITHUB_REF:11}
-      PROJECT_KEY: LukeShay_route-rating-rest-api
-      SHA: ${GITHUB_SHA::7}
+      <<: *git-env-vars
     name: Coverage
     steps:
       - uses: actions/checkout@v2
@@ -35,14 +40,12 @@ jobs:
         with:
           name: build-artifacts
           path: build
-      - run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=${{ env.BRANCH }} -Dsonar.project.version=${{ env.SHA}}
+      - run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=${{ env.BRANCH_NAME }} -Dsonar.project.version=${{ env.SHORT_SHA }}
   push-image:
     runs-on: ubuntu-latest
     needs: [build]
     env:
-      DOCKER_REPO: lukeshaydocker/route-rating-rest-api
-      SHA: ${GITHUB_SHA::7}
-      BRANCH: ${GITHUB_REF}
+      <<: *git-env-vars
     name: Docker image
     steps:
       - uses: actions/download-artifact@v1
@@ -50,8 +53,8 @@ jobs:
           name: rest-api.jar
           path: rest-api.jar
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-      - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest -f deploy/Dockerfile .
-      - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
+      - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHORT_SHA }} -t ${{ env.DOCKER_REPO }}:latest -f deploy/Dockerfile .
+      - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHORT_SHA }}
       - run: test `echo ${{ env.BRANCH }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
   deploy:
     if: github.ref == 'refs/heads/master'
