@@ -11,7 +11,7 @@ jobs:
           java-version: '11.0.5' # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
-      - run: ./gradlew build
+      - run: ./scripts/build.sh
       - uses: actions/upload-artifact@v1
         with:
           name: rest-api.jar 

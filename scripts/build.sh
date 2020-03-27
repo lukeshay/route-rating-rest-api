@@ -10,6 +10,6 @@ rm -rf rest-api.log || echo ""
     -x bootDistZip \
     -x distTar \
     -x distZip \
-    -x startScripts || exit 1
+    -x startScripts
 
 mv build/libs/*.jar rest-api.jar
