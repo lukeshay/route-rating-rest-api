@@ -71,5 +71,7 @@ jobs:
       - run: docker run -v "${PWD}"/build:/app/build rest-api-lambda
       - uses: youyo/aws-sam-action/python3.8@master
         with:
-          sam_command: 'package --s3-bucket route-rating-rest-api-builds --s3-prefix latest --output-template-file output.yml' 
+          sam_command: 'package --s3-bucket route-rating-rest-api-builds --s3-prefix latest --output-template-file output.yml'
+      - uses: youyo/aws-sam-action/python3.8@master
+        with: 
           sam_command: 'deploy --s3-bucket route-rating-rest-api-builds --template-file output.yml --region us-east-2 --no-confirm-changeset --stack-name route-rating-rest-api --capabilities CAPABILITY_IAM' 
