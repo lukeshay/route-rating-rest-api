@@ -61,16 +61,11 @@ jobs:
       AWS_DEFAULT_REGION: us-east-2
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.5' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
-          architecture: x64 # (x64 or x86) - defaults to x64
       - run: docker build -f deploy/Dockerfile.lambda -t rest-api-lambda .
       - run: docker run -v "${PWD}"/build:/app/build rest-api-lambda
       - uses: youyo/aws-sam-action/python3.8@master
         with:
-          sam_command:'package --s3-bucket route-rating-rest-api-builds -s3-prefix latest --output-template-file output.yml' 
+          sam_command: 'package --s3-bucket route-rating-rest-api-builds -s3-prefix latest --output-template-file output.yml' 
       - uses: youyo/aws-sam-action/python3.8@master
         with:
-          sam_command:'deploy --s3-bucket route-rating-rest-api-builds --template-file output.yml --region us-east-2 --no-confirm-changeset --stack-name route-rating-rest-api --capabilities CAPABILITY_IAM' 
+          sam_command: 'deploy --s3-bucket route-rating-rest-api-builds --template-file output.yml --region us-east-2 --no-confirm-changeset --stack-name route-rating-rest-api --capabilities CAPABILITY_IAM' 
