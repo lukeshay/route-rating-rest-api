@@ -54,7 +54,6 @@ jobs:
       - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
       - run: test `echo ${{ env.BRANCH }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
   deploy:
-    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: [build]
     env:
