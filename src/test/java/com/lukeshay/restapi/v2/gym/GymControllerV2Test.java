@@ -5,7 +5,6 @@ import com.lukeshay.restapi.gym.Gym;
 import com.lukeshay.restapi.route.Route;
 import com.lukeshay.restapi.wall.Wall;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
-import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,59 +13,57 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.util.Collections;
+
 public class GymControllerV2Test extends TestBase {
-  @Autowired private GymV2Controller gymController;
+	@Autowired private GymV2Controller gymController;
 
-  private Gym testGym;
-  private Wall testWall;
-  private Route testRoute;
-  private GymWithWalls testGymWithWalls;
+	private Gym testGym;
+	private Wall testWall;
+	private Route testRoute;
+	private GymWithWalls testGymWithWalls;
 
-  @BeforeEach
-  void setUp() {
-    testGym =
-        new Gym(
-            "Jim",
-            "street",
-            "city",
-            "state",
-            "50014",
-            "lukeshay.com",
-            "climbing@gym.com",
-            "phoneNumber",
-            Collections.singletonList(user.getId()));
+	@BeforeEach
+	void setUp() {
+		testGym = new Gym("Jim",
+				"street",
+				"city",
+				"state",
+				"50014",
+				"lukeshay.com",
+				"climbing@gym.com",
+				"phoneNumber",
+				Collections.singletonList(user.getId())
+		);
 
-    testGym = gymRepository.save(testGym);
+		testGym = gymRepository.save(testGym);
 
-    testWall = new Wall(testGym.getId(), "Wall", Collections.singletonList(WallTypes.BOULDER));
+		testWall = new Wall(testGym.getId(), "Wall", Collections.singletonList(WallTypes.BOULDER));
 
-    testWall = wallRepository.save(testWall);
+		testWall = wallRepository.save(testWall);
 
-    testRoute =
-        new Route(
-            testWall.getId(),
-            testGym.getId(),
-            "Yooty",
-            "Yeety",
-            "Green",
-            Collections.singletonList(WallTypes.BOULDER));
+		testRoute = new Route(testWall.getId(),
+				testGym.getId(),
+				"Yooty",
+				"Yeety",
+				"Green",
+				Collections.singletonList(WallTypes.BOULDER)
+		);
 
-    testRoute = routeRepository.save(testRoute);
+		testRoute = routeRepository.save(testRoute);
 
-    testGymWithWalls =
-        new GymWithWalls(
-            testGym,
-            Collections.singletonList(
-                new WallWithRoutes(testWall, Collections.singletonList(testRoute))));
-  }
+		testGymWithWalls = new GymWithWalls(testGym,
+				Collections.singletonList(new WallWithRoutes(testWall, Collections.singletonList(testRoute)))
+		);
+	}
 
-  @Test
-  @WithMockUser
-  void getGymTest() {
-    ResponseEntity<?> response = gymController.getGym(null, testGym.getId());
+	@Test
+	@WithMockUser
+	void getGymTest() {
+		ResponseEntity<?> response = gymController.getGym(null, testGym.getId());
 
-    Assertions.assertAll(
-        () -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-        () -> Assertions.assertEquals(testGymWithWalls, response.getBody()));
-  }
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(testGymWithWalls, response.getBody())
+		);
+	}
 }

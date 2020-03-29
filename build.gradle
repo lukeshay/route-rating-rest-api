@@ -1,15 +1,10 @@
-import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
-import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
-
 plugins {
     id 'org.springframework.boot' version '2.2.6.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
-    id 'com.github.sherter.google-java-format' version '0.8'
     id 'jacoco'
     id 'application'
     id 'org.sonarqube' version '2.8'
-//    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 group = 'com.lukeshay'
@@ -18,7 +13,8 @@ sourceCompatibility = '11'
 mainClassName = 'com.lukeshay.restapi.RestApiApplication'
 
 ext {
-    springBootVersion = '2.2.2.RELEASE'
+    springBootVersion = '2.2.6.RELEASE'
+    jjwtVersion = '0.11.1'
 }
 
 configurations {
@@ -34,29 +30,34 @@ repositories {
 
 dependencies {
     // Spring boot dependencies
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: project.springBootVersion
+    implementation group: 'com.amazonaws.serverless', name: 'aws-serverless-java-container-springboot2', version: '1.4'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: project.springBootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: project.springBootVersion
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: project.springBootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: project.springBootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: project.springBootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: project.springBootVersion
 
     // Database dependencies
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
 
     // Test dependencies
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude group: 'junit', module: 'junit'
     }
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     // Security dependencies
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: project.springBootVersion
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.1'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.7'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-orgjson', version: '0.10.7'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: project.jjwtVersion
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: project.jjwtVersion, {
+        exclude group: 'io.jsonwebtoken', module: 'jjwt-api'
+    }
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: project.jjwtVersion, {
+        exclude group: 'io.jsonwebtoken', module: 'jjwt-api'
+    }
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 
 
@@ -67,46 +68,35 @@ dependencies {
     // AWS dependencies
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.753')
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3'
+    implementation group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.4.0'
 
-    implementation 'com.google.code.gson:gson'
+    implementation group: 'com.google.code.gson', name: 'gson'
 }
 
 test {
     useJUnitPlatform()
 }
 
-task format(type: GoogleJavaFormat) {
-    source 'src/main'
-    source 'src/test'
-    include '**/*.java'
-    exclude '**/*Template.java'
-}
-
-task verifyFormatting(type: VerifyGoogleJavaFormat) {
-    source 'src/main'
-    include '**/*.java'
-    ignoreFailures true
-}
-
 jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it,
-                include: [
-                    'com/lukeshay/restapi/**',
-                ],
-                exclude: [
-                    '**/*Repository.class',
-                    '**/*Body.class',
-                    '**/*View.class',
-                    '**/*Payload.class',
-                    '**/*Filter.class',
-                    '**/*Exception.class',
-                    '**/*SpringMain.class',
-                    '**/*Utils.class',
-                    '**/*Auditable.class',
-                    '**/*config/*'
-                ]
+                    include: [
+                            'com/lukeshay/restapi/**',
+                    ],
+                    exclude: [
+                            '**/*Repository.class',
+                            '**/*Body.class',
+                            '**/*View.class',
+                            '**/*Payload.class',
+                            '**/*Filter.class',
+                            '**/*Exception.class',
+                            '**/*SpringMain.class',
+                            '**/*Utils.class',
+                            '**/*Auditable.class',
+                            '**/StreamLambdaHandler.class',
+                            '**/*config/*'
+                    ]
             )
         }))
     }
@@ -142,4 +132,15 @@ compileTestJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-build.dependsOn jacocoTestCoverageVerification
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    archiveFileName = 'rest-api-lambda.zip'
+    into('lib') {
+        from(configurations.compileClasspath) {
+            exclude 'tomcat-embed-*'
+        }
+    }
+}
+
+build.finalizedBy(buildZip)

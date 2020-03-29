@@ -8,9 +8,9 @@ import org.springframework.security.core.Authentication;
 
 public interface RouteRatingService {
 
-  Logger LOG = LoggerFactory.getLogger(RouteRatingService.class.getName());
+	Logger LOG = LoggerFactory.getLogger(RouteRatingService.class.getName());
 
-  ResponseEntity<?> createRating(Authentication authentication, RouteRating rating);
+	ResponseEntity<?> createRating(Authentication authentication, RouteRating rating);
 
-  Page<RouteRating> getRatingsByRouteId(String routeId, String sorts, Integer limit, Integer page);
+	Page<RouteRating> getRatingsByRouteId(String routeId, String sorts, Integer limit, Integer page);
 }

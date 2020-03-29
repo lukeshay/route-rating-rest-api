@@ -1,0 +1,11 @@
+build
+deploy
+.gitignore
+.gradle
+.github
+.idea
+LICENSE
+Makefile
+*.yml
+README.md
+Jenkinsfile

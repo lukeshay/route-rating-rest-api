@@ -1,19 +1,11 @@
 package com.lukeshay.restapi.security;
 
 import com.lukeshay.restapi.jwt.JwtService;
-import com.lukeshay.restapi.jwt.JwtServiceImpl;
 import com.lukeshay.restapi.session.SessionService;
-import com.lukeshay.restapi.session.SessionServiceImpl;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.user.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,110 +13,107 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-  private static Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class.getName());
+	private static Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class.getName());
 
-  private UserRepository userRepository;
-  private JwtService jwtService;
-  private SessionService sessionService;
+	private UserRepository userRepository;
+	private JwtService jwtService;
+	private SessionService sessionService;
 
-  public JwtAuthorizationFilter(
-      AuthenticationManager authenticationManager, UserRepository userRepository) {
-    super(authenticationManager);
-    this.userRepository = userRepository;
-  }
+	public JwtAuthorizationFilter(
+			AuthenticationManager authenticationManager,
+			JwtService jwtService,
+			UserRepository userRepository
+	) {
+		super(authenticationManager);
+		this.jwtService = jwtService;
+		this.userRepository = userRepository;
+	}
 
-  @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-      throws IOException, ServletException {
+	@Override
+	protected void doFilterInternal(
+			HttpServletRequest request, HttpServletResponse response, FilterChain chain
+	) throws IOException, ServletException {
 
-    if (jwtService == null) {
-      ServletContext servletContext = request.getServletContext();
-      WebApplicationContext webApplicationContext =
-          WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		String header = request.getHeader(SecurityProperties.JWT_HEADER_STRING);
 
-      jwtService = webApplicationContext.getBean(JwtServiceImpl.class);
-      sessionService = webApplicationContext.getBean(SessionServiceImpl.class);
-    }
+		if (header == null || !header.startsWith(SecurityProperties.TOKEN_PREFIX)) {
+			chain.doFilter(request, response);
+			return;
+		}
 
-    String header = request.getHeader(SecurityProperties.JWT_HEADER_STRING);
+		Authentication authentication = getUsernamePasswordAuthentication(request, response);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    if (header == null || !header.startsWith(SecurityProperties.TOKEN_PREFIX)) {
-      chain.doFilter(request, response);
-      return;
-    }
+		chain.doFilter(request, response);
+	}
 
-    Authentication authentication = getUsernamePasswordAuthentication(request, response);
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+	private Authentication getUsernamePasswordAuthentication(
+			HttpServletRequest request, HttpServletResponse response
+	) {
 
-    chain.doFilter(request, response);
-  }
+		String jwtToken =
+				request.getHeader(SecurityProperties.JWT_HEADER_STRING).replace(SecurityProperties.TOKEN_PREFIX, "");
 
-  private Authentication getUsernamePasswordAuthentication(
-      HttpServletRequest request, HttpServletResponse response) {
+		if (jwtToken.trim().length() == 0) {
+			return null;
+		}
 
-    String jwtToken =
-        request
-            .getHeader(SecurityProperties.JWT_HEADER_STRING)
-            .replace(SecurityProperties.TOKEN_PREFIX, "");
+		Claims jwtClaims;
 
-    if (jwtToken.trim().length() == 0) {
-      return null;
-    }
+		try {
+			jwtClaims = jwtService.parseJwtToken(jwtToken);
+		} catch (ExpiredJwtException expiredJwtException) {
 
-    Claims jwtClaims;
+			Claims refreshClaims;
 
-    try {
-      jwtClaims = jwtService.parseJwtToken(jwtToken);
-    } catch (ExpiredJwtException expiredJwtException) {
+			try {
+				String refreshToken = request.getHeader(SecurityProperties.REFRESH_HEADER_STRING)
+				                             .replace(SecurityProperties.TOKEN_PREFIX, "");
 
-      Claims refreshClaims;
+				refreshClaims = jwtService.parseJwtToken(refreshToken);
+				jwtClaims = expiredJwtException.getClaims();
 
-      try {
-        String refreshToken =
-            request
-                .getHeader(SecurityProperties.REFRESH_HEADER_STRING)
-                .replace(SecurityProperties.TOKEN_PREFIX, "");
+				if (refreshClaims.getId().equals(jwtClaims.getId()) && refreshClaims.getSubject()
+				                                                                    .equals(SecurityProperties.REFRESH_HEADER_STRING)) {
 
-        refreshClaims = jwtService.parseJwtToken(refreshToken);
-        jwtClaims = expiredJwtException.getClaims();
+					String newJwtToken = jwtService.buildToken(jwtClaims);
 
-        if (refreshClaims.getId().equals(jwtClaims.getId())
-            && refreshClaims.getSubject().equals(SecurityProperties.REFRESH_HEADER_STRING)) {
+					response.addHeader(
+							SecurityProperties.JWT_HEADER_STRING,
+							SecurityProperties.TOKEN_PREFIX + newJwtToken
+					);
+				}
+			} catch (ExpiredJwtException | NullPointerException ignored) {
+				LOG.debug("No refresh token present or refresh token is expired.");
+				jwtClaims = null;
+			}
+		}
 
-          String newJwtToken = jwtService.buildToken(jwtClaims);
+		UsernamePasswordAuthenticationToken authentication = null;
 
-          response.addHeader(
-              SecurityProperties.JWT_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + newJwtToken);
-        }
-      } catch (ExpiredJwtException | NullPointerException ignored) {
-        LOG.debug("No refresh token present or refresh token is expired.");
-        jwtClaims = null;
-      }
-    }
+		if (jwtClaims != null && jwtClaims.getSubject().equals(SecurityProperties.JWT_HEADER_STRING)) {
+			User user = userRepository.findById(jwtClaims.getId()).orElse(null);
 
-    UsernamePasswordAuthenticationToken authentication = null;
+			if (user == null) {
+				return null;
+			}
 
-    if (jwtClaims != null && jwtClaims.getSubject().equals(SecurityProperties.JWT_HEADER_STRING)) {
-      User user = userRepository.findById(jwtClaims.getId()).orElse(null);
+			UserPrincipal principal = new UserPrincipal(user);
 
-      if (user == null) {
-        return null;
-      }
+			LOG.debug("This user token is being created.");
 
-      UserPrincipal principal = new UserPrincipal(user);
+			authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+		}
 
-      LOG.debug("This user token is being created.");
-
-      authentication =
-          new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-    }
-
-    return authentication;
-  }
+		return authentication;
+	}
 }

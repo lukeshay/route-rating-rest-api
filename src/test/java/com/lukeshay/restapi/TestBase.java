@@ -14,8 +14,6 @@ import com.lukeshay.restapi.user.UserTypes;
 import com.lukeshay.restapi.wall.Wall;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
 import com.lukeshay.restapi.wall.WallRepository;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
@@ -29,154 +27,153 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class TestBase {
-  @Autowired protected GymRepository gymRepository;
-  @Autowired protected RouteRatingRepository routeRatingRepository;
-  @Autowired protected RouteRepository routeRepository;
-  @Autowired protected SessionRepository sessionRepository;
-  @Autowired protected UserRepository userRepository;
-  @Autowired protected WallRepository wallRepository;
-  @Autowired protected PasswordEncoder passwordEncoder;
+	@Autowired protected GymRepository gymRepository;
+	@Autowired protected RouteRatingRepository routeRatingRepository;
+	@Autowired protected RouteRepository routeRepository;
+	@Autowired protected SessionRepository sessionRepository;
+	@Autowired protected UserRepository userRepository;
+	@Autowired protected WallRepository wallRepository;
+	@Autowired protected PasswordEncoder passwordEncoder;
 
-  protected User user;
-  protected UserPrincipal userPrincipal;
+	protected User user;
+	protected UserPrincipal userPrincipal;
 
-  @Mock protected Authentication authentication;
-  @Mock protected AwsService awsService;
+	@Mock protected Authentication authentication;
+	@Mock protected AwsService awsService;
 
-  @BeforeEach
-  protected void setUpClasses() {
-    MockitoAnnotations.initMocks(this);
+	/**
+	 * Helper method to create a test route. The fields not specified are as follows <br>
+	 * name: route name <br>
+	 * setter: route setter <br>
+	 * holdColor: route hold color
+	 *
+	 * @param gymId  The gym id
+	 * @param wallId The wall id
+	 * @param types  The type of the wall
+	 * @return The route
+	 */
+	protected static Route createTestRoute(String gymId, String wallId, List<WallTypes> types) {
+		return new Route(wallId, gymId, "route name", "route setter", "route hold color", types);
+	}
 
-    user =
-        new User(
-            "test.user@email.com",
-            "Test",
-            "User",
-            "test.user@email.com",
-            "1111111111",
-            "Des Moines",
-            "Iowa",
-            "USA",
-            "password");
+	/**
+	 * Helper method to create a test gym. The fields not specified are as follows <br>
+	 * name: gym name <br>
+	 * address: gym address <br>
+	 * city: gym city <br>
+	 * state: IA <br>
+	 * zipCode: 00000 <br>
+	 * website: gym.website.com <br>
+	 * email: gym@email.com <br>
+	 * phoneNumber: 1111111111
+	 *
+	 * @param editorId The id of an editor
+	 * @return The gym
+	 */
+	protected static Gym createTestGym(String editorId) {
+		return new Gym(
+				"gym name",
+				"gym address",
+				"gym city",
+				"IA",
+				"00000",
+				"gym.website.com",
+				"gym@email.com",
+				"1111111111",
+				Collections.singletonList(editorId)
+		);
+	}
 
-    user.setAuthority(UserTypes.BASIC.authority());
-    user.setRole(UserTypes.BASIC.role());
+	/**
+	 * Helper method to create a test wall. The fields not specified are as follows <br>
+	 * name: wall name <br>
+	 *
+	 * @param gymId The id of the gym
+	 * @param types The types of the wall
+	 * @return The wall
+	 */
+	protected static Wall createTestWall(String gymId, List<WallTypes> types) {
+		return new Wall(gymId, "wall name", types);
+	}
 
-    user = userRepository.save(user);
+	@BeforeEach
+	protected void setUpClasses() {
+		MockitoAnnotations.initMocks(this);
 
-    userPrincipal = new UserPrincipal(user);
+		user = new User(
+				"test.user@email.com",
+				"Test",
+				"User",
+				"test.user@email.com",
+				"1111111111",
+				"Des Moines",
+				"Iowa",
+				"USA",
+				"password"
+		);
 
-    Mockito.when(authentication.getPrincipal()).thenReturn(userPrincipal);
-    Mockito.when(awsService.uploadFileToS3(Mockito.anyString(), Mockito.any(MultipartFile.class)))
-        .thenReturn("url.com");
-  }
+		user.setAuthority(UserTypes.BASIC.authority());
+		user.setRole(UserTypes.BASIC.role());
 
-  @AfterEach
-  protected void tearDownClasses() {
-    gymRepository.deleteAll();
-    routeRatingRepository.deleteAll();
-    routeRepository.deleteAll();
-    sessionRepository.deleteAll();
-    userRepository.deleteAll();
-    wallRepository.deleteAll();
-  }
+		user = userRepository.save(user);
 
-  /**
-   * Helper method to create a test route. The fields not specified are as follows <br>
-   * name: route name <br>
-   * setter: route setter <br>
-   * holdColor: route hold color
-   *
-   * @param gymId The gym id
-   * @param wallId The wall id
-   * @param types The type of the wall
-   * @return The route
-   */
-  protected static Route createTestRoute(String gymId, String wallId, List<WallTypes> types) {
-    return new Route(wallId, gymId, "route name", "route setter", "route hold color", types);
-  }
+		userPrincipal = new UserPrincipal(user);
 
-  /**
-   * Helper method to create a test gym. The fields not specified are as follows <br>
-   * name: gym name <br>
-   * address: gym address <br>
-   * city: gym city <br>
-   * state: IA <br>
-   * zipCode: 00000 <br>
-   * website: gym.website.com <br>
-   * email: gym@email.com <br>
-   * phoneNumber: 1111111111
-   *
-   * @param editorId The id of an editor
-   * @return The gym
-   */
-  protected static Gym createTestGym(String editorId) {
-    return new Gym(
-        "gym name",
-        "gym address",
-        "gym city",
-        "IA",
-        "00000",
-        "gym.website.com",
-        "gym@email.com",
-        "1111111111",
-        Collections.singletonList(editorId));
-  }
+		Mockito.when(authentication.getPrincipal()).thenReturn(userPrincipal);
+		Mockito.when(awsService.uploadFileToS3(Mockito.anyString(), Mockito.any(MultipartFile.class)))
+		       .thenReturn("url.com");
+	}
 
-  /**
-   * Helper method to create a test wall. The fields not specified are as follows <br>
-   * name: wall name <br>
-   *
-   * @param gymId The id of the gym
-   * @param types The types of the wall
-   * @return The wall
-   */
-  protected static Wall createTestWall(String gymId, List<WallTypes> types) {
-    return new Wall(gymId, "wall name", types);
-  }
+	@AfterEach
+	protected void tearDownClasses() {
+		gymRepository.deleteAll();
+		routeRatingRepository.deleteAll();
+		routeRepository.deleteAll();
+		sessionRepository.deleteAll();
+		userRepository.deleteAll();
+		wallRepository.deleteAll();
+	}
 
-  protected void populateGyms() {
-    for (int i = 0; i < 10; i++) {
-      gymRepository.save(
-          new Gym(
-              "gym name" + i,
-              "gym address" + i,
-              "gym city" + i,
-              "IA",
-              "00000",
-              "gym.website.com",
-              "gym@email.com",
-              "1111111111",
-              Collections.emptyList()));
-    }
-  }
+	protected void populateGyms() {
+		for (int i = 0; i < 10; i++) {
+			gymRepository.save(new Gym(
+					"gym name" + i,
+					"gym address" + i,
+					"gym city" + i,
+					"IA",
+					"00000",
+					"gym.website.com",
+					"gym@email.com",
+					"1111111111",
+					Collections.emptyList()
+			));
+		}
+	}
 
-  protected void populateWalls() {
-    for (int i = 0; i < 10; i++) {
-      Gym gym =
-          gymRepository.findAll().get((int) Math.ceil(Math.random() * (gymRepository.count() - 1)));
-      wallRepository.save(
-          new Wall(gym.getId(), "wall name" + i, Collections.singletonList(WallTypes.LEAD)));
-    }
-  }
+	protected void populateWalls() {
+		for (int i = 0; i < 10; i++) {
+			Gym gym = gymRepository.findAll().get((int) Math.ceil(Math.random() * (gymRepository.count() - 1)));
+			wallRepository.save(new Wall(gym.getId(), "wall name" + i, Collections.singletonList(WallTypes.LEAD)));
+		}
+	}
 
-  protected void populateRoutes() {
-    for (int i = 0; i < 10; i++) {
-      Wall wall =
-          wallRepository
-              .findAll()
-              .get((int) Math.ceil(Math.random() * (wallRepository.count() - 1)));
-      routeRepository.save(
-          new Route(
-              wall.getId(),
-              wall.getGymId(),
-              "route name" + i,
-              "route setter" + i,
-              "route hold color" + i,
-              wall.getTypes()));
-    }
-  }
+	protected void populateRoutes() {
+		for (int i = 0; i < 10; i++) {
+			Wall wall = wallRepository.findAll().get((int) Math.ceil(Math.random() * (wallRepository.count() - 1)));
+			routeRepository.save(new Route(
+					wall.getId(),
+					wall.getGymId(),
+					"route name" + i,
+					"route setter" + i,
+					"route hold color" + i,
+					wall.getTypes()
+			));
+		}
+	}
 }

@@ -2,26 +2,10 @@
 
 rm -rf build || echo ""
 rm -rf rest-api.jar || echo ""
-rm -rf restapi.log || echo ""
-
-#./gradlew clean build --no-daemon  \
-#    -x jacocoTestReport \
-#    -x test \
-#    -x verifyGoogleJavaFormat \
-#    -x compileTestJava \
-#    -x processTestResources \
-#    -x testClasses \
-#    -x bootDistTar \
-#    -x bootDistZip \
-#    -x distTar \
-#    -x distZip \
-#    -x startScripts \
-#    -x check \
-#    || exit 1
+rm -rf rest-api.log || echo ""
 
 ./gradlew build \
   --no-rebuild \
-  -x verifyGoogleJavaFormat \
   -x bootDistTar \
   -x bootDistZip \
   -x distTar \

@@ -6,202 +6,203 @@ import com.lukeshay.restapi.route.RouteProperties.Grade;
 import com.lukeshay.restapi.utils.Auditable;
 import com.lukeshay.restapi.utils.ModelUtils;
 import com.lukeshay.restapi.wall.WallProperties.WallTypes;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "routes")
 public class Route extends Auditable<String> implements Serializable {
 
-  @Column(name = "id", unique = true, updatable = false)
-  @Expose
-  @GeneratedValue(generator = "pg-uuid")
-  @GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
-  @Id
-  private String id;
+	@Column(name = "id", unique = true, updatable = false) @Expose @GeneratedValue(generator = "pg-uuid")
+	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator") @Id private String id;
 
-  @Column(name = "wall_id", updatable = false)
-  @Expose
-  private String wallId;
+	@Column(name = "wall_id", updatable = false) @Expose private String wallId;
 
-  @Column(name = "gym_id", updatable = false)
-  @Expose
-  private String gymId;
+	@Column(name = "gym_id", updatable = false) @Expose private String gymId;
 
-  @Column(name = "name")
-  @Expose
-  private String name;
+	@Column(name = "name") @Expose private String name;
 
-  @Column(name = "setter")
-  @Expose
-  private String setter;
+	@Column(name = "setter") @Expose private String setter;
 
-  @Column(name = "hold_color")
-  @Expose
-  private String holdColor;
+	@Column(name = "hold_color") @Expose private String holdColor;
 
-  @Column(name = "types")
-  @ElementCollection(fetch = FetchType.EAGER)
-  @Expose
-  private List<WallTypes> types;
+	@Column(name = "types") @ElementCollection(fetch = FetchType.EAGER) @Expose private List<WallTypes> types;
 
-  @Column(name = "average_grade")
-  @Expose
-  private Grade averageGrade;
+	@Column(name = "average_grade") @Expose private Grade averageGrade;
 
-  @Column(name = "average_rating")
-  @Expose
-  private double averageRating;
+	@Column(name = "average_rating") @Expose private double averageRating;
 
-  Route() {}
+	Route() {
+	}
 
-  public Route(
-      String wallId,
-      String gymId,
-      String name,
-      String setter,
-      String holdColor,
-      List<WallTypes> types) {
-    this.wallId = wallId;
-    this.gymId = gymId;
-    this.name = name;
-    this.setter = setter;
-    this.holdColor = holdColor;
-    this.types = types;
-  }
+	public Route(
+			String wallId, String gymId, String name, String setter, String holdColor, List<WallTypes> types
+	) {
+		this.wallId = wallId;
+		this.gymId = gymId;
+		this.name = name;
+		this.setter = setter;
+		this.holdColor = holdColor;
+		this.types = types;
+	}
 
-  public Grade getAverageGrade() {
-    return averageGrade;
-  }
+	public Grade getAverageGrade() {
+		return averageGrade;
+	}
 
-  public void setAverageGrade(Grade averageGrade) {
-    this.averageGrade = averageGrade;
-  }
+	public void setAverageGrade(Grade averageGrade) {
+		this.averageGrade = averageGrade;
+	}
 
-  public double getAverageRating() {
-    return averageRating;
-  }
+	public double getAverageRating() {
+		return averageRating;
+	}
 
-  public void setAverageRating(double averageRating) {
-    this.averageRating = averageRating;
-  }
+	public void setAverageRating(double averageRating) {
+		this.averageRating = averageRating;
+	}
 
-  public String getGymId() {
-    return gymId;
-  }
+	public String getGymId() {
+		return gymId;
+	}
 
-  public void setGymId(String gymId) {
-    this.gymId = gymId;
-  }
+	public void setGymId(String gymId) {
+		this.gymId = gymId;
+	}
 
-  public String getHoldColor() {
-    return holdColor;
-  }
+	public String getHoldColor() {
+		return holdColor;
+	}
 
-  public void setHoldColor(String holdColor) {
-    this.holdColor = holdColor;
-  }
+	public void setHoldColor(String holdColor) {
+		this.holdColor = holdColor;
+	}
 
-  public String getId() {
-    return id;
-  }
+	public String getId() {
+		return id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public String getSetter() {
-    return setter;
-  }
+	public String getSetter() {
+		return setter;
+	}
 
-  public void setSetter(String setter) {
-    this.setter = setter;
-  }
+	public void setSetter(String setter) {
+		this.setter = setter;
+	}
 
-  public List<WallTypes> getTypes() {
-    return types;
-  }
+	public List<WallTypes> getTypes() {
+		return types;
+	}
 
-  public void setTypes(List<WallTypes> types) {
-    this.types = types;
-  }
+	public void setTypes(List<WallTypes> types) {
+		this.types = types;
+	}
 
-  public String getWallId() {
-    return wallId;
-  }
+	public String getWallId() {
+		return wallId;
+	}
 
-  public void setWallId(String wallId) {
-    this.wallId = wallId;
-  }
+	public void setWallId(String wallId) {
+		this.wallId = wallId;
+	}
 
-  public void updateAverages(List<RouteRating> ratings) {
-    List<Grade> userGrades = new ArrayList<>();
-    List<Integer> userRatings = new ArrayList<>();
+	public void setHoldColorIfNotNull(String holdColor) {
+		if (holdColor != null && !holdColor.isBlank()) {
+			this.holdColor = holdColor;
+		}
+	}
 
-    ratings.forEach(
-        (rating) -> {
-          userGrades.add(rating.getGrade());
-          userRatings.add(rating.getRating());
-        });
+	public void setNameIfNotNull(String name) {
+		if (name != null && !name.isBlank()) {
+			this.name = name;
+		}
+	}
 
-    int numberGrades = userGrades.size();
-    int numberRatings = userRatings.size();
-    double averageGrade;
-    double averageRating;
+	public void setSetterIfNotNull(String setter) {
+		if (setter != null && !setter.isBlank()) {
+			this.setter = setter;
+		}
+	}
 
-    averageGrade = userGrades.stream().mapToDouble(Grade::getValue).sum() / numberGrades;
-    averageRating = userRatings.stream().mapToDouble(element -> element).sum() / numberRatings;
+	public void setTypesIfNotNull(List<WallTypes> types) {
+		if (types != null && !types.isEmpty()) {
+			this.types = types;
+		}
+	}
 
-    setAverageRating(averageRating);
-    setAverageGrade(Grade.getGrade(averageGrade));
-  }
+	public void setWallIdIfNotNull(String wallId) {
+		if (wallId != null && !wallId.isBlank()) {
+			this.wallId = wallId;
+		}
+	}
 
-  @Override
-  public String toString() {
-    return ModelUtils.toString(this);
-  }
+	public void updateAverages(List<RouteRating> ratings) {
+		List<Grade> userGrades = new ArrayList<>();
+		List<Integer> userRatings = new ArrayList<>();
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Route route = (Route) o;
-    return Double.compare(route.averageRating, averageRating) == 0
-        && Objects.equals(id, route.id)
-        && Objects.equals(wallId, route.wallId)
-        && Objects.equals(gymId, route.gymId)
-        && Objects.equals(name, route.name)
-        && Objects.equals(setter, route.setter)
-        && Objects.equals(holdColor, route.holdColor)
-        && ModelUtils.collectionsEqual(types, route.types)
-        && averageGrade == route.averageGrade;
-  }
+		ratings.forEach((rating) -> {
+			userGrades.add(rating.getGrade());
+			userRatings.add(rating.getRating());
+		});
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        id, wallId, gymId, name, setter, holdColor, types, averageGrade, averageRating);
-  }
+		int numberGrades = userGrades.size();
+		int numberRatings = userRatings.size();
+		double averageGrade;
+		double averageRating;
+
+		averageGrade = userGrades.stream().mapToDouble(Grade::getValue).sum() / numberGrades;
+		averageRating = userRatings.stream().mapToDouble(element -> element).sum() / numberRatings;
+
+		setAverageRating(averageRating);
+		setAverageGrade(Grade.getGrade(averageGrade));
+	}
+
+	@Override
+	public String toString() {
+		return ModelUtils.toString(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Route route = (Route) o;
+		return Double.compare(route.averageRating, averageRating) == 0 && Objects.equals(id,
+				route.id
+		) && Objects.equals(wallId, route.wallId) && Objects.equals(gymId, route.gymId) && Objects.equals(
+				name,
+				route.name
+		) && Objects.equals(
+				setter,
+				route.setter
+		) && Objects.equals(holdColor, route.holdColor) && ModelUtils.collectionsEqual(types,
+				route.types
+		) && averageGrade == route.averageGrade;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, wallId, gymId, name, setter, holdColor, types, averageGrade, averageRating);
+	}
 }

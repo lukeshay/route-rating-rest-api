@@ -1,18 +1,17 @@
 package com.lukeshay.restapi.user;
 
 public enum UserTypes {
-  BASIC,
-  ADMIN;
+	BASIC, ADMIN;
 
-  public String authority() {
-    return this.toString();
-  }
+	public String authority() {
+		return this.toString();
+	}
 
-  public boolean equals(String role) {
-    return this.role().equals(role);
-  }
+	public boolean equals(String role) {
+		return this.role().equals(role);
+	}
 
-  public String role() {
-    return this.toString() + "_ROLE";
-  }
+	public String role() {
+		return this.toString() + "_ROLE";
+	}
 }

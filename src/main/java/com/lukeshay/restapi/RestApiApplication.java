@@ -2,17 +2,12 @@ package com.lukeshay.restapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-/** The type Rest api application. */
 @SpringBootApplication
+@EntityScan({"com.lukeshay.restapi"})
 public class RestApiApplication {
-
-  /**
-   * The entry point of application.
-   *
-   * @param args the input arguments
-   */
-  public static void main(String[] args) {
-    SpringApplication.run(RestApiApplication.class, args);
-  }
+	public static void main(String[] args) {
+		SpringApplication.run(RestApiApplication.class, args);
+	}
 }
