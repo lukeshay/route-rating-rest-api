@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-      - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest -f deploy/Dockerfile .
+      - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest -v build:/app/build -f deploy/Dockerfile .
       - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
       - run: test `echo ${{ github.ref }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
   coverage:
@@ -38,10 +38,10 @@ jobs:
     name: Lambda deploy
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v1
-        with:
-          name: build-artifacts
-          path: build
+      - uses: actions/setup-java@v1
+      with:
+        java-version: '11.0.6'
+      - run: ./scripts/build.sh
       - uses: youyo/aws-sam-action/python3.8@master
         with:
           sam_command: 'package --s3-bucket route-rating-rest-api-builds --s3-prefix latest --output-template-file output.yml'

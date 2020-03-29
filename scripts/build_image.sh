@@ -2,6 +2,6 @@
 
 . ./scripts/utils.sh
 
-docker build -f deploy/Dockerfile -t "${CURRENT_IMAGE}" -t "${LATEST_IMAGE}" .
+rm -rf build || echo ""
 
-rm -rf rest-api.jar
+docker build -f deploy/Dockerfile -t "${CURRENT_IMAGE}" -t "${LATEST_IMAGE}" -v build:/app/build .
