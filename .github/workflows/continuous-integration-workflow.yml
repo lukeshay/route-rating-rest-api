@@ -13,8 +13,7 @@ jobs:
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - run: docker build -t ${{ env.DOCKER_REPO }}:${{ env.SHA }} -t ${{ env.DOCKER_REPO }}:latest -f deploy/Dockerfile .
       - run: docker push ${{ env.DOCKER_REPO }}:${{ env.SHA }}
-      if: github.ref == 'refs/heads/master'
-      - run: docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
+      - run: test `echo ${{ github.ref }} | grep "master"` && docker push ${{ env.DOCKER_REPO }}:latest || echo "Not pushing latest because on branch"
   coverage:
     runs-on: ubuntu-latest
     env:
