@@ -7,7 +7,7 @@ jobs:
     env:
       DOCKER_REPO: lukeshaydocker/route-rating-rest-api
       SHA: ${GITHUB_SHA::7}
-    name: Docker image
+    name: Build
     steps:
       - uses: actions/checkout@v2
       - run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
