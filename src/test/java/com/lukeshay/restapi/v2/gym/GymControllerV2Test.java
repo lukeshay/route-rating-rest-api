@@ -16,8 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.util.Collections;
 
 public class GymControllerV2Test extends TestBase {
-	@Autowired
-	private GymV2Controller gymController;
+	@Autowired private GymV2Controller gymController;
 
 	private Gym testGym;
 	private Wall testWall;
@@ -26,9 +25,7 @@ public class GymControllerV2Test extends TestBase {
 
 	@BeforeEach
 	void setUp() {
-		testGym =
-			new Gym(
-				"Jim",
+		testGym = new Gym("Jim",
 				"street",
 				"city",
 				"state",
@@ -36,7 +33,8 @@ public class GymControllerV2Test extends TestBase {
 				"lukeshay.com",
 				"climbing@gym.com",
 				"phoneNumber",
-				Collections.singletonList(user.getId()));
+				Collections.singletonList(user.getId())
+		);
 
 		testGym = gymRepository.save(testGym);
 
@@ -44,22 +42,19 @@ public class GymControllerV2Test extends TestBase {
 
 		testWall = wallRepository.save(testWall);
 
-		testRoute =
-			new Route(
-				testWall.getId(),
+		testRoute = new Route(testWall.getId(),
 				testGym.getId(),
 				"Yooty",
 				"Yeety",
 				"Green",
-				Collections.singletonList(WallTypes.BOULDER));
+				Collections.singletonList(WallTypes.BOULDER)
+		);
 
 		testRoute = routeRepository.save(testRoute);
 
-		testGymWithWalls =
-			new GymWithWalls(
-				testGym,
-				Collections.singletonList(
-					new WallWithRoutes(testWall, Collections.singletonList(testRoute))));
+		testGymWithWalls = new GymWithWalls(testGym,
+				Collections.singletonList(new WallWithRoutes(testWall, Collections.singletonList(testRoute)))
+		);
 	}
 
 	@Test
@@ -67,8 +62,8 @@ public class GymControllerV2Test extends TestBase {
 	void getGymTest() {
 		ResponseEntity<?> response = gymController.getGym(null, testGym.getId());
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() -> Assertions.assertEquals(testGymWithWalls, response.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(testGymWithWalls, response.getBody())
+		);
 	}
 }

@@ -17,71 +17,46 @@ import java.util.Objects;
 @Table(name = "gyms")
 public class Gym extends Auditable<String> implements Serializable {
 
-	@Column(name = "id", unique = true, updatable = false)
-	@Expose
-	@GeneratedValue(generator = "pg-uuid")
-	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
-	@Id
-	private String id;
+	@Column(name = "id", unique = true, updatable = false) @Expose @GeneratedValue(generator = "pg-uuid")
+	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator") @Id private String id;
 
-	@Column(name = "name")
-	@Expose
-	private String name;
+	@Column(name = "name") @Expose private String name;
 
-	@Column(name = "address")
-	@Expose
-	private String address;
+	@Column(name = "address") @Expose private String address;
 
-	@Column(name = "city")
-	@Expose
-	private String city;
+	@Column(name = "city") @Expose private String city;
 
-	@Column(name = "state")
-	@Expose
-	private String state;
+	@Column(name = "state") @Expose private String state;
 
-	@Column(name = "zip_code")
-	@Expose
-	private String zipCode;
+	@Column(name = "zip_code") @Expose private String zipCode;
 
-	@Column(name = "website")
-	@Expose
-	private String website;
+	@Column(name = "website") @Expose private String website;
 
-	@Column(name = "email")
-	@Expose
-	private String email;
+	@Column(name = "email") @Expose private String email;
 
-	@Column(name = "phone_number")
-	@Expose
-	private String phoneNumber;
+	@Column(name = "phone_number") @Expose private String phoneNumber;
 
-	@Column(name = "logo_url")
-	@Expose
-	private String logoUrl;
+	@Column(name = "logo_url") @Expose private String logoUrl;
 
-	@Column(name = "photo_url")
-	@Expose
-	private String photoUrl;
+	@Column(name = "photo_url") @Expose private String photoUrl;
 
-	@Column(name = "authorized_editors")
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Expose
-	private List<String> authorizedEditors;
+	@Column(name = "authorized_editors") @ElementCollection(fetch = FetchType.EAGER) @Expose private List<String>
+			authorizedEditors;
 
 	public Gym() {
 	}
 
 	public Gym(
-		String name,
-		String address,
-		String city,
-		String state,
-		String zipCode,
-		String website,
-		String email,
-		String phoneNumber,
-		List<String> authorizedEditors) {
+			String name,
+			String address,
+			String city,
+			String state,
+			String zipCode,
+			String website,
+			String email,
+			String phoneNumber,
+			List<String> authorizedEditors
+	) {
 		this.name = name;
 		this.address = address;
 		this.city = city;
@@ -94,18 +69,19 @@ public class Gym extends Auditable<String> implements Serializable {
 	}
 
 	public Gym(
-		String id,
-		String name,
-		String address,
-		String city,
-		String state,
-		String zipCode,
-		String website,
-		String email,
-		String phoneNumber,
-		String logoUrl,
-		String photoUrl,
-		List<String> authorizedEditors) {
+			String id,
+			String name,
+			String address,
+			String city,
+			String state,
+			String zipCode,
+			String website,
+			String email,
+			String phoneNumber,
+			String logoUrl,
+			String photoUrl,
+			List<String> authorizedEditors
+	) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
@@ -216,6 +192,78 @@ public class Gym extends Auditable<String> implements Serializable {
 		this.zipCode = zipCode;
 	}
 
+	public void setAddressIfNotNull(String address) {
+		if (address != null && !address.isBlank()) {
+			this.address = address;
+		}
+	}
+
+	public void setAuthorizedEditorsIfNotNull(List<String> authorizedEditors) {
+		if (authorizedEditors != null && authorizedEditors.isEmpty()) {
+			this.authorizedEditors = authorizedEditors;
+		}
+	}
+
+	public void setCityIfNotNull(String city) {
+		if (city != null && !city.isBlank()) {
+			this.city = city;
+		}
+	}
+
+	public void setEmailIfNotNull(String email) {
+		if (email != null && !email.isBlank()) {
+			this.email = email;
+		}
+	}
+
+	public void setIdIfNotNull(String id) {
+		if (id != null && !id.isBlank()) {
+			this.id = id;
+		}
+	}
+
+	public void setLogoUrlIfNotNull(String logoUrl) {
+		if (logoUrl != null && !logoUrl.isBlank()) {
+			this.logoUrl = logoUrl;
+		}
+	}
+
+	public void setNameIfNotNull(String name) {
+		if (name != null && !name.isBlank()) {
+			this.name = name;
+		}
+	}
+
+	public void setPhoneNumberIfNotNull(String phoneNumber) {
+		if (phoneNumber != null && !phoneNumber.isBlank()) {
+			this.phoneNumber = phoneNumber;
+		}
+	}
+
+	public void setPhotoUrlIfNotNull(String photoUrl) {
+		if (photoUrl != null && !photoUrl.isBlank()) {
+			this.photoUrl = photoUrl;
+		}
+	}
+
+	public void setStateIfNotNull(String state) {
+		if (state != null && !state.isBlank()) {
+			this.state = state;
+		}
+	}
+
+	public void setWebsiteIfNotNull(String website) {
+		if (website != null && !website.isBlank()) {
+			this.website = website;
+		}
+	}
+
+	public void setZipCodeIfNotNull(String zipCode) {
+		if (zipCode != null && !zipCode.isBlank()) {
+			this.zipCode = zipCode;
+		}
+	}
+
 	@Override
 	public String toString() {
 		return ModelUtils.toString(this);
@@ -230,34 +278,37 @@ public class Gym extends Auditable<String> implements Serializable {
 			return false;
 		}
 		Gym gym = (Gym) o;
-		return Objects.equals(id, gym.id)
-			&& Objects.equals(name, gym.name)
-			&& Objects.equals(address, gym.address)
-			&& Objects.equals(city, gym.city)
-			&& Objects.equals(state, gym.state)
-			&& Objects.equals(zipCode, gym.zipCode)
-			&& Objects.equals(website, gym.website)
-			&& Objects.equals(email, gym.email)
-			&& Objects.equals(phoneNumber, gym.phoneNumber)
-			&& Objects.equals(logoUrl, gym.logoUrl)
-			&& Objects.equals(photoUrl, gym.photoUrl)
-			&& ModelUtils.collectionsEqual(authorizedEditors, gym.authorizedEditors);
+		return Objects.equals(id, gym.id) && Objects.equals(name, gym.name) && Objects.equals(address,
+				gym.address
+		) && Objects.equals(city, gym.city) && Objects.equals(
+				state,
+				gym.state
+		) && Objects.equals(zipCode, gym.zipCode) && Objects.equals(website, gym.website) && Objects.equals(
+				email,
+				gym.email
+		) && Objects.equals(
+				phoneNumber,
+				gym.phoneNumber
+		) && Objects.equals(logoUrl, gym.logoUrl) && Objects.equals(
+				photoUrl,
+				gym.photoUrl
+		) && ModelUtils.collectionsEqual(authorizedEditors, gym.authorizedEditors);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(
-			id,
-			name,
-			address,
-			city,
-			state,
-			zipCode,
-			website,
-			email,
-			phoneNumber,
-			logoUrl,
-			photoUrl,
-			authorizedEditors);
+		return Objects.hash(id,
+				name,
+				address,
+				city,
+				state,
+				zipCode,
+				website,
+				email,
+				phoneNumber,
+				logoUrl,
+				photoUrl,
+				authorizedEditors
+		);
 	}
 }

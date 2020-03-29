@@ -58,12 +58,13 @@ public class WallController {
 	@PreAuthorize("permitAll()")
 	@ApiOperation(value = "Get a gyms walls.", response = Wall.class)
 	public ResponseEntity<Page<Wall>> getWalls(
-		Authentication authentication,
-		@PathVariable String gymId,
-		@PathParam("query") String query,
-		@PathParam("sort") String sort,
-		@PathParam("limit") Integer limit,
-		@PathParam("page") Integer page) {
+			Authentication authentication,
+			@PathVariable String gymId,
+			@PathParam("query") String query,
+			@PathParam("sort") String sort,
+			@PathParam("limit") Integer limit,
+			@PathParam("page") Integer page
+	) {
 		LOG.debug("Getting gym {} walls", gymId);
 
 		return wallService.getWalls(gymId, query, sort, limit, page);
@@ -76,8 +77,7 @@ public class WallController {
 		LOG.debug("Updating wall {}", body);
 
 		Wall wall =
-			wallService.updateWall(
-				authentication, body.getId(), body.getGymId(), body.getName(), body.getTypes());
+				wallService.updateWall(authentication, body.getId(), body.getGymId(), body.getName(), body.getTypes());
 
 		if (wall == null) {
 			return ResponseUtils.badRequest(BodyUtils.error("Error updating wall."));

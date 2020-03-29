@@ -3,10 +3,7 @@ package com.lukeshay.restapi.wall;
 public class WallProperties {
 
 	public enum WallTypes {
-		BOULDER,
-		TOP_ROPE,
-		LEAD,
-		AUTO_BELAY;
+		BOULDER, TOP_ROPE, LEAD, AUTO_BELAY;
 
 		public String toString() {
 			if (this.equals(BOULDER)) {

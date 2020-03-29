@@ -9,10 +9,8 @@ import java.util.Objects;
 
 public class AuthBody {
 
-	@Expose
-	private User user;
-	@Expose
-	private Session session;
+	@Expose private User user;
+	@Expose private Session session;
 
 	public AuthBody(User user, Session session) {
 		this.user = user;

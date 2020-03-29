@@ -13,12 +13,10 @@ import java.util.Map;
 
 @Service
 public class RecaptchaValidator {
-	private static final String GOOGLE_RECAPTCHA_VERIFY_URL =
-		"https://www.google.com/recaptcha/api/siteverify";
+	private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 	private final RestTemplateBuilder restTemplateBuilder;
 	Logger LOG = LoggerFactory.getLogger(RecaptchaValidator.class.getName());
-	@Value("${google.recaptcha.token}")
-	private String googleRecaptchaToken;
+	@Value("${google.recaptcha.token}") private String googleRecaptchaToken;
 	private Map lastResponse;
 
 	@Autowired
@@ -31,14 +29,12 @@ public class RecaptchaValidator {
 		body.put("secret", googleRecaptchaToken);
 		body.put("response", recaptcha);
 
-		ResponseEntity<Map> recaptchaResponseEntity =
-			restTemplateBuilder
-				.build()
-				.postForEntity(
-					GOOGLE_RECAPTCHA_VERIFY_URL + "?secret={secret}&response={response}",
-					body,
-					Map.class,
-					body);
+		ResponseEntity<Map> recaptchaResponseEntity = restTemplateBuilder.build()
+		                                                                 .postForEntity(GOOGLE_RECAPTCHA_VERIFY_URL + "?secret={secret}&response={response}",
+				                                                                 body,
+				                                                                 Map.class,
+				                                                                 body
+		                                                                 );
 
 		lastResponse = recaptchaResponseEntity.getBody();
 

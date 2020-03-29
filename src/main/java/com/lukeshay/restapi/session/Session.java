@@ -16,25 +16,14 @@ import java.util.Objects;
 @Table(name = "sessions")
 public class Session extends Auditable<String> implements Serializable {
 
-	@Column(name = "id", unique = true, updatable = false)
-	@Expose
-	@GeneratedValue(generator = "pg-uuid")
-	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
-	@Id
-	private String id;
+	@Column(name = "id", unique = true, updatable = false) @Expose @GeneratedValue(generator = "pg-uuid")
+	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator") @Id private String id;
 
-	@Column(name = "tokens")
-	@Expose
-	@Transient
-	private RouteRatingJwt tokens;
+	@Column(name = "tokens") @Expose @Transient private RouteRatingJwt tokens;
 
-	@Column(name = "user_id", unique = true, updatable = false)
-	@Expose
-	private String userId;
+	@Column(name = "user_id", unique = true, updatable = false) @Expose private String userId;
 
-	@Column(name = "active")
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private Boolean active;
+	@Column(name = "active") @JsonProperty(access = Access.WRITE_ONLY) private Boolean active;
 
 	public Session() {
 	}
@@ -86,10 +75,10 @@ public class Session extends Auditable<String> implements Serializable {
 			return false;
 		}
 		Session session = (Session) o;
-		return Objects.equals(id, session.id)
-			&& Objects.equals(tokens, session.tokens)
-			&& Objects.equals(userId, session.userId)
-			&& Objects.equals(active, session.active);
+		return Objects.equals(id, session.id) && Objects.equals(tokens, session.tokens) && Objects.equals(
+				userId,
+				session.userId
+		) && Objects.equals(active, session.active);
 	}
 
 	@Override

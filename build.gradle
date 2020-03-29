@@ -81,22 +81,22 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it,
-                include: [
-                    'com/lukeshay/restapi/**',
-                ],
-                exclude: [
-                    '**/*Repository.class',
-                    '**/*Body.class',
-                    '**/*View.class',
-                    '**/*Payload.class',
-                    '**/*Filter.class',
-                    '**/*Exception.class',
-                    '**/*SpringMain.class',
-                    '**/*Utils.class',
-                    '**/*Auditable.class',
-                    '**/StreamLambdaHandler.class',
-                    '**/*config/*'
-                ]
+                    include: [
+                            'com/lukeshay/restapi/**',
+                    ],
+                    exclude: [
+                            '**/*Repository.class',
+                            '**/*Body.class',
+                            '**/*View.class',
+                            '**/*Payload.class',
+                            '**/*Filter.class',
+                            '**/*Exception.class',
+                            '**/*SpringMain.class',
+                            '**/*Utils.class',
+                            '**/*Auditable.class',
+                            '**/StreamLambdaHandler.class',
+                            '**/*config/*'
+                    ]
             )
         }))
     }

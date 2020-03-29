@@ -18,12 +18,10 @@ public interface WallService {
 	Wall deleteWall(Authentication authentication, String wallId);
 
 	ResponseEntity<Page<Wall>> getWalls(
-		String gymId, String query, String sort, Integer limit, Integer page);
+			String gymId, String query, String sort, Integer limit, Integer page
+	);
 
 	Wall updateWall(
-		Authentication authentication,
-		String wallId,
-		String gymId,
-		String updatedName,
-		List<WallTypes> updatedTypes);
+			Authentication authentication, String wallId, String gymId, String updatedName, List<WallTypes> updatedTypes
+	);
 }

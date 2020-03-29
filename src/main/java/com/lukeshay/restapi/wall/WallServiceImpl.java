@@ -18,12 +18,9 @@ import java.util.List;
 @Service
 public class WallServiceImpl implements WallService {
 
-	@Autowired
-	private WallRepository wallRepository;
-	@Autowired
-	private GymRepository gymRepository;
-	@Autowired
-	private RouteRepository routeRepository;
+	@Autowired private WallRepository wallRepository;
+	@Autowired private GymRepository gymRepository;
+	@Autowired private RouteRepository routeRepository;
 
 	@Override
 	public ResponseEntity<?> createWall(Authentication authentication, Wall body) {
@@ -74,30 +71,27 @@ public class WallServiceImpl implements WallService {
 
 	@Override
 	public ResponseEntity<Page<Wall>> getWalls(
-		String gymId, String query, String sort, Integer limit, Integer page) {
-		Gym gym =
-			gymRepository
-				.findById(gymId)
-				.orElseThrow(() -> ExceptionUtils.badRequest("Gym does not exist."));
+			String gymId, String query, String sort, Integer limit, Integer page
+	) {
+		Gym gym = gymRepository.findById(gymId).orElseThrow(() -> ExceptionUtils.badRequest("Gym does not exist."));
 
 		if (query == null) {
 			query = "";
 		}
 
-		Page<Wall> wallPage =
-			wallRepository.findAllByGymIdAndNameIgnoreCaseContaining(
-				PageableUtils.buildPageRequest(page, limit, sort), gymId, query);
+		Page<Wall> wallPage = wallRepository.findAllByGymIdAndNameIgnoreCaseContaining(PageableUtils.buildPageRequest(
+				page,
+				limit,
+				sort
+		), gymId, query);
 
 		return ResponseUtils.okOfType(wallPage);
 	}
 
 	@Override
 	public Wall updateWall(
-		Authentication authentication,
-		String wallId,
-		String gymId,
-		String updatedName,
-		List<WallTypes> updatedTypes) {
+			Authentication authentication, String wallId, String gymId, String updatedName, List<WallTypes> updatedTypes
+	) {
 		if (gymId == null || wallId == null) {
 			return null;
 		}

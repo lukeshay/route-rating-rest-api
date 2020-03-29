@@ -13,9 +13,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 		String userId = "";
 
 		try {
-			userId =
-				AuthenticationUtils.getUser(SecurityContextHolder.getContext().getAuthentication())
-					.getId();
+			userId = AuthenticationUtils.getUser(SecurityContextHolder.getContext().getAuthentication()).getId();
 		} catch (Exception ignore) {
 		}
 		return Optional.of(userId);

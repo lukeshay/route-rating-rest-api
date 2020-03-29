@@ -50,9 +50,10 @@ public class CredentialsPayload {
 			return false;
 		}
 		CredentialsPayload that = (CredentialsPayload) o;
-		return Objects.equals(username, that.username)
-			&& Objects.equals(password, that.password)
-			&& Objects.equals(remember, that.remember);
+		return Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(
+				remember,
+				that.remember
+		);
 	}
 
 	@Override

@@ -23,18 +23,20 @@ public interface GymService {
 	Page<Gym> getGyms(String query, String sorts, Integer limit, Integer page);
 
 	Gym updateGym(
-		Authentication authentication,
-		String gymId,
-		String name,
-		String address,
-		String city,
-		String state,
-		String zipCode,
-		String email,
-		String phoneNumber,
-		String website,
-		List<String> authorizedEditors);
+			Authentication authentication,
+			String gymId,
+			String name,
+			String address,
+			String city,
+			String state,
+			String zipCode,
+			String email,
+			String phoneNumber,
+			String website,
+			List<String> authorizedEditors
+	);
 
 	ResponseEntity<?> uploadPhoto(
-		Authentication authentication, MultipartFile file, String gymId, String imageName);
+			Authentication authentication, MultipartFile file, String gymId, String imageName
+	);
 }

@@ -19,23 +19,13 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @EntityListeners(AuditingEntityListener.class)
 public class Auditable<U> {
 
-	@CreatedBy
-	@JsonProperty(access = Access.WRITE_ONLY)
-	protected U createdBy;
+	@CreatedBy @JsonProperty(access = Access.WRITE_ONLY) protected U createdBy;
 
-	@CreatedDate
-	@Temporal(TIMESTAMP)
-	@JsonProperty(access = Access.WRITE_ONLY)
-	protected Date creationDate;
+	@CreatedDate @Temporal(TIMESTAMP) @JsonProperty(access = Access.WRITE_ONLY) protected Date creationDate;
 
-	@LastModifiedBy
-	@JsonProperty(access = Access.WRITE_ONLY)
-	protected U lastModifiedBy;
+	@LastModifiedBy @JsonProperty(access = Access.WRITE_ONLY) protected U lastModifiedBy;
 
-	@LastModifiedDate
-	@Temporal(TIMESTAMP)
-	@JsonProperty(access = Access.WRITE_ONLY)
-	protected Date lastModifiedDate;
+	@LastModifiedDate @Temporal(TIMESTAMP) @JsonProperty(access = Access.WRITE_ONLY) protected Date lastModifiedDate;
 
 	public U getCreatedBy() {
 		return createdBy;

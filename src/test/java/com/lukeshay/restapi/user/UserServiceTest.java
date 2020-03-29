@@ -16,8 +16,7 @@ import java.util.Map;
 public class UserServiceTest extends TestBase {
 
 	private UserService userService;
-	@Mock
-	private RecaptchaValidator recaptchaValidator;
+	@Mock private RecaptchaValidator recaptchaValidator;
 
 	@BeforeEach
 	void setUp() {
@@ -47,11 +46,13 @@ public class UserServiceTest extends TestBase {
 		user = userRepository.findAll().get(0);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(user, createValidUser.getBody()),
-			() ->
-				Assertions.assertEquals(
-					UserTypes.BASIC.authority(), ((User) createValidUser.getBody()).getAuthority()),
-			() -> Assertions.assertEquals(HttpStatus.OK, createValidUser.getStatusCode()));
+				() -> Assertions.assertEquals(user, createValidUser.getBody()),
+				() -> Assertions.assertEquals(
+						UserTypes.BASIC.authority(),
+						((User) createValidUser.getBody()).getAuthority()
+				),
+				() -> Assertions.assertEquals(HttpStatus.OK, createValidUser.getStatusCode())
+		);
 
 		userRepository.deleteAll();
 		ResponseEntity<?> createValidAdminUser = userService.createUser(user, UserTypes.ADMIN);
@@ -59,12 +60,12 @@ public class UserServiceTest extends TestBase {
 		user = userRepository.findAll().get(0);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(user, createValidAdminUser.getBody()),
-			() ->
-				Assertions.assertEquals(
-					UserTypes.ADMIN.authority(),
-					((User) createValidAdminUser.getBody()).getAuthority()),
-			() -> Assertions.assertEquals(HttpStatus.OK, createValidAdminUser.getStatusCode()));
+				() -> Assertions.assertEquals(user, createValidAdminUser.getBody()),
+				() -> Assertions.assertEquals(UserTypes.ADMIN.authority(),
+						((User) createValidAdminUser.getBody()).getAuthority()
+				),
+				() -> Assertions.assertEquals(HttpStatus.OK, createValidAdminUser.getStatusCode())
+		);
 
 		userRepository.deleteAll();
 
@@ -74,10 +75,9 @@ public class UserServiceTest extends TestBase {
 		ResponseEntity<?> createInvalidUser = userService.createUser(user, UserTypes.BASIC);
 
 		Assertions.assertAll(
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Field missing for user."), createInvalidUser.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, createInvalidUser.getStatusCode()));
+				() -> Assertions.assertEquals(BodyUtils.error("Field missing for user."), createInvalidUser.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, createInvalidUser.getStatusCode())
+		);
 	}
 
 	@Test

@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class JwtServiceTest extends TestBase {
 
-	@Autowired
-	private JwtService jwtService;
+	@Autowired private JwtService jwtService;
 
 	private RouteRatingJwt testRouteRatingJwt;
 	private Claims jwtClaims;
@@ -30,13 +29,12 @@ public class JwtServiceTest extends TestBase {
 
 		expiresIn = JwtService.getExpirationInMinutes(jwtClaims);
 
-		testRouteRatingJwt =
-			new RouteRatingJwt(
-				SecurityProperties.TOKEN_PREFIX + jwtToken,
+		testRouteRatingJwt = new RouteRatingJwt(SecurityProperties.TOKEN_PREFIX + jwtToken,
 				jwtClaims,
 				expiresIn,
 				SecurityProperties.TOKEN_PREFIX + refreshToken,
-				refreshClaims);
+				refreshClaims
+		);
 	}
 
 	@Test
@@ -44,69 +42,59 @@ public class JwtServiceTest extends TestBase {
 		Claims parsedJwtClaims = jwtService.parseJwtToken(jwtToken);
 		Claims parsedRefreshClaims = jwtService.parseJwtToken(refreshToken);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(user.getId(), jwtClaims.getId()),
-			() -> Assertions.assertEquals(SecurityProperties.JWT_HEADER_STRING, jwtClaims.getSubject()),
-			() -> Assertions.assertEquals(SecurityProperties.ISSUER, jwtClaims.getIssuer()),
-			() -> Assertions.assertEquals(user.getId(), refreshClaims.getId()),
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.REFRESH_HEADER_STRING, refreshClaims.getSubject()),
-			() -> Assertions.assertEquals(SecurityProperties.ISSUER, refreshClaims.getIssuer()),
-			() -> Assertions.assertEquals(jwtClaims.getSubject(), parsedJwtClaims.getSubject()),
-			() -> Assertions.assertEquals(jwtClaims.getId(), parsedJwtClaims.getId()),
-			() -> Assertions.assertEquals(jwtClaims.getIssuedAt(), parsedJwtClaims.getIssuedAt()),
-			() -> Assertions.assertEquals(jwtClaims.getExpiration(), parsedJwtClaims.getExpiration()),
-			() -> Assertions.assertEquals(jwtClaims.getIssuer(), parsedJwtClaims.getIssuer()),
-			() -> Assertions.assertEquals(refreshClaims.getSubject(), parsedRefreshClaims.getSubject()),
-			() -> Assertions.assertEquals(refreshClaims.getId(), parsedRefreshClaims.getId()),
-			() ->
-				Assertions.assertEquals(refreshClaims.getIssuedAt(), parsedRefreshClaims.getIssuedAt()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getExpiration(), parsedRefreshClaims.getExpiration()),
-			() -> Assertions.assertEquals(refreshClaims.getIssuer(), parsedRefreshClaims.getIssuer()));
+		Assertions.assertAll(() -> Assertions.assertEquals(user.getId(), jwtClaims.getId()),
+				() -> Assertions.assertEquals(SecurityProperties.JWT_HEADER_STRING, jwtClaims.getSubject()),
+				() -> Assertions.assertEquals(SecurityProperties.ISSUER, jwtClaims.getIssuer()),
+				() -> Assertions.assertEquals(user.getId(), refreshClaims.getId()),
+				() -> Assertions.assertEquals(SecurityProperties.REFRESH_HEADER_STRING, refreshClaims.getSubject()),
+				() -> Assertions.assertEquals(SecurityProperties.ISSUER, refreshClaims.getIssuer()),
+				() -> Assertions.assertEquals(jwtClaims.getSubject(), parsedJwtClaims.getSubject()),
+				() -> Assertions.assertEquals(jwtClaims.getId(), parsedJwtClaims.getId()),
+				() -> Assertions.assertEquals(jwtClaims.getIssuedAt(), parsedJwtClaims.getIssuedAt()),
+				() -> Assertions.assertEquals(jwtClaims.getExpiration(), parsedJwtClaims.getExpiration()),
+				() -> Assertions.assertEquals(jwtClaims.getIssuer(), parsedJwtClaims.getIssuer()),
+				() -> Assertions.assertEquals(refreshClaims.getSubject(), parsedRefreshClaims.getSubject()),
+				() -> Assertions.assertEquals(refreshClaims.getId(), parsedRefreshClaims.getId()),
+				() -> Assertions.assertEquals(refreshClaims.getIssuedAt(), parsedRefreshClaims.getIssuedAt()),
+				() -> Assertions.assertEquals(refreshClaims.getExpiration(), parsedRefreshClaims.getExpiration()),
+				() -> Assertions.assertEquals(refreshClaims.getIssuer(), parsedRefreshClaims.getIssuer())
+		);
 	}
 
 	@Test
 	void routeRatingJwtTest() {
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(expiresIn, testRouteRatingJwt.getExpiresIn()),
-			() ->
-				Assertions.assertEquals(
-					jwtClaims.getSubject(), testRouteRatingJwt.getJwtClaims().getSubject()),
-			() -> Assertions.assertEquals(jwtClaims.getId(), testRouteRatingJwt.getJwtClaims().getId()),
-			() ->
-				Assertions.assertEquals(
-					jwtClaims.getIssuedAt(), testRouteRatingJwt.getJwtClaims().getIssuedAt()),
-			() ->
-				Assertions.assertEquals(
-					jwtClaims.getExpiration(), testRouteRatingJwt.getJwtClaims().getExpiration()),
-			() ->
-				Assertions.assertEquals(
-					jwtClaims.getIssuer(), testRouteRatingJwt.getJwtClaims().getIssuer()),
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + jwtToken, testRouteRatingJwt.getJwtToken()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getSubject(), testRouteRatingJwt.getRefreshClaims().getSubject()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getId(), testRouteRatingJwt.getRefreshClaims().getId()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getIssuedAt(), testRouteRatingJwt.getRefreshClaims().getIssuedAt()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getExpiration(),
-					testRouteRatingJwt.getRefreshClaims().getExpiration()),
-			() ->
-				Assertions.assertEquals(
-					refreshClaims.getIssuer(), testRouteRatingJwt.getRefreshClaims().getIssuer()),
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + refreshToken,
-					testRouteRatingJwt.getRefreshToken()));
+		Assertions.assertAll(() -> Assertions.assertEquals(expiresIn, testRouteRatingJwt.getExpiresIn()),
+				() -> Assertions.assertEquals(jwtClaims.getSubject(), testRouteRatingJwt.getJwtClaims().getSubject()),
+				() -> Assertions.assertEquals(jwtClaims.getId(), testRouteRatingJwt.getJwtClaims().getId()),
+				() -> Assertions.assertEquals(jwtClaims.getIssuedAt(), testRouteRatingJwt.getJwtClaims().getIssuedAt()),
+				() -> Assertions.assertEquals(
+						jwtClaims.getExpiration(),
+						testRouteRatingJwt.getJwtClaims().getExpiration()
+				),
+				() -> Assertions.assertEquals(jwtClaims.getIssuer(), testRouteRatingJwt.getJwtClaims().getIssuer()),
+				() -> Assertions.assertEquals(
+						SecurityProperties.TOKEN_PREFIX + jwtToken,
+						testRouteRatingJwt.getJwtToken()
+				),
+				() -> Assertions.assertEquals(
+						refreshClaims.getSubject(),
+						testRouteRatingJwt.getRefreshClaims().getSubject()
+				),
+				() -> Assertions.assertEquals(refreshClaims.getId(), testRouteRatingJwt.getRefreshClaims().getId()),
+				() -> Assertions.assertEquals(
+						refreshClaims.getIssuedAt(),
+						testRouteRatingJwt.getRefreshClaims().getIssuedAt()
+				),
+				() -> Assertions.assertEquals(refreshClaims.getExpiration(),
+						testRouteRatingJwt.getRefreshClaims().getExpiration()
+				),
+				() -> Assertions.assertEquals(
+						refreshClaims.getIssuer(),
+						testRouteRatingJwt.getRefreshClaims().getIssuer()
+				),
+				() -> Assertions.assertEquals(SecurityProperties.TOKEN_PREFIX + refreshToken,
+						testRouteRatingJwt.getRefreshToken()
+				)
+		);
 	}
 }

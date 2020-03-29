@@ -11,26 +11,18 @@ import java.util.Objects;
 
 public class RouteRatingJwt implements Serializable {
 
-	@Expose
-	private String jwtToken;
+	@Expose private String jwtToken;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private Claims jwtClaims;
+	@JsonProperty(access = Access.WRITE_ONLY) private Claims jwtClaims;
 
-	@Expose
-	private Long expiresIn;
-	@Expose
-	private String refreshToken;
+	@Expose private Long expiresIn;
+	@Expose private String refreshToken;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private Claims refreshClaims;
+	@JsonProperty(access = Access.WRITE_ONLY) private Claims refreshClaims;
 
 	public RouteRatingJwt(
-		String jwtToken,
-		Claims jwtClaims,
-		Long expiresIn,
-		String refreshToken,
-		Claims refreshClaims) {
+			String jwtToken, Claims jwtClaims, Long expiresIn, String refreshToken, Claims refreshClaims
+	) {
 		this.jwtToken = jwtToken;
 		this.jwtClaims = jwtClaims;
 		this.expiresIn = expiresIn;
@@ -72,11 +64,10 @@ public class RouteRatingJwt implements Serializable {
 			return false;
 		}
 		RouteRatingJwt that = (RouteRatingJwt) o;
-		return Objects.equals(jwtToken, that.jwtToken)
-			&& Objects.equals(jwtClaims, that.jwtClaims)
-			&& Objects.equals(expiresIn, that.expiresIn)
-			&& Objects.equals(refreshToken, that.refreshToken)
-			&& Objects.equals(refreshClaims, that.refreshClaims);
+		return Objects.equals(jwtToken, that.jwtToken) && Objects.equals(jwtClaims, that.jwtClaims) && Objects.equals(
+				expiresIn,
+				that.expiresIn
+		) && Objects.equals(refreshToken, that.refreshToken) && Objects.equals(refreshClaims, that.refreshClaims);
 	}
 
 	@Override

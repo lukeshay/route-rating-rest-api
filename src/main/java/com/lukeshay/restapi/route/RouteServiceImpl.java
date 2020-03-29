@@ -27,7 +27,8 @@ public class RouteServiceImpl implements RouteService {
 
 	@Autowired
 	public RouteServiceImpl(
-		RouteRepository routeRepository, GymRepository gymRepository, WallRepository wallRepository) {
+			RouteRepository routeRepository, GymRepository gymRepository, WallRepository wallRepository
+	) {
 		this.routeRepository = routeRepository;
 		this.gymRepository = gymRepository;
 		this.wallRepository = wallRepository;
@@ -54,11 +55,9 @@ public class RouteServiceImpl implements RouteService {
 
 		Route route = routeRepository.findById(body.getId()).orElse(null);
 
-		if (route == null
-			|| gym == null
-			|| user == null
-			|| !route.getGymId().equals(body.getGymId())
-			|| !gym.getAuthorizedEditors().contains(user.getId())) {
+		if (route == null || gym == null || user == null || !route.getGymId()
+		                                                          .equals(body.getGymId()) || !gym.getAuthorizedEditors()
+		                                                                                          .contains(user.getId())) {
 			return null;
 		}
 
@@ -104,23 +103,22 @@ public class RouteServiceImpl implements RouteService {
 
 	@Override
 	public Route updateRoute(
-		Authentication authentication,
-		String id,
-		String gymId,
-		String wallId,
-		List<WallTypes> types,
-		String holdColor,
-		String setter,
-		String name) {
+			Authentication authentication,
+			String id,
+			String gymId,
+			String wallId,
+			List<WallTypes> types,
+			String holdColor,
+			String setter,
+			String name
+	) {
 		User user = AuthenticationUtils.getUser(authentication);
 		Route route = routeRepository.findById(id).orElse(null);
 		Gym gym = gymRepository.findById(gymId).orElse(null);
 
-		if (route == null
-			|| !route.getGymId().equals(gymId)
-			|| gym == null
-			|| user == null
-			|| !gym.getAuthorizedEditors().contains(user.getId())) {
+		if (route == null || !route.getGymId()
+		                           .equals(gymId) || gym == null || user == null || !gym.getAuthorizedEditors()
+		                                                                                .contains(user.getId())) {
 			return null;
 		}
 
@@ -159,21 +157,17 @@ public class RouteServiceImpl implements RouteService {
 		Wall wall = getWallOrNotFound(route);
 		Map<String, String> result = new HashMap<>();
 
-		route
-			.getTypes()
-			.forEach(
-				(wallType) -> {
-					if (!wall.getTypes().contains(wallType)) {
-						result.put("types", wallType.toString() + " is not allowed for this wall.");
-					}
-				});
+		route.getTypes().forEach((wallType) -> {
+			if (!wall.getTypes().contains(wallType)) {
+				result.put("types", wallType.toString() + " is not allowed for this wall.");
+			}
+		});
 
 		return result;
 	}
 
 	@Override
-	public boolean validateEditor(Authentication authentication, Route body)
-		throws HttpClientErrorException {
+	public boolean validateEditor(Authentication authentication, Route body) throws HttpClientErrorException {
 		Optional<User> user = AuthenticationUtils.getUserOptional(authentication);
 		Gym gym = getGymOrNotFound(body);
 

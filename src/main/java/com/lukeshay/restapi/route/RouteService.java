@@ -24,14 +24,15 @@ public interface RouteService {
 	Optional<Wall> getWall(Route route);
 
 	Route updateRoute(
-		Authentication authentication,
-		String id,
-		String gymId,
-		String wallId,
-		List<WallTypes> types,
-		String holdColor,
-		String setter,
-		String name);
+			Authentication authentication,
+			String id,
+			String gymId,
+			String wallId,
+			List<WallTypes> types,
+			String holdColor,
+			String setter,
+			String name
+	);
 
 	Map<String, String> validWallTypes(Route route) throws HttpClientErrorException;
 

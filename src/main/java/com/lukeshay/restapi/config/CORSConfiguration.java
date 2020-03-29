@@ -18,18 +18,21 @@ public class CORSConfiguration implements Filter {
 	private static Logger LOG = LoggerFactory.getLogger(CORSConfiguration.class.getName());
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-		throws IOException, ServletException {
+	public void doFilter(
+			ServletRequest req,
+			ServletResponse res,
+			FilterChain chain
+	) throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
-		LOG.debug(
-			"Filtering: method: {}, origin: {}, endpoint: {}, authorization: {}",
-			request.getMethod(),
-			request.getHeader("origin"),
-			request.getRequestURI() + "?" + request.getQueryString(),
-			request.getHeader("Authorization"));
+		LOG.debug("Filtering: method: {}, origin: {}, endpoint: {}, authorization: {}",
+				request.getMethod(),
+				request.getHeader("origin"),
+				request.getRequestURI() + "?" + request.getQueryString(),
+				request.getHeader("Authorization")
+		);
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Credentials", "true");

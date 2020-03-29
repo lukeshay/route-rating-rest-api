@@ -17,22 +17,21 @@ import java.util.*;
 
 public class RouteRatingControllerTest extends TestBase {
 
-	@Autowired
-	RouteRatingService routeRatingService;
+	@Autowired RouteRatingService routeRatingService;
 	private RouteRatingController ratingController;
 	private Route route;
 	private RouteRating rating;
 
 	@BeforeEach
 	void setUp() {
-		route =
-			new Route(
+		route = new Route(
 				UUID.randomUUID().toString(),
 				UUID.randomUUID().toString(),
 				"c",
 				"d",
 				"e",
-				Collections.singletonList(WallTypes.BOULDER));
+				Collections.singletonList(WallTypes.BOULDER)
+		);
 
 		route = routeRepository.save(route);
 
@@ -48,8 +47,9 @@ public class RouteRatingControllerTest extends TestBase {
 		rating = routeRatingRepository.findAll().get(0);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() -> Assertions.assertEquals(rating, response.getBody()));
+				() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(rating, response.getBody())
+		);
 
 		rating.setId(null);
 		rating.setRouteId(UUID.randomUUID().toString());
@@ -57,10 +57,9 @@ public class RouteRatingControllerTest extends TestBase {
 		ResponseEntity<?> invalidRouteResponse = ratingController.createRating(authentication, rating);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, invalidRouteResponse.getStatusCode()),
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Rating is invalid."), invalidRouteResponse.getBody()));
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, invalidRouteResponse.getStatusCode()),
+				() -> Assertions.assertEquals(BodyUtils.error("Rating is invalid."), invalidRouteResponse.getBody())
+		);
 	}
 
 	@Test
@@ -68,8 +67,7 @@ public class RouteRatingControllerTest extends TestBase {
 		List<RouteRating> ratings = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {
-			RouteRating routeRating =
-				new RouteRating(route.getId(), "I like chicken" + i, Grade.GRADE_5_9, 4);
+			RouteRating routeRating = new RouteRating(route.getId(), "I like chicken" + i, Grade.GRADE_5_9, 4);
 
 			routeRating = routeRatingRepository.save(routeRating);
 
@@ -79,11 +77,9 @@ public class RouteRatingControllerTest extends TestBase {
 		ResponseEntity<?> response = ratingController.getRatings(route.getId(), null, null, null);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() ->
-				Assertions.assertTrue(
-					ratings.containsAll(
-						Objects.requireNonNull(
-							((Page<RouteRating>) response.getBody()).getContent()))));
+				() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertTrue(ratings.containsAll(Objects.requireNonNull(((Page<RouteRating>) response.getBody())
+						.getContent())))
+		);
 	}
 }

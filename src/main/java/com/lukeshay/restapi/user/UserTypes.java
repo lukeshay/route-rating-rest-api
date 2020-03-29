@@ -1,8 +1,7 @@
 package com.lukeshay.restapi.user;
 
 public enum UserTypes {
-	BASIC,
-	ADMIN;
+	BASIC, ADMIN;
 
 	public String authority() {
 		return this.toString();

@@ -22,10 +22,8 @@ public class RouteRatingServiceImpl implements RouteRatingService {
 
 	private static Logger LOG = LoggerFactory.getLogger(RouteRatingServiceImpl.class.getName());
 
-	@Autowired
-	private RouteRatingRepository ratingRepository;
-	@Autowired
-	private RouteRepository routeRepository;
+	@Autowired private RouteRatingRepository ratingRepository;
+	@Autowired private RouteRepository routeRepository;
 
 	@Override
 	public ResponseEntity<?> createRating(Authentication authentication, RouteRating rating) {
@@ -56,21 +54,17 @@ public class RouteRatingServiceImpl implements RouteRatingService {
 
 	@Override
 	public Page<RouteRating> getRatingsByRouteId(
-		String routeId, String sorts, Integer limit, Integer page) {
+			String routeId, String sorts, Integer limit, Integer page
+	) {
 		if (sorts == null) {
 			sorts = "createdDate:desc";
 		}
 
-		return ratingRepository.findAllByRouteId(
-			PageableUtils.buildPageRequest(page, limit, sorts), routeId);
+		return ratingRepository.findAllByRouteId(PageableUtils.buildPageRequest(page, limit, sorts), routeId);
 	}
 
 	private boolean validateRating(RouteRating rating) {
-		return rating.getCreatorId() != null
-			&& rating.getCreatorUsername() != null
-			&& rating.getRouteId() != null
-			&& rating.getRating() != 0
-			&& rating.getRating() <= 5
-			&& rating.getGrade() != null;
+		return rating.getCreatorId() != null && rating.getCreatorUsername() != null && rating.getRouteId() != null && rating
+				.getRating() != 0 && rating.getRating() <= 5 && rating.getGrade() != null;
 	}
 }

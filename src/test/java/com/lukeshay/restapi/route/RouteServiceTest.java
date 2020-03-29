@@ -26,8 +26,7 @@ public class RouteServiceTest extends TestBase {
 		testWall = TestBase.createTestWall(testGym.getId(), Collections.singletonList(WallTypes.LEAD));
 		testWall = wallRepository.save(testWall);
 		testRoute =
-			TestBase.createTestRoute(
-				testGym.getId(), testWall.getId(), Collections.singletonList(WallTypes.LEAD));
+				TestBase.createTestRoute(testGym.getId(), testWall.getId(), Collections.singletonList(WallTypes.LEAD));
 		testRoute = routeRepository.save(testRoute);
 
 		populateGyms();
@@ -50,9 +49,9 @@ public class RouteServiceTest extends TestBase {
 		Optional<Route> route = routeService.createRoute(testRoute);
 		testRoute = routeRepository.findAll().get(0);
 
-		Assertions.assertAll(
-			() -> Assertions.assertTrue(route.isPresent()),
-			() -> Assertions.assertEquals(testRoute, route.get()));
+		Assertions.assertAll(() -> Assertions.assertTrue(route.isPresent()),
+				() -> Assertions.assertEquals(testRoute, route.get())
+		);
 	}
 
 	@Test
@@ -65,18 +64,18 @@ public class RouteServiceTest extends TestBase {
 	void getRoutesByWall() {
 		List<Route> routes = routeService.getRoutesByWall(testWall.getId());
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(1, routes.size()),
-			() -> Assertions.assertEquals(testRoute, routes.get(0)));
+		Assertions.assertAll(() -> Assertions.assertEquals(1, routes.size()),
+				() -> Assertions.assertEquals(testRoute, routes.get(0))
+		);
 	}
 
 	@Test
 	void getWallTest() {
 		Optional<Wall> wall = routeService.getWall(testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertTrue(wall.isPresent()),
-			() -> Assertions.assertEquals(testWall, wall.get()));
+		Assertions.assertAll(() -> Assertions.assertTrue(wall.isPresent()),
+				() -> Assertions.assertEquals(testWall, wall.get())
+		);
 
 		Route tempRoute = createTestRoute(testGym.getId(), testWall.getId(), testWall.getTypes());
 		wallRepository.delete(testWall);

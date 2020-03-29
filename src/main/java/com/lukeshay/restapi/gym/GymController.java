@@ -72,10 +72,11 @@ public class GymController {
 	@PreAuthorize("permitAll()")
 	@ApiOperation(value = "Gets gyms.", response = Gym.class)
 	public ResponseEntity<Page<Gym>> getGyms(
-		@PathParam("query") String query,
-		@PathParam("sort") String sort,
-		@PathParam("limit") Integer limit,
-		@PathParam("page") Integer page) {
+			@PathParam("query") String query,
+			@PathParam("sort") String sort,
+			@PathParam("limit") Integer limit,
+			@PathParam("page") Integer page
+	) {
 		LOG.debug("Getting gyms, query: {}, limit: {}, page: {}", query, limit, page);
 
 		Page<Gym> gyms = gymService.getGyms(query, sort, limit, page);
@@ -87,12 +88,12 @@ public class GymController {
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "Update a gym.", response = Gym.class)
 	public ResponseEntity<?> updateGym(
-		Authentication authentication, @PathVariable String gymId, @RequestBody Gym gym) {
+			Authentication authentication, @PathVariable String gymId, @RequestBody Gym gym
+	) {
 
 		LOG.debug("Updating {}", gymId);
 
-		gym =
-			gymService.updateGym(
+		gym = gymService.updateGym(
 				authentication,
 				gymId,
 				gym.getName(),
@@ -103,7 +104,8 @@ public class GymController {
 				gym.getEmail(),
 				gym.getPhoneNumber(),
 				gym.getWebsite(),
-				gym.getAuthorizedEditors());
+				gym.getAuthorizedEditors()
+		);
 
 		if (gym == null) {
 			return ResponseUtils.badRequest(BodyUtils.error("Gym not found"));
@@ -117,10 +119,11 @@ public class GymController {
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "Upload the gym's logo.", response = Gym.class)
 	public ResponseEntity<?> uploadLogo(
-		Authentication authentication,
-		@RequestParam("file") MultipartFile file,
-		@RequestParam("gymId") String gymId,
-		@PathVariable String imageName) {
+			Authentication authentication,
+			@RequestParam("file") MultipartFile file,
+			@RequestParam("gymId") String gymId,
+			@PathVariable String imageName
+	) {
 		LOG.debug("Uploading logo to gym {}", gymId);
 
 		return gymService.uploadPhoto(authentication, file, gymId, imageName);

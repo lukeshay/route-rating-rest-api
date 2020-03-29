@@ -94,8 +94,7 @@ public class RouteController {
 	public ResponseEntity<?> updateRoute(Authentication authentication, @RequestBody Route body) {
 		LOG.debug("Updating route {}", body.getId());
 
-		Route route =
-			routeService.updateRoute(
+		Route route = routeService.updateRoute(
 				authentication,
 				body.getId(),
 				body.getGymId(),
@@ -103,7 +102,8 @@ public class RouteController {
 				body.getTypes(),
 				body.getHoldColor(),
 				body.getSetter(),
-				body.getName());
+				body.getName()
+		);
 
 		if (route == null) {
 			return ResponseUtils.badRequest(BodyUtils.error("Error updating route."));

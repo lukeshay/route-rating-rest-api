@@ -33,28 +33,19 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class TestBase {
-	@Autowired
-	protected GymRepository gymRepository;
-	@Autowired
-	protected RouteRatingRepository routeRatingRepository;
-	@Autowired
-	protected RouteRepository routeRepository;
-	@Autowired
-	protected SessionRepository sessionRepository;
-	@Autowired
-	protected UserRepository userRepository;
-	@Autowired
-	protected WallRepository wallRepository;
-	@Autowired
-	protected PasswordEncoder passwordEncoder;
+	@Autowired protected GymRepository gymRepository;
+	@Autowired protected RouteRatingRepository routeRatingRepository;
+	@Autowired protected RouteRepository routeRepository;
+	@Autowired protected SessionRepository sessionRepository;
+	@Autowired protected UserRepository userRepository;
+	@Autowired protected WallRepository wallRepository;
+	@Autowired protected PasswordEncoder passwordEncoder;
 
 	protected User user;
 	protected UserPrincipal userPrincipal;
 
-	@Mock
-	protected Authentication authentication;
-	@Mock
-	protected AwsService awsService;
+	@Mock protected Authentication authentication;
+	@Mock protected AwsService awsService;
 
 	/**
 	 * Helper method to create a test route. The fields not specified are as follows <br>
@@ -87,15 +78,16 @@ public class TestBase {
 	 */
 	protected static Gym createTestGym(String editorId) {
 		return new Gym(
-			"gym name",
-			"gym address",
-			"gym city",
-			"IA",
-			"00000",
-			"gym.website.com",
-			"gym@email.com",
-			"1111111111",
-			Collections.singletonList(editorId));
+				"gym name",
+				"gym address",
+				"gym city",
+				"IA",
+				"00000",
+				"gym.website.com",
+				"gym@email.com",
+				"1111111111",
+				Collections.singletonList(editorId)
+		);
 	}
 
 	/**
@@ -114,8 +106,7 @@ public class TestBase {
 	protected void setUpClasses() {
 		MockitoAnnotations.initMocks(this);
 
-		user =
-			new User(
+		user = new User(
 				"test.user@email.com",
 				"Test",
 				"User",
@@ -124,7 +115,8 @@ public class TestBase {
 				"Des Moines",
 				"Iowa",
 				"USA",
-				"password");
+				"password"
+		);
 
 		user.setAuthority(UserTypes.BASIC.authority());
 		user.setRole(UserTypes.BASIC.role());
@@ -135,7 +127,7 @@ public class TestBase {
 
 		Mockito.when(authentication.getPrincipal()).thenReturn(userPrincipal);
 		Mockito.when(awsService.uploadFileToS3(Mockito.anyString(), Mockito.any(MultipartFile.class)))
-			.thenReturn("url.com");
+		       .thenReturn("url.com");
 	}
 
 	@AfterEach
@@ -150,8 +142,7 @@ public class TestBase {
 
 	protected void populateGyms() {
 		for (int i = 0; i < 10; i++) {
-			gymRepository.save(
-				new Gym(
+			gymRepository.save(new Gym(
 					"gym name" + i,
 					"gym address" + i,
 					"gym city" + i,
@@ -160,33 +151,29 @@ public class TestBase {
 					"gym.website.com",
 					"gym@email.com",
 					"1111111111",
-					Collections.emptyList()));
+					Collections.emptyList()
+			));
 		}
 	}
 
 	protected void populateWalls() {
 		for (int i = 0; i < 10; i++) {
-			Gym gym =
-				gymRepository.findAll().get((int) Math.ceil(Math.random() * (gymRepository.count() - 1)));
-			wallRepository.save(
-				new Wall(gym.getId(), "wall name" + i, Collections.singletonList(WallTypes.LEAD)));
+			Gym gym = gymRepository.findAll().get((int) Math.ceil(Math.random() * (gymRepository.count() - 1)));
+			wallRepository.save(new Wall(gym.getId(), "wall name" + i, Collections.singletonList(WallTypes.LEAD)));
 		}
 	}
 
 	protected void populateRoutes() {
 		for (int i = 0; i < 10; i++) {
-			Wall wall =
-				wallRepository
-					.findAll()
-					.get((int) Math.ceil(Math.random() * (wallRepository.count() - 1)));
-			routeRepository.save(
-				new Route(
+			Wall wall = wallRepository.findAll().get((int) Math.ceil(Math.random() * (wallRepository.count() - 1)));
+			routeRepository.save(new Route(
 					wall.getId(),
 					wall.getGymId(),
 					"route name" + i,
 					"route setter" + i,
 					"route hold color" + i,
-					wall.getTypes()));
+					wall.getTypes()
+			));
 		}
 	}
 }

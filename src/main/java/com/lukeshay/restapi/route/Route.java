@@ -18,56 +18,31 @@ import java.util.Objects;
 @Table(name = "routes")
 public class Route extends Auditable<String> implements Serializable {
 
-	@Column(name = "id", unique = true, updatable = false)
-	@Expose
-	@GeneratedValue(generator = "pg-uuid")
-	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
-	@Id
-	private String id;
+	@Column(name = "id", unique = true, updatable = false) @Expose @GeneratedValue(generator = "pg-uuid")
+	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator") @Id private String id;
 
-	@Column(name = "wall_id", updatable = false)
-	@Expose
-	private String wallId;
+	@Column(name = "wall_id", updatable = false) @Expose private String wallId;
 
-	@Column(name = "gym_id", updatable = false)
-	@Expose
-	private String gymId;
+	@Column(name = "gym_id", updatable = false) @Expose private String gymId;
 
-	@Column(name = "name")
-	@Expose
-	private String name;
+	@Column(name = "name") @Expose private String name;
 
-	@Column(name = "setter")
-	@Expose
-	private String setter;
+	@Column(name = "setter") @Expose private String setter;
 
-	@Column(name = "hold_color")
-	@Expose
-	private String holdColor;
+	@Column(name = "hold_color") @Expose private String holdColor;
 
-	@Column(name = "types")
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Expose
-	private List<WallTypes> types;
+	@Column(name = "types") @ElementCollection(fetch = FetchType.EAGER) @Expose private List<WallTypes> types;
 
-	@Column(name = "average_grade")
-	@Expose
-	private Grade averageGrade;
+	@Column(name = "average_grade") @Expose private Grade averageGrade;
 
-	@Column(name = "average_rating")
-	@Expose
-	private double averageRating;
+	@Column(name = "average_rating") @Expose private double averageRating;
 
 	Route() {
 	}
 
 	public Route(
-		String wallId,
-		String gymId,
-		String name,
-		String setter,
-		String holdColor,
-		List<WallTypes> types) {
+			String wallId, String gymId, String name, String setter, String holdColor, List<WallTypes> types
+	) {
 		this.wallId = wallId;
 		this.gymId = gymId;
 		this.name = name;
@@ -152,11 +127,10 @@ public class Route extends Auditable<String> implements Serializable {
 		List<Grade> userGrades = new ArrayList<>();
 		List<Integer> userRatings = new ArrayList<>();
 
-		ratings.forEach(
-			(rating) -> {
-				userGrades.add(rating.getGrade());
-				userRatings.add(rating.getRating());
-			});
+		ratings.forEach((rating) -> {
+			userGrades.add(rating.getGrade());
+			userRatings.add(rating.getRating());
+		});
 
 		int numberGrades = userGrades.size();
 		int numberRatings = userRatings.size();
@@ -184,20 +158,20 @@ public class Route extends Auditable<String> implements Serializable {
 			return false;
 		}
 		Route route = (Route) o;
-		return Double.compare(route.averageRating, averageRating) == 0
-			&& Objects.equals(id, route.id)
-			&& Objects.equals(wallId, route.wallId)
-			&& Objects.equals(gymId, route.gymId)
-			&& Objects.equals(name, route.name)
-			&& Objects.equals(setter, route.setter)
-			&& Objects.equals(holdColor, route.holdColor)
-			&& ModelUtils.collectionsEqual(types, route.types)
-			&& averageGrade == route.averageGrade;
+		return Double.compare(route.averageRating, averageRating) == 0 && Objects.equals(
+				id,
+				route.id
+		) && Objects.equals(wallId, route.wallId) && Objects.equals(gymId, route.gymId) && Objects.equals(
+				name,
+				route.name
+		) && Objects.equals(setter, route.setter) && Objects.equals(
+				holdColor,
+				route.holdColor
+		) && ModelUtils.collectionsEqual(types, route.types) && averageGrade == route.averageGrade;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(
-			id, wallId, gymId, name, setter, holdColor, types, averageGrade, averageRating);
+		return Objects.hash(id, wallId, gymId, name, setter, holdColor, types, averageGrade, averageRating);
 	}
 }

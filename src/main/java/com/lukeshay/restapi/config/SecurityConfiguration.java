@@ -34,9 +34,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private SessionService sessionService;
 	private JwtService jwtService;
 
-	public SecurityConfiguration(@Qualifier("userPrincipalService") UserDetailsService userDetailsService,
-	                             UserRepository userRepository,
-	                             SessionService sessionService, JwtService jwtService) {
+	public SecurityConfiguration(
+			@Qualifier("userPrincipalService") UserDetailsService userDetailsService,
+			UserRepository userRepository,
+			SessionService sessionService,
+			JwtService jwtService
+	) {
 		this.userDetailsService = userDetailsService;
 		this.userRepository = userRepository;
 		this.sessionService = sessionService;
@@ -56,18 +59,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf()
-			.disable()
-			.cors()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, sessionService,
-				userRepository))
-			.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtService, userRepository))
-			.authorizeRequests()
-			.anyRequest()
-			.permitAll();
+		    .disable()
+		    .cors()
+		    .and()
+		    .sessionManagement()
+		    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		    .and()
+		    .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, sessionService, userRepository))
+		    .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtService, userRepository))
+		    .authorizeRequests()
+		    .anyRequest()
+		    .permitAll();
 	}
 
 	@Override
@@ -79,14 +81,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Collections.singletonList("*"));
-		configuration.setAllowedMethods(
-			Arrays.asList(
-				HttpMethod.GET.name(),
+		configuration.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(),
 				HttpMethod.HEAD.name(),
 				HttpMethod.POST.name(),
 				HttpMethod.PUT.name(),
 				HttpMethod.DELETE.name(),
-				HttpMethod.OPTIONS.name()));
+				HttpMethod.OPTIONS.name()
+		));
 		configuration.addAllowedHeader("*");
 		configuration.addExposedHeader("Access-Control-Allow-Origin");
 		configuration.addExposedHeader("Access-Control-Allow-Methods");

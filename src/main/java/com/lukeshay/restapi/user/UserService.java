@@ -24,15 +24,16 @@ public interface UserService {
 	boolean isUsernameTaken(Authentication authentication, String username);
 
 	User updateUser(
-		Authentication authentication,
-		String username,
-		String email,
-		String firstName,
-		String lastName,
-		String city,
-		String state,
-		String country,
-		String password);
+			Authentication authentication,
+			String username,
+			String email,
+			String firstName,
+			String lastName,
+			String city,
+			String state,
+			String country,
+			String password
+	);
 
 	/**
 	 * Checks if email is valid, not null, and not in use. If it is invalid in anyway, a value with
@@ -43,7 +44,8 @@ public interface UserService {
 	 * @return boolean of whether the email is valid
 	 */
 	boolean validateEmail(
-		Map<String, String> responseBody, Authentication authentication, String email);
+			Map<String, String> responseBody, Authentication authentication, String email
+	);
 
 	/**
 	 * Checks if the password is not null and valid format. If is in invalid in anyway, a value with
@@ -82,5 +84,6 @@ public interface UserService {
 	 * @return boolean of whether the username is valid
 	 */
 	boolean validateUsername(
-		Map<String, String> responseBody, Authentication authentication, String username);
+			Map<String, String> responseBody, Authentication authentication, String username
+	);
 }

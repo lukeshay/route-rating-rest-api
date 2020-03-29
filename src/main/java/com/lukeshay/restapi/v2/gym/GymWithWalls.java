@@ -11,24 +11,23 @@ import java.util.Objects;
 
 public class GymWithWalls extends Gym {
 
-	@Expose
-	@JsonProperty(access = Access.READ_WRITE)
-	private List<WallWithRoutes> walls;
+	@Expose @JsonProperty(access = Access.READ_WRITE) private List<WallWithRoutes> walls;
 
 	public GymWithWalls(Gym gym, List<WallWithRoutes> walls) {
 		super(
-			gym.getId(),
-			gym.getName(),
-			gym.getAddress(),
-			gym.getCity(),
-			gym.getState(),
-			gym.getZipCode(),
-			gym.getWebsite(),
-			gym.getEmail(),
-			gym.getPhoneNumber(),
-			gym.getLogoUrl(),
-			gym.getPhotoUrl(),
-			gym.getAuthorizedEditors());
+				gym.getId(),
+				gym.getName(),
+				gym.getAddress(),
+				gym.getCity(),
+				gym.getState(),
+				gym.getZipCode(),
+				gym.getWebsite(),
+				gym.getEmail(),
+				gym.getPhoneNumber(),
+				gym.getLogoUrl(),
+				gym.getPhotoUrl(),
+				gym.getAuthorizedEditors()
+		);
 		this.walls = walls;
 	}
 

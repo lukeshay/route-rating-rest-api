@@ -50,95 +50,65 @@ public class GymServiceImpl implements GymService {
 			query = "";
 		}
 
-		return gymRepository.findAllByNameIgnoreCaseContaining(
-			PageableUtils.buildPageRequest(page, limit, sorts), query);
+		return gymRepository.findAllByNameIgnoreCaseContaining(PageableUtils.buildPageRequest(page, limit, sorts),
+				query
+		);
 	}
 
 	@Override
 	public Gym updateGym(
-		Authentication authentication,
-		String gymId,
-		String name,
-		String address,
-		String city,
-		String state,
-		String zipCode,
-		String email,
-		String phoneNumber,
-		String website,
-		List<String> authorizedEditors) {
+			Authentication authentication,
+			String gymId,
+			String name,
+			String address,
+			String city,
+			String state,
+			String zipCode,
+			String email,
+			String phoneNumber,
+			String website,
+			List<String> authorizedEditors
+	) {
 
 		Gym gym = gymRepository.findById(gymId).orElse(null);
 		User user = AuthenticationUtils.getUser(authentication);
 
-		if (gym == null
-			|| user == null
-			|| ((gym.getAuthorizedEditors() == null
-			|| !gym.getAuthorizedEditors().contains(user.getId()))
-			&& !user.getAuthority().equals(UserTypes.ADMIN.authority()))) {
+		if (gym == null || user == null || ((gym.getAuthorizedEditors() == null || !gym.getAuthorizedEditors()
+				.contains(user.getId())) && !user.getAuthority().equals(UserTypes.ADMIN.authority()))) {
 			return null;
 		}
 
-		if (name != null && !name.equals("")) {
-			gym.setName(name);
-		}
-
-		if (address != null && !address.equals("")) {
-			gym.setAddress(address);
-		}
-
-		if (city != null && !city.equals("")) {
-			gym.setCity(city);
-		}
-
-		if (state != null && !state.equals("")) {
-			gym.setState(state);
-		}
-
-		if (zipCode != null && !zipCode.equals("")) {
-			gym.setZipCode(zipCode);
-		}
-
-		if (website != null && !website.equals("")) {
-			gym.setWebsite(website);
-		}
-
-		if (phoneNumber != null && !phoneNumber.equals("")) {
-			gym.setPhoneNumber(phoneNumber);
-		}
-
-		if (email != null && !email.equals("")) {
-			gym.setEmail(email);
-		}
-
-		if (authorizedEditors != null && authorizedEditors.size() > 0) {
-			gym.setAuthorizedEditors(authorizedEditors);
-		}
+		gym.setNameIfNotNull(name);
+		gym.setName(name);
+		gym.setAddressIfNotNull(address);
+		gym.setCityIfNotNull(city);
+		gym.setStateIfNotNull(state);
+		gym.setZipCodeIfNotNull(zipCode);
+		gym.setWebsiteIfNotNull(website);
+		gym.setPhoneNumberIfNotNull(phoneNumber);
+		gym.setEmailIfNotNull(email);
+		gym.setAuthorizedEditorsIfNotNull(authorizedEditors);
 
 		return gymRepository.save(gym);
 	}
 
 	@Override
 	public ResponseEntity<?> uploadPhoto(
-		Authentication authentication, MultipartFile file, String gymId, String imageName) {
+			Authentication authentication, MultipartFile file, String gymId, String imageName
+	) {
 		Gym gym = gymRepository.findById(gymId).orElse(null);
 		User user = AuthenticationUtils.getUser(authentication);
 
-		if (gym == null
-			|| user == null
-			|| ((gym.getAuthorizedEditors() == null
-			|| !gym.getAuthorizedEditors().contains(user.getId()))
-			&& !user.getAuthority().equals(UserTypes.ADMIN.authority()))) {
-			return ResponseUtils.unauthorized(
-				BodyUtils.error("You are unauthorized to perform this action."));
+		if (gym == null || user == null || ((gym.getAuthorizedEditors() == null || !gym.getAuthorizedEditors()
+				.contains(user.getId())) && !user.getAuthority().equals(UserTypes.ADMIN.authority()))) {
+			return ResponseUtils.unauthorized(BodyUtils.error("You are unauthorized to perform this action."));
 		}
 
 		if (!imageName.equals("logo") && !imageName.equals("gym")) {
 			return ResponseUtils.badRequest(BodyUtils.error("Invalid upload."));
 		}
 
-		String url =
-			awsService.uploadFileToS3(String.format("gyms/%s/%s.jpg", gym.getId(), imageName), file);
+		String url = awsService.uploadFileToS3(String.format("gyms/%s/%s.jpg", gym.getId(), imageName), file);
 
 		if (url == null) {
 			return ResponseUtils.internalServerError(BodyUtils.error("Error uploading file."));

@@ -2,10 +2,8 @@ package com.lukeshay.restapi.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lukeshay.restapi.jwt.JwtService;
-import com.lukeshay.restapi.jwt.JwtServiceImpl;
 import com.lukeshay.restapi.session.Session;
 import com.lukeshay.restapi.session.SessionService;
-import com.lukeshay.restapi.session.SessionServiceImpl;
 import com.lukeshay.restapi.user.UserRepository;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
@@ -16,12 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,7 +31,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
 
-	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService, SessionService sessionService, UserRepository userRepository) {
+	public JwtAuthenticationFilter(
+			AuthenticationManager authenticationManager,
+			JwtService jwtService,
+			SessionService sessionService,
+			UserRepository userRepository
+	) {
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
 		this.sessionService = sessionService;
@@ -46,35 +45,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	@Override
 	public Authentication attemptAuthentication(
-		HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+			HttpServletRequest request, HttpServletResponse response
+	) throws AuthenticationException {
 
 		CredentialsPayload credentialsPayload = null;
 
 		try {
-			credentialsPayload =
-				new ObjectMapper().readValue(request.getInputStream(), CredentialsPayload.class);
+			credentialsPayload = new ObjectMapper().readValue(request.getInputStream(), CredentialsPayload.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		assert credentialsPayload != null;
 
-		UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				credentialsPayload.getUsername(),
 				credentialsPayload.getPassword(),
-				Collections.emptyList());
+				Collections.emptyList()
+		);
 
 		return authenticationManager.authenticate(authenticationToken);
 	}
 
 	@Override
 	protected void successfulAuthentication(
-		HttpServletRequest request,
-		HttpServletResponse response,
-		FilterChain chain,
-		Authentication authResult)
-		throws IOException {
+			HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult
+	) throws IOException {
 
 		UserPrincipal principal = (UserPrincipal) authResult.getPrincipal();
 
@@ -83,30 +79,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		Claims refreshClaims = null;
 		String refreshToken = "";
 
-		if (request != null
-			&& request.getQueryString() != null
-			&& request.getQueryString().contains("remember=true")) {
-			LOG.debug(
-				"Creating refresh token for {}",
-				((UserPrincipal) authResult.getPrincipal()).getUser().getId());
+		if (request != null && request.getQueryString() != null && request.getQueryString().contains("remember=true")) {
+			LOG.debug("Creating refresh token for {}", ((UserPrincipal) authResult.getPrincipal()).getUser().getId());
 			refreshClaims = jwtService.buildRefreshClaims(principal.getUser());
 			refreshToken = jwtService.buildToken(refreshClaims);
 		}
 
-		Session session =
-			sessionService.createSession(
-				SecurityProperties.TOKEN_PREFIX + jwtToken,
+		Session session = sessionService.createSession(SecurityProperties.TOKEN_PREFIX + jwtToken,
 				jwtClaims,
 				JwtService.getExpirationInMinutes(jwtClaims),
 				SecurityProperties.TOKEN_PREFIX + refreshToken,
 				refreshClaims,
-				principal.getUser().getId());
+				principal.getUser().getId()
+		);
 		//    sessionService.saveSession(session);
 
-		response.addHeader(
-			SecurityProperties.JWT_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + jwtToken);
-		response.addHeader(
-			SecurityProperties.REFRESH_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + refreshToken);
+		response.addHeader(SecurityProperties.JWT_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + jwtToken);
+		response.addHeader(SecurityProperties.REFRESH_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + refreshToken);
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 

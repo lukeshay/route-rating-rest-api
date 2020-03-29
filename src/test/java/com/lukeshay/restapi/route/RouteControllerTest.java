@@ -18,39 +18,33 @@ import java.util.Collections;
 public class RouteControllerTest extends TestBase {
 
 	private RouteController routeController;
-	@Autowired
-	private RouteService routeService;
+	@Autowired private RouteService routeService;
 	private Route testRoute;
 	private Wall testWall;
 	private Gym testGym;
 
 	@BeforeEach
 	void setUp() {
-		testGym =
-			gymRepository.save(
-				new Gym(
-					"Jim",
-					"street",
-					"city",
-					"state",
-					"50014",
-					"lukeshay.com",
-					"climbing@gym.com",
-					"phoneNumber",
-					Collections.singletonList(user.getId())));
+		testGym = gymRepository.save(new Gym("Jim",
+				"street",
+				"city",
+				"state",
+				"50014",
+				"lukeshay.com",
+				"climbing@gym.com",
+				"phoneNumber",
+				Collections.singletonList(user.getId())
+		));
 
-		testWall =
-			wallRepository.save(
-				new Wall(testGym.getId(), "Wall", Collections.singletonList(WallTypes.BOULDER)));
+		testWall = wallRepository.save(new Wall(testGym.getId(), "Wall", Collections.singletonList(WallTypes.BOULDER)));
 
-		testRoute =
-			new Route(
-				testWall.getId(),
+		testRoute = new Route(testWall.getId(),
 				testGym.getId(),
 				"Yooty",
 				"Yeety",
 				"Green",
-				Collections.singletonList(WallTypes.BOULDER));
+				Collections.singletonList(WallTypes.BOULDER)
+		);
 
 		routeController = new RouteController(routeService);
 	}
@@ -61,15 +55,15 @@ public class RouteControllerTest extends TestBase {
 
 		testRoute = routeRepository.findAll().get(0);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() -> Assertions.assertEquals(testRoute, response.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(testRoute, response.getBody())
+		);
 
 		wallRepository.deleteAll();
 
-		Assertions.assertThrows(
-			HttpClientErrorException.class,
-			() -> routeController.createRoute(authentication, testRoute));
+		Assertions.assertThrows(HttpClientErrorException.class,
+				() -> routeController.createRoute(authentication, testRoute)
+		);
 
 		testWall.setId(null);
 		testWall = wallRepository.save(testWall);
@@ -79,15 +73,15 @@ public class RouteControllerTest extends TestBase {
 
 		ResponseEntity<?> responseNotEditor = routeController.createRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.UNAUTHORIZED, responseNotEditor.getStatusCode()),
-			() -> Assertions.assertNull(responseNotEditor.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.UNAUTHORIZED, responseNotEditor.getStatusCode()),
+				() -> Assertions.assertNull(responseNotEditor.getBody())
+		);
 
 		gymRepository.deleteAll();
 
-		Assertions.assertThrows(
-			HttpClientErrorException.class,
-			() -> routeController.createRoute(authentication, testRoute));
+		Assertions.assertThrows(HttpClientErrorException.class,
+				() -> routeController.createRoute(authentication, testRoute)
+		);
 	}
 
 	@Test
@@ -100,19 +94,17 @@ public class RouteControllerTest extends TestBase {
 
 		testRoute = routeRepository.findById(testRoute.getId()).get();
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() -> Assertions.assertEquals(testRoute, response.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(testRoute, response.getBody())
+		);
 
 		wallRepository.deleteAll();
 
 		ResponseEntity<?> responseNoWall = routeController.updateRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoWall.getStatusCode()),
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Error updating route."), responseNoWall.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoWall.getStatusCode()),
+				() -> Assertions.assertEquals(BodyUtils.error("Error updating route."), responseNoWall.getBody())
+		);
 
 		testWall.setId(null);
 		testWall = wallRepository.save(testWall);
@@ -122,11 +114,9 @@ public class RouteControllerTest extends TestBase {
 
 		ResponseEntity<?> responseNotEditor = routeController.updateRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNotEditor.getStatusCode()),
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Error updating route."), responseNotEditor.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNotEditor.getStatusCode()),
+				() -> Assertions.assertEquals(BodyUtils.error("Error updating route."), responseNotEditor.getBody())
+		);
 	}
 
 	@Test
@@ -135,19 +125,17 @@ public class RouteControllerTest extends TestBase {
 
 		ResponseEntity<?> response = routeController.deleteRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
-			() -> Assertions.assertEquals(testRoute, response.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()),
+				() -> Assertions.assertEquals(testRoute, response.getBody())
+		);
 
 		routeRepository.deleteAll();
 
 		ResponseEntity<?> responseNoRoute = routeController.deleteRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoRoute.getStatusCode()),
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Error deleting route."), responseNoRoute.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNoRoute.getStatusCode()),
+				() -> Assertions.assertEquals(BodyUtils.error("Error deleting route."), responseNoRoute.getBody())
+		);
 
 		testGym.setAuthorizedEditors(Collections.emptyList());
 		testGym = gymRepository.save(testGym);
@@ -155,10 +143,8 @@ public class RouteControllerTest extends TestBase {
 
 		ResponseEntity<?> responseNotEditor = routeController.deleteRoute(authentication, testRoute);
 
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNotEditor.getStatusCode()),
-			() ->
-				Assertions.assertEquals(
-					BodyUtils.error("Error deleting route."), responseNotEditor.getBody()));
+		Assertions.assertAll(() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseNotEditor.getStatusCode()),
+				() -> Assertions.assertEquals(BodyUtils.error("Error deleting route."), responseNotEditor.getBody())
+		);
 	}
 }

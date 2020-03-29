@@ -11,20 +11,16 @@ public class UserPrincipalTest extends TestBase {
 	void hasCorrectAuthoritiesTest() {
 		Assertions.assertEquals(2, userPrincipal.getAuthorities().size());
 
-		boolean containsAuthority =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(
-					grantedAuthority -> grantedAuthority.getAuthority().equals(user.getAuthority()));
-		boolean containsRole =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(user.getRole()));
+		boolean containsAuthority = userPrincipal.getAuthorities()
+		                                         .stream()
+		                                         .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                       .equals(user.getAuthority()));
+		boolean containsRole = userPrincipal.getAuthorities()
+		                                    .stream()
+		                                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                  .equals(user.getRole()));
 
-		Assertions.assertAll(
-			() -> Assertions.assertTrue(containsAuthority), () -> Assertions.assertTrue(containsRole));
+		Assertions.assertAll(() -> Assertions.assertTrue(containsAuthority), () -> Assertions.assertTrue(containsRole));
 	}
 
 	@Test
@@ -35,23 +31,21 @@ public class UserPrincipalTest extends TestBase {
 
 		Assertions.assertEquals(2, userPrincipal.getAuthorities().size());
 
-		boolean containsAuthorityFromNull =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(
-					grantedAuthority ->
-						grantedAuthority.getAuthority().equals(UserTypes.BASIC.authority()));
-		boolean containsRoleFromNull =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(
-					grantedAuthority -> grantedAuthority.getAuthority().equals(UserTypes.BASIC.role()));
+		boolean containsAuthorityFromNull = userPrincipal.getAuthorities()
+		                                                 .stream()
+		                                                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                               .equals(UserTypes.BASIC
+				                                                                                               .authority()));
+		boolean containsRoleFromNull = userPrincipal.getAuthorities()
+		                                            .stream()
+		                                            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                          .equals(UserTypes.BASIC
+				                                                                                          .role()));
 
 		Assertions.assertAll(
-			() -> Assertions.assertTrue(containsAuthorityFromNull),
-			() -> Assertions.assertTrue(containsRoleFromNull));
+				() -> Assertions.assertTrue(containsAuthorityFromNull),
+				() -> Assertions.assertTrue(containsRoleFromNull)
+		);
 
 		user.setAuthority(null);
 		user.setRole(null);
@@ -59,29 +53,26 @@ public class UserPrincipalTest extends TestBase {
 
 		Assertions.assertEquals(2, userPrincipal.getAuthorities().size());
 
-		boolean containsAuthorityFromInvalid =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(
-					grantedAuthority ->
-						grantedAuthority.getAuthority().equals(UserTypes.BASIC.authority()));
-		boolean containsRoleFromInvalid =
-			userPrincipal
-				.getAuthorities()
-				.stream()
-				.anyMatch(
-					grantedAuthority -> grantedAuthority.getAuthority().equals(UserTypes.BASIC.role()));
+		boolean containsAuthorityFromInvalid = userPrincipal.getAuthorities()
+		                                                    .stream()
+		                                                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                                  .equals(UserTypes.BASIC
+				                                                                                                  .authority()));
+		boolean containsRoleFromInvalid = userPrincipal.getAuthorities()
+		                                               .stream()
+		                                               .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+		                                                                                             .equals(UserTypes.BASIC
+				                                                                                             .role()));
 
 		Assertions.assertAll(
-			() -> Assertions.assertTrue(containsAuthorityFromInvalid),
-			() -> Assertions.assertTrue(containsRoleFromInvalid));
+				() -> Assertions.assertTrue(containsAuthorityFromInvalid),
+				() -> Assertions.assertTrue(containsRoleFromInvalid)
+		);
 	}
 
 	@Test
 	void getNameTest() {
-		Assertions.assertEquals(
-			user.getFirstName() + " " + user.getLastName(), userPrincipal.getName());
+		Assertions.assertEquals(user.getFirstName() + " " + user.getLastName(), userPrincipal.getName());
 	}
 
 	@Test
@@ -96,10 +87,7 @@ public class UserPrincipalTest extends TestBase {
 
 	@Test
 	void getUnusedMethodsTest() {
-		Assertions.assertTrue(
-			userPrincipal.isAccountNonExpired()
-				&& userPrincipal.isAccountNonExpired()
-				&& userPrincipal.isAccountNonLocked()
-				&& userPrincipal.isEnabled());
+		Assertions.assertTrue(userPrincipal.isAccountNonExpired() && userPrincipal.isAccountNonExpired() && userPrincipal
+				.isAccountNonLocked() && userPrincipal.isEnabled());
 	}
 }

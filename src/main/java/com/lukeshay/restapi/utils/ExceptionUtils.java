@@ -15,7 +15,8 @@ public class ExceptionUtils {
 	}
 
 	private static HttpClientErrorException httpClientErrorException(
-		HttpStatus status, String message) {
+			HttpStatus status, String message
+	) {
 		return HttpClientErrorException.create(status, message, HttpHeaders.EMPTY, null, null);
 	}
 }

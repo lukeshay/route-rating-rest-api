@@ -16,8 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Profile("lambda")
 public class LambdaConfig {
 	// silence console logging
-	@Value("${logging.level.root:OFF}")
-	String message = "";
+	@Value("${logging.level.root:OFF}") String message = "";
 
 	/**
 	 * Create required HandlerMapping, to avoid several default HandlerMapping instances being created

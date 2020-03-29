@@ -22,31 +22,28 @@ public class AwsServiceImpl implements AwsService {
 
 	AWSCredentialsProvider credentialsProvider;
 
-	@Value("${file.bucket.name}")
-	private String bucketName;
+	@Value("${file.bucket.name}") private String bucketName;
 
-	@Value("${file.bucket.url}")
-	private String bucketUrl;
+	@Value("${file.bucket.url}") private String bucketUrl;
 
-	@Value("${do.key.access")
-	private String accessKey;
+	@Value("${do.key.access") private String accessKey;
 
-	@Value("${do.key.secret")
-	private String secretKey;
+	@Value("${do.key.secret") private String secretKey;
 
 	public AwsServiceImpl() {
 		if (accessKey == null || secretKey == null) {
 			credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials("", ""));
 		}
 		else {
-			credentialsProvider =
-				new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
+			credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
 		}
 	}
 
 	@Override
 	public File convertFile(MultipartFile file) {
-		if (file == null) return null;
+		if (file == null) {
+			return null;
+		}
 		File convertedFile = new File(TEMP_FILE_NAME);
 
 		try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
@@ -63,11 +60,13 @@ public class AwsServiceImpl implements AwsService {
 	public String uploadFileToS3(String fileName, MultipartFile file) {
 		File converted = convertFile(file);
 
-		AmazonS3 awsBuckets =
-			AmazonS3ClientBuilder.standard()
-				.withCredentials(credentialsProvider)
-				.withEndpointConfiguration(new EndpointConfiguration(bucketUrl, "nyc3"))
-				.build();
+		AmazonS3 awsBuckets = AmazonS3ClientBuilder.standard()
+		                                           .withCredentials(credentialsProvider)
+		                                           .withEndpointConfiguration(new EndpointConfiguration(
+				                                           bucketUrl,
+				                                           "nyc3"
+		                                           ))
+		                                           .build();
 
 		PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, converted);
 		putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);

@@ -17,8 +17,7 @@ import java.util.Date;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-	@Value("${security.secret.jwt}")
-	private String jwtSecret;
+	@Value("${security.secret.jwt}") private String jwtSecret;
 
 	private JwtParser jwtParser;
 	private SecretKey secretKey;
@@ -27,35 +26,32 @@ public class JwtServiceImpl implements JwtService {
 		Instant now = Instant.now();
 		Claims claims = Jwts.claims();
 
-		claims
-			.setExpiration(Date.from(now.plusSeconds(expiration)))
-			.setIssuedAt(Date.from(now))
-			.setSubject(subject)
-			.setId(user.getId())
-			.setIssuer(SecurityProperties.ISSUER);
+		claims.setExpiration(Date.from(now.plusSeconds(expiration)))
+		      .setIssuedAt(Date.from(now))
+		      .setSubject(subject)
+		      .setId(user.getId())
+		      .setIssuer(SecurityProperties.ISSUER);
 
 		return claims;
 	}
 
 	@Override
 	public Claims buildJwtClaims(User user) {
-		return buildClaims(
-			user, SecurityProperties.JWT_EXPIRATION_TIME, SecurityProperties.JWT_HEADER_STRING);
+		return buildClaims(user, SecurityProperties.JWT_EXPIRATION_TIME, SecurityProperties.JWT_HEADER_STRING);
 	}
 
 	@Override
 	public Claims buildRefreshClaims(User user) {
-		return buildClaims(
-			user, SecurityProperties.REFRESH_EXPIRATION_TIME, SecurityProperties.REFRESH_HEADER_STRING);
+		return buildClaims(user, SecurityProperties.REFRESH_EXPIRATION_TIME, SecurityProperties.REFRESH_HEADER_STRING);
 	}
 
 	@Override
 	public String buildToken(Claims claims) {
 		return Jwts.builder()
-			.signWith(secretKey)
-			.setHeaderParam(SecurityProperties.JWT_HEADER_PARAM, "JWT")
-			.setClaims(claims)
-			.compact();
+		           .signWith(secretKey)
+		           .setHeaderParam(SecurityProperties.JWT_HEADER_PARAM, "JWT")
+		           .setClaims(claims)
+		           .compact();
 	}
 
 	@Override

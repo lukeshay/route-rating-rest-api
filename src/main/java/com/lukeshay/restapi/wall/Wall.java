@@ -15,25 +15,14 @@ import java.util.Objects;
 @Table(name = "walls")
 public class Wall extends Auditable<String> implements Serializable {
 
-	@Column(name = "id", unique = true, updatable = false)
-	@Expose
-	@GeneratedValue(generator = "pg-uuid")
-	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator")
-	@Id
-	private String id;
+	@Column(name = "id", unique = true, updatable = false) @Expose @GeneratedValue(generator = "pg-uuid")
+	@GenericGenerator(name = "pg-uuid", strategy = "org.hibernate.id.UUIDGenerator") @Id private String id;
 
-	@Column(name = "gym_id")
-	@Expose
-	private String gymId;
+	@Column(name = "gym_id") @Expose private String gymId;
 
-	@Column(name = "name")
-	@Expose
-	private String name;
+	@Column(name = "name") @Expose private String name;
 
-	@Column(name = "types")
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Expose
-	private List<WallTypes> types;
+	@Column(name = "types") @ElementCollection(fetch = FetchType.EAGER) @Expose private List<WallTypes> types;
 
 	public Wall() {
 	}
@@ -97,10 +86,10 @@ public class Wall extends Auditable<String> implements Serializable {
 			return false;
 		}
 		Wall wall = (Wall) o;
-		return Objects.equals(id, wall.id)
-			&& Objects.equals(gymId, wall.gymId)
-			&& Objects.equals(name, wall.name)
-			&& ModelUtils.collectionsEqual(types, wall.types);
+		return Objects.equals(id, wall.id) && Objects.equals(gymId, wall.gymId) && Objects.equals(
+				name,
+				wall.name
+		) && ModelUtils.collectionsEqual(types, wall.types);
 	}
 
 	@Override

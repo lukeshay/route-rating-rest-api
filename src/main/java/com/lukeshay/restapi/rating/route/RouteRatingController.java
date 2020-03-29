@@ -29,7 +29,8 @@ public class RouteRatingController {
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "Create a rating for a route.", response = RouteRating.class)
 	public ResponseEntity<?> createRating(
-		Authentication authentication, @RequestBody RouteRating rating) {
+			Authentication authentication, @RequestBody RouteRating rating
+	) {
 		return ratingService.createRating(authentication, rating);
 	}
 
@@ -37,10 +38,11 @@ public class RouteRatingController {
 	@PreAuthorize("permitAll()")
 	@ApiOperation(value = "Get the ratings of a route.", response = RouteRating.class)
 	public ResponseEntity<?> getRatings(
-		@PathVariable String routeId,
-		@PathParam("sort") String sort,
-		@PathParam("limit") Integer limit,
-		@PathParam("page") Integer pageNumber) {
+			@PathVariable String routeId,
+			@PathParam("sort") String sort,
+			@PathParam("limit") Integer limit,
+			@PathParam("page") Integer pageNumber
+	) {
 
 		Page<RouteRating> page = ratingService.getRatingsByRouteId(routeId, sort, limit, pageNumber);
 

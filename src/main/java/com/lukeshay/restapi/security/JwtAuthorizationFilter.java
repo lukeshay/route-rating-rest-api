@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private JwtService jwtService;
 	private SessionService sessionService;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository) {
+	public JwtAuthorizationFilter(
+			AuthenticationManager authenticationManager,
+			JwtService jwtService,
+			UserRepository userRepository
+	) {
 		super(authenticationManager);
 		this.jwtService = jwtService;
 		this.userRepository = userRepository;
@@ -35,8 +40,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	@Override
 	protected void doFilterInternal(
-		HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-		throws IOException, ServletException {
+			HttpServletRequest request, HttpServletResponse response, FilterChain chain
+	) throws IOException, ServletException {
 
 		String header = request.getHeader(SecurityProperties.JWT_HEADER_STRING);
 
@@ -52,12 +57,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	}
 
 	private Authentication getUsernamePasswordAuthentication(
-		HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response
+	) {
 
 		String jwtToken =
-			request
-				.getHeader(SecurityProperties.JWT_HEADER_STRING)
-				.replace(SecurityProperties.TOKEN_PREFIX, "");
+				request.getHeader(SecurityProperties.JWT_HEADER_STRING).replace(SecurityProperties.TOKEN_PREFIX, "");
 
 		if (jwtToken.trim().length() == 0) {
 			return null;
@@ -72,21 +76,21 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			Claims refreshClaims;
 
 			try {
-				String refreshToken =
-					request
-						.getHeader(SecurityProperties.REFRESH_HEADER_STRING)
-						.replace(SecurityProperties.TOKEN_PREFIX, "");
+				String refreshToken = request.getHeader(SecurityProperties.REFRESH_HEADER_STRING)
+				                             .replace(SecurityProperties.TOKEN_PREFIX, "");
 
 				refreshClaims = jwtService.parseJwtToken(refreshToken);
 				jwtClaims = expiredJwtException.getClaims();
 
-				if (refreshClaims.getId().equals(jwtClaims.getId())
-					&& refreshClaims.getSubject().equals(SecurityProperties.REFRESH_HEADER_STRING)) {
+				if (refreshClaims.getId().equals(jwtClaims.getId()) && refreshClaims.getSubject()
+				                                                                    .equals(SecurityProperties.REFRESH_HEADER_STRING)) {
 
 					String newJwtToken = jwtService.buildToken(jwtClaims);
 
 					response.addHeader(
-						SecurityProperties.JWT_HEADER_STRING, SecurityProperties.TOKEN_PREFIX + newJwtToken);
+							SecurityProperties.JWT_HEADER_STRING,
+							SecurityProperties.TOKEN_PREFIX + newJwtToken
+					);
 				}
 			} catch (ExpiredJwtException | NullPointerException ignored) {
 				LOG.debug("No refresh token present or refresh token is expired.");
@@ -107,8 +111,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 			LOG.debug("This user token is being created.");
 
-			authentication =
-				new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+			authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
 		}
 
 		return authentication;

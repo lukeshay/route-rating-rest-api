@@ -45,6 +45,9 @@ public class UserPrincipal implements UserDetails, Principal {
 
 	@Override
 	public String getPassword() {
+		if (user == null) {
+			return "";
+		}
 		return user.getPassword();
 	}
 
@@ -54,6 +57,9 @@ public class UserPrincipal implements UserDetails, Principal {
 
 	@Override
 	public String getUsername() {
+		if (user == null) {
+			return "";
+		}
 		return user.getUsername();
 	}
 

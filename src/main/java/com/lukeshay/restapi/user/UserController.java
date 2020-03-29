@@ -41,8 +41,7 @@ public class UserController {
 		Map<String, String> responseBody = new HashMap<>();
 
 		boolean validEmail = userService.validateEmail(responseBody, authentication, body.getEmail());
-		boolean validUsername =
-			userService.validateUsername(responseBody, authentication, body.getUsername());
+		boolean validUsername = userService.validateUsername(responseBody, authentication, body.getUsername());
 		boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
 		//    boolean validState = userService.validateState(responseBody, body.getState());
 
@@ -125,20 +124,18 @@ public class UserController {
 		Map<String, String> responseBody = new HashMap<>();
 
 		boolean validEmail = userService.validateEmail(responseBody, authentication, body.getEmail());
-		boolean validUsername =
-			userService.validateUsername(responseBody, authentication, body.getUsername());
-		boolean validPassword =
-			userService.validatePassword(responseBody, body.getPassword())
-				|| body.getPassword() == null
-				|| body.getPassword().equals("");
+		boolean validUsername = userService.validateUsername(responseBody, authentication, body.getUsername());
+		boolean validPassword = userService.validatePassword(
+				responseBody,
+				body.getPassword()
+		) || body.getPassword() == null || body.getPassword().equals("");
 		//    boolean validState = userService.validateState(responseBody, body.getState());
 
 		if (!validEmail || !validUsername || !validPassword) {
 			return ResponseUtils.badRequest(responseBody);
 		}
 
-		body =
-			userService.updateUser(
+		body = userService.updateUser(
 				authentication,
 				body.getUsername(),
 				body.getEmail(),
@@ -147,7 +144,8 @@ public class UserController {
 				body.getCity(),
 				body.getState(),
 				body.getCountry(),
-				body.getPassword());
+				body.getPassword()
+		);
 
 		if (body == null) {
 			LOG.debug("User was not found");

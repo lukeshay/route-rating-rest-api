@@ -24,8 +24,7 @@ public class GymV2Controller {
 
 	private static Logger LOG = LoggerFactory.getLogger(GymV2Controller.class.getName());
 
-	@Autowired
-	private GymV2Service gymV2Service;
+	@Autowired private GymV2Service gymV2Service;
 
 	@GetMapping("/{gymId}")
 	@PreAuthorize("permitAll()")

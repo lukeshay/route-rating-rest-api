@@ -14,11 +14,9 @@ import java.util.UUID;
 
 public class SessionServiceTest extends TestBase {
 
-	@Autowired
-	private JwtService jwtService;
+	@Autowired private JwtService jwtService;
 
-	@Autowired
-	private SessionService sessionService;
+	@Autowired private SessionService sessionService;
 
 	private Session testSession;
 	private RouteRatingJwt testRouteRatingJwt;
@@ -38,13 +36,12 @@ public class SessionServiceTest extends TestBase {
 
 		expiresIn = JwtService.getExpirationInMinutes(jwtClaims);
 
-		testRouteRatingJwt =
-			new RouteRatingJwt(
-				SecurityProperties.TOKEN_PREFIX + jwtToken,
+		testRouteRatingJwt = new RouteRatingJwt(SecurityProperties.TOKEN_PREFIX + jwtToken,
 				jwtClaims,
 				expiresIn,
 				SecurityProperties.TOKEN_PREFIX + refreshToken,
-				refreshClaims);
+				refreshClaims
+		);
 
 		testSession = new Session(testRouteRatingJwt, user.getId());
 	}
@@ -53,28 +50,25 @@ public class SessionServiceTest extends TestBase {
 	void createSessionTest() {
 		String userId = UUID.randomUUID().toString();
 
-		Session testSessionTwo =
-			sessionService.createSession(
-				SecurityProperties.TOKEN_PREFIX + jwtToken,
+		Session testSessionTwo = sessionService.createSession(SecurityProperties.TOKEN_PREFIX + jwtToken,
 				jwtClaims,
 				expiresIn,
 				SecurityProperties.TOKEN_PREFIX + refreshToken,
 				refreshClaims,
-				userId);
+				userId
+		);
 
-		Assertions.assertAll(
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + jwtToken,
-					testSessionTwo.getTokens().getJwtToken()),
-			() -> Assertions.assertEquals(jwtClaims, testSessionTwo.getTokens().getJwtClaims()),
-			() -> Assertions.assertEquals(expiresIn, testSessionTwo.getTokens().getExpiresIn()),
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + refreshToken,
-					testSessionTwo.getTokens().getRefreshToken()),
-			() -> Assertions.assertEquals(refreshClaims, testSessionTwo.getTokens().getRefreshClaims()),
-			() -> Assertions.assertEquals(userId, testSessionTwo.getUserId()));
+		Assertions.assertAll(() -> Assertions.assertEquals(SecurityProperties.TOKEN_PREFIX + jwtToken,
+				testSessionTwo.getTokens().getJwtToken()
+				),
+				() -> Assertions.assertEquals(jwtClaims, testSessionTwo.getTokens().getJwtClaims()),
+				() -> Assertions.assertEquals(expiresIn, testSessionTwo.getTokens().getExpiresIn()),
+				() -> Assertions.assertEquals(SecurityProperties.TOKEN_PREFIX + refreshToken,
+						testSessionTwo.getTokens().getRefreshToken()
+				),
+				() -> Assertions.assertEquals(refreshClaims, testSessionTwo.getTokens().getRefreshClaims()),
+				() -> Assertions.assertEquals(userId, testSessionTwo.getUserId())
+		);
 	}
 
 	@Test
@@ -83,17 +77,15 @@ public class SessionServiceTest extends TestBase {
 
 		testSession = sessionRepository.findById(savedTestSession.getId()).get();
 
-		Assertions.assertAll(
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + jwtToken,
-					savedTestSession.getTokens().getJwtToken()),
-			() -> Assertions.assertEquals(expiresIn, savedTestSession.getTokens().getExpiresIn()),
-			() ->
-				Assertions.assertEquals(
-					SecurityProperties.TOKEN_PREFIX + refreshToken,
-					savedTestSession.getTokens().getRefreshToken()),
-			() -> Assertions.assertEquals(user.getId(), savedTestSession.getUserId()));
+		Assertions.assertAll(() -> Assertions.assertEquals(SecurityProperties.TOKEN_PREFIX + jwtToken,
+				savedTestSession.getTokens().getJwtToken()
+				),
+				() -> Assertions.assertEquals(expiresIn, savedTestSession.getTokens().getExpiresIn()),
+				() -> Assertions.assertEquals(SecurityProperties.TOKEN_PREFIX + refreshToken,
+						savedTestSession.getTokens().getRefreshToken()
+				),
+				() -> Assertions.assertEquals(user.getId(), savedTestSession.getUserId())
+		);
 
 		savedTestSession.setTokens(null);
 

@@ -21,8 +21,7 @@ import java.util.UUID;
 class UserControllerTest extends TestBase {
 
 	private UserController userController;
-	@Mock
-	private RecaptchaValidator recaptchaValidator;
+	@Mock private RecaptchaValidator recaptchaValidator;
 
 	@BeforeEach
 	void setUp() {
@@ -31,18 +30,14 @@ class UserControllerTest extends TestBase {
 
 		Mockito.when(recaptchaValidator.validate(Mockito.anyString())).thenReturn(true);
 
-		userController =
-			new UserController(
-				new UserServiceImpl(userRepository, passwordEncoder, recaptchaValidator));
+		userController = new UserController(new UserServiceImpl(userRepository, passwordEncoder, recaptchaValidator));
 	}
 
 	@Test
 	void createUserTest() {
 		authentication =
-			new UsernamePasswordAuthenticationToken(
-				new UserPrincipal(null), null, Collections.emptyList());
-		User testUserTwo =
-			new User(
+				new UsernamePasswordAuthenticationToken(new UserPrincipal(null), null, Collections.emptyList());
+		User testUserTwo = new User(
 				"TestUserTwo",
 				"Test",
 				"User",
@@ -51,7 +46,8 @@ class UserControllerTest extends TestBase {
 				"Des Moines",
 				"Iowa",
 				"USA",
-				"password");
+				"password"
+		);
 		testUserTwo.setLastName("User");
 
 		NewUser newUser = new NewUser(testUserTwo, "asdf");
@@ -71,8 +67,9 @@ class UserControllerTest extends TestBase {
 		map.put("email", "Email is already in use.");
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(map, responseEmail.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode()));
+				() -> Assertions.assertEquals(map, responseEmail.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode())
+		);
 
 		user.setEmail("testtest@email.com");
 		user.setUsername(testUserTwo.getUsername());
@@ -84,15 +81,15 @@ class UserControllerTest extends TestBase {
 		map.put("username", "Username is already in use.");
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(map, responseUsername.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseUsername.getStatusCode()));
+				() -> Assertions.assertEquals(map, responseUsername.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseUsername.getStatusCode())
+		);
 	}
 
 	@Test
 	@WithMockUser
 	void updateUserTest() {
-		User testUserTwo =
-			new User(
+		User testUserTwo = new User(
 				"test.user2@email.com",
 				"Test",
 				"User",
@@ -101,7 +98,8 @@ class UserControllerTest extends TestBase {
 				"Des Moines",
 				"Iowa",
 				"USA",
-				"password");
+				"password"
+		);
 
 		testUserTwo.setAuthority(UserTypes.BASIC.authority());
 		testUserTwo.setRole(UserTypes.BASIC.role());
@@ -117,8 +115,9 @@ class UserControllerTest extends TestBase {
 		user = userRepository.findById(user.getId()).orElse(null);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(user, updatedUser.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.OK, updatedUser.getStatusCode()));
+				() -> Assertions.assertEquals(user, updatedUser.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.OK, updatedUser.getStatusCode())
+		);
 
 		user.setEmail(testUserTwo.getEmail());
 		ResponseEntity<?> responseEmail = userController.updateUser(authentication, user);
@@ -128,8 +127,9 @@ class UserControllerTest extends TestBase {
 		map.put("email", "Email is already in use.");
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(map, responseEmail.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode()));
+				() -> Assertions.assertEquals(map, responseEmail.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEmail.getStatusCode())
+		);
 
 		user.setEmail("testtest@email.com");
 		user.setUsername(testUserTwo.getUsername());
@@ -139,7 +139,8 @@ class UserControllerTest extends TestBase {
 		map.put("username", "Username is already in use.");
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(map, responseUsername.getBody()),
-			() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseUsername.getStatusCode()));
+				() -> Assertions.assertEquals(map, responseUsername.getBody()),
+				() -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseUsername.getStatusCode())
+		);
 	}
 }

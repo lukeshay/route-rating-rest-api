@@ -21,9 +21,8 @@ class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserServiceImpl(
-		UserRepository userRepository,
-		PasswordEncoder passwordEncoder,
-		RecaptchaValidator recaptchaValidator) {
+			UserRepository userRepository, PasswordEncoder passwordEncoder, RecaptchaValidator recaptchaValidator
+	) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.recaptchaValidator = recaptchaValidator;
@@ -31,15 +30,9 @@ class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<?> createUser(User user, UserTypes type) {
-		if (user.getUsername() != null
-			&& user.getFirstName() != null
-			&& user.getLastName() != null
-			&& user.getEmail() != null
-			&& user.getPhoneNumber() != null
-			&& user.getCity() != null
-			&& user.getState() != null
-			&& user.getCountry() != null
-			&& user.getPassword() != null) {
+		if (user.getUsername() != null && user.getFirstName() != null && user.getLastName() != null && user.getEmail() != null && user
+				.getPhoneNumber() != null && user.getCity() != null && user.getState() != null && user.getCountry() != null && user
+				.getPassword() != null) {
 
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setAuthority(type.authority());
@@ -83,29 +76,30 @@ class UserServiceImpl implements UserService {
 	public boolean isEmailTaken(Authentication authentication, String email) {
 		User user = AuthenticationUtils.getUser(authentication);
 
-		return (user == null || !user.getEmail().equals(email))
-			&& userRepository.findByEmail(email).orElse(null) != null;
+		return (user == null || !user.getEmail().equals(email)) && userRepository.findByEmail(email)
+				.orElse(null) != null;
 	}
 
 	@Override
 	public boolean isUsernameTaken(Authentication authentication, String username) {
 		User user = AuthenticationUtils.getUser(authentication);
 
-		return (user == null || !user.getUsername().equals(username))
-			&& userRepository.findByUsername(username).orElse(null) != null;
+		return (user == null || !user.getUsername().equals(username)) && userRepository.findByUsername(username)
+				.orElse(null) != null;
 	}
 
 	@Override
 	public User updateUser(
-		Authentication authentication,
-		String username,
-		String email,
-		String firstName,
-		String lastName,
-		String city,
-		String state,
-		String country,
-		String password) {
+			Authentication authentication,
+			String username,
+			String email,
+			String firstName,
+			String lastName,
+			String city,
+			String state,
+			String country,
+			String password
+	) {
 
 		User user = AuthenticationUtils.getUser(authentication);
 
@@ -116,44 +110,22 @@ class UserServiceImpl implements UserService {
 			return null;
 		}
 
-		if (username != null && !username.equals("")) {
-			toUpdate.setUsername(username);
-		}
-
-		if (email != null && !email.equals("")) {
-			toUpdate.setEmail(email);
-		}
-
-		if (firstName != null && !firstName.equals("")) {
-			toUpdate.setFirstName(firstName);
-		}
-
-		if (lastName != null && !lastName.equals("")) {
-			toUpdate.setLastName(lastName);
-		}
-
-		if (city != null && !city.equals("")) {
-			toUpdate.setCity(city);
-		}
-
-		if (state != null && !state.equals("")) {
-			toUpdate.setState(state);
-		}
-
-		if (country != null && !country.equals("")) {
-			toUpdate.setCountry(country);
-		}
-
-		if (password != null && !password.equals("")) {
-			toUpdate.setPassword(passwordEncoder.encode(password));
-		}
+		toUpdate.setUsernameIfNotNull(username);
+		toUpdate.setEmailIfNotNull(email);
+		toUpdate.setFirstNameIfNotNull(firstName);
+		toUpdate.setLastNameIfNotNull(lastName);
+		toUpdate.setCityIfNotNull(city);
+		toUpdate.setStateIfNotNull(state);
+		toUpdate.setCountry(country);
+		toUpdate.setPasswordIfNotNull(passwordEncoder.encode(password));
 
 		return userRepository.save(toUpdate);
 	}
 
 	@Override
 	public boolean validateEmail(
-		Map<String, String> responseBody, Authentication authentication, String email) {
+			Map<String, String> responseBody, Authentication authentication, String email
+	) {
 		if (email == null) {
 			responseBody.put("email", "Email must be provided.");
 			return false;
@@ -218,7 +190,8 @@ class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean validateUsername(
-		Map<String, String> responseBody, Authentication authentication, String username) {
+			Map<String, String> responseBody, Authentication authentication, String username
+	) {
 		if (username == null) {
 			responseBody.put("username", "Username must be provided.");
 			return false;
