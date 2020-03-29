@@ -123,6 +123,36 @@ public class Route extends Auditable<String> implements Serializable {
 		this.wallId = wallId;
 	}
 
+	public void setHoldColorIfNotNull(String holdColor) {
+		if (holdColor != null && !holdColor.isBlank()) {
+			this.holdColor = holdColor;
+		}
+	}
+
+	public void setNameIfNotNull(String name) {
+		if (name != null && !name.isBlank()) {
+			this.name = name;
+		}
+	}
+
+	public void setSetterIfNotNull(String setter) {
+		if (setter != null && !setter.isBlank()) {
+			this.setter = setter;
+		}
+	}
+
+	public void setTypesIfNotNull(List<WallTypes> types) {
+		if (types != null && !types.isEmpty()) {
+			this.types = types;
+		}
+	}
+
+	public void setWallIdIfNotNull(String wallId) {
+		if (wallId != null && !wallId.isBlank()) {
+			this.wallId = wallId;
+		}
+	}
+
 	public void updateAverages(List<RouteRating> ratings) {
 		List<Grade> userGrades = new ArrayList<>();
 		List<Integer> userRatings = new ArrayList<>();
@@ -158,16 +188,17 @@ public class Route extends Auditable<String> implements Serializable {
 			return false;
 		}
 		Route route = (Route) o;
-		return Double.compare(route.averageRating, averageRating) == 0 && Objects.equals(
-				id,
+		return Double.compare(route.averageRating, averageRating) == 0 && Objects.equals(id,
 				route.id
 		) && Objects.equals(wallId, route.wallId) && Objects.equals(gymId, route.gymId) && Objects.equals(
 				name,
 				route.name
-		) && Objects.equals(setter, route.setter) && Objects.equals(
-				holdColor,
-				route.holdColor
-		) && ModelUtils.collectionsEqual(types, route.types) && averageGrade == route.averageGrade;
+		) && Objects.equals(
+				setter,
+				route.setter
+		) && Objects.equals(holdColor, route.holdColor) && ModelUtils.collectionsEqual(types,
+				route.types
+		) && averageGrade == route.averageGrade;
 	}
 
 	@Override

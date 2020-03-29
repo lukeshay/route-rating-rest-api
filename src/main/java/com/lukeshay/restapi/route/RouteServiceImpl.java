@@ -56,8 +56,7 @@ public class RouteServiceImpl implements RouteService {
 		Route route = routeRepository.findById(body.getId()).orElse(null);
 
 		if (route == null || gym == null || user == null || !route.getGymId()
-		                                                          .equals(body.getGymId()) || !gym.getAuthorizedEditors()
-		                                                                                          .contains(user.getId())) {
+				.equals(body.getGymId()) || !gym.getAuthorizedEditors().contains(user.getId())) {
 			return null;
 		}
 
@@ -117,8 +116,7 @@ public class RouteServiceImpl implements RouteService {
 		Gym gym = gymRepository.findById(gymId).orElse(null);
 
 		if (route == null || !route.getGymId()
-		                           .equals(gymId) || gym == null || user == null || !gym.getAuthorizedEditors()
-		                                                                                .contains(user.getId())) {
+				.equals(gymId) || gym == null || user == null || !gym.getAuthorizedEditors().contains(user.getId())) {
 			return null;
 		}
 
@@ -133,21 +131,10 @@ public class RouteServiceImpl implements RouteService {
 			}
 		}
 
-		if (types != null && types.size() > 0) {
-			route.setTypes(types);
-		}
-
-		if (holdColor != null && !holdColor.equals("")) {
-			route.setHoldColor(holdColor);
-		}
-
-		if (setter != null && !setter.equals("")) {
-			route.setSetter(setter);
-		}
-
-		if (name != null && !name.equals("")) {
-			route.setName(name);
-		}
+		route.setTypesIfNotNull(types);
+		route.setHoldColorIfNotNull(holdColor);
+		route.setSetterIfNotNull(setter);
+		route.setNameIfNotNull(name);
 
 		return routeRepository.save(route);
 	}

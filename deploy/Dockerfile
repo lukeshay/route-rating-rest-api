@@ -7,7 +7,14 @@ WORKDIR $PROJECT_HOME
 
 EXPOSE 8080
 
-COPY ./rest-api.jar $PROJECT_HOME
+COPY gradle ./gradle
+COPY gradlew ./gradlew
+
+RUN ./gradlew --build-cache --no-daemon
+
+COPY . .
+
+RUN ./scripts/build.sh
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
   -Dspring.datasource.url=$DB_URL \
