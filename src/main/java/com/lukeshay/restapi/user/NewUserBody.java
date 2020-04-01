@@ -1,17 +1,17 @@
-package com.lukeshay.restapi.user.bodys;
+package com.lukeshay.restapi.user;
 
 import com.google.gson.annotations.Expose;
 import com.lukeshay.restapi.user.User;
 import com.lukeshay.restapi.utils.ModelUtils;
 
-public class NewUser extends User {
+public class NewUserBody extends User {
 
 	@Expose private String recaptcha;
 
-	NewUser() {
+	NewUserBody() {
 	}
 
-	public NewUser(User user, String recaptcha) {
+	public NewUserBody(User user, String recaptcha) {
 		super(
 				user.getUsername(),
 				user.getFirstName(),

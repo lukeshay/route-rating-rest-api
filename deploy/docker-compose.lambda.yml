@@ -2,16 +2,16 @@ version: "3.5"
 
 services:
   postgres:
-    image: postgres:11-alpine
+    image: postgres
     container_name: rest-api-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: routerating
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=routerating
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
 
 volumes:
   db-data:

@@ -2,7 +2,6 @@ package com.lukeshay.restapi.user;
 
 import com.lukeshay.restapi.TestBase;
 import com.lukeshay.restapi.security.UserPrincipal;
-import com.lukeshay.restapi.user.bodys.NewUser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,17 +49,17 @@ class UserControllerTest extends TestBase {
 		);
 		testUserTwo.setLastName("User");
 
-		NewUser newUser = new NewUser(testUserTwo, "asdf");
+		NewUserBody newUserBody = new NewUserBody(testUserTwo, "asdf");
 
-		ResponseEntity<?> getUser = userController.createUser(newUser);
+		ResponseEntity<?> getUser = userController.createUser(newUserBody);
 		testUserTwo = userRepository.findByUsername(testUserTwo.getUsername()).get();
 
 		Assertions.assertEquals(testUserTwo, getUser.getBody());
 
 		user.setId(null);
 		user.setUsername(UUID.randomUUID().toString());
-		newUser = new NewUser(user, "asdf");
-		ResponseEntity<?> responseEmail = userController.createUser(newUser);
+		newUserBody = new NewUserBody(user, "asdf");
+		ResponseEntity<?> responseEmail = userController.createUser(newUserBody);
 
 		Map<String, Object> map = new HashMap<>();
 
@@ -73,9 +72,9 @@ class UserControllerTest extends TestBase {
 
 		user.setEmail("testtest@email.com");
 		user.setUsername(testUserTwo.getUsername());
-		newUser = new NewUser(user, "asdf");
+		newUserBody = new NewUserBody(user, "asdf");
 
-		ResponseEntity<?> responseUsername = userController.createUser(newUser);
+		ResponseEntity<?> responseUsername = userController.createUser(newUserBody);
 
 		map.clear();
 		map.put("username", "Username is already in use.");

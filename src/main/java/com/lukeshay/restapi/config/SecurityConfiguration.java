@@ -5,6 +5,7 @@ import com.lukeshay.restapi.security.JwtAuthenticationFilter;
 import com.lukeshay.restapi.security.JwtAuthorizationFilter;
 import com.lukeshay.restapi.session.SessionService;
 import com.lukeshay.restapi.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -34,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private SessionService sessionService;
 	private JwtService jwtService;
 
+	@Autowired
 	public SecurityConfiguration(
 			@Qualifier("userPrincipalService") UserDetailsService userDetailsService,
 			UserRepository userRepository,
