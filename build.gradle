@@ -31,7 +31,6 @@ repositories {
 dependencies {
     // Spring boot dependencies
     implementation group: 'com.amazonaws.serverless', name: 'aws-serverless-java-container-springboot2', version: '1.4'
-//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: project.springBootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: project.springBootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: project.springBootVersion
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: project.springBootVersion

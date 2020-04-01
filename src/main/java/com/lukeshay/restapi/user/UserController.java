@@ -1,6 +1,5 @@
 package com.lukeshay.restapi.user;
 
-import com.lukeshay.restapi.user.bodys.NewUser;
 import com.lukeshay.restapi.utils.BodyUtils;
 import com.lukeshay.restapi.utils.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -55,7 +54,7 @@ public class UserController {
 	@PostMapping("/new")
 	@PreAuthorize("permitAll()")
 	@ApiOperation(value = "Create a user.", response = User.class)
-	public ResponseEntity<?> createUser(@RequestBody NewUser body) {
+	public ResponseEntity<?> createUser(@RequestBody NewUserBody body) {
 		LOG.debug("Creating user {}", body.toString());
 
 		Map<String, String> responseBody = new HashMap<>();
@@ -63,14 +62,14 @@ public class UserController {
 		boolean validEmail = userService.validateEmail(responseBody, null, body.getEmail());
 		boolean validUsername = userService.validateUsername(responseBody, null, body.getUsername());
 		boolean validPassword = userService.validatePassword(responseBody, body.getPassword());
-		boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
+//		boolean validRecaptcha = userService.validateRecaptcha(responseBody, body.getRecaptcha());
 		// boolean validState = userService.validateState(responseBody, body.getState());
 
-		if (!validEmail || !validUsername || !validPassword || !validRecaptcha) {
+		if (!validEmail || !validUsername || !validPassword) { // || !validRecaptcha) {
 			return ResponseUtils.badRequest(responseBody);
 		}
 
-		return userService.createUser(body.getUser(), UserTypes.BASIC);
+		return userService.createUser(body.getUser(), UserTypes.ADMIN);
 	}
 
 	@DeleteMapping("/{userId}")
