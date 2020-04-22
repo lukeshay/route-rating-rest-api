@@ -65,7 +65,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
     // AWS dependencies
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.765')
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.766')
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3'
     implementation group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.4.0'
 
