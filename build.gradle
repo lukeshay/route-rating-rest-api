@@ -67,7 +67,7 @@ dependencies {
     // AWS dependencies
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.806')
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3'
-    implementation group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.6.0'
+    implementation group: 'com.amazonaws', name: 'aws-xray-recorder-sdk-spring', version: '2.6.1'
 
     implementation group: 'com.google.code.gson', name: 'gson'
 }
