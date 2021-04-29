@@ -1,0 +1,35 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.amazonaws:aws-java-sdk-bom
+    versions:
+    - 1.11.1000
+    - 1.11.1001
+    - 1.11.1002
+    - 1.11.1003
+    - 1.11.1004
+    - 1.11.1005
+    - 1.11.1006
+    - 1.11.981
+    - 1.11.988
+    - 1.11.990
+    - 1.11.991
+    - 1.11.992
+    - 1.11.993
+    - 1.11.994
+    - 1.11.995
+    - 1.11.996
+    - 1.11.997
+    - 1.11.998
+    - 1.11.999
+  - dependency-name: org.springframework.boot
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
